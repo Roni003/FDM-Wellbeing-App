@@ -7,10 +7,10 @@ export default function Entry() {
   // When user loads in, if authentiacted, get role from db
 
   // If role == fdm
-  // router.replace(/(tabs)/)
+  // router.replace(/user/(tabs))
 
   // If role == ambassador
-  // router.replace(*path to ambassador home page)
+  // router.replace(/ambassador/(tabs))
 
   // this will be login page, user stays here if theyre not authed,
   // then gets redirected to home page after login
@@ -18,8 +18,11 @@ export default function Entry() {
   return (
     <View style={styles.container}>
       <Text>INDEX page</Text>
-      <Link replace href="/(tabs)/">
-        <Text>Link</Text>
+      <Link replace href="/user/(tabs)">
+        <Text>Link to user home page</Text>
+      </Link>
+      <Link replace href="/ambassador/(tabs)">
+        <Text>Link to ambassador home page</Text>
       </Link>
     </View>
   );
