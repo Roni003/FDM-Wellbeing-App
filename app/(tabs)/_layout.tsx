@@ -5,7 +5,6 @@ import { Pressable } from "react-native";
 
 import Colors from "@/constants/Colors";
 import { useColorScheme } from "@/components/useColorScheme";
-import { useClientOnlyValue } from "@/components/useClientOnlyValue";
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
@@ -53,7 +52,7 @@ export default function TabLayout() {
         name="three" // Name of the file that exports the screen
         options={{
           title: "Tab Three", // The name of the buton in the navbar
-          headerShown: false, // If you dont want to show the title on top of the screen
+          //headerShown: false, // If you dont want to show the title on top of the screen
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />
