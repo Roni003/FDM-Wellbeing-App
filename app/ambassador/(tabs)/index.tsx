@@ -6,7 +6,7 @@ import { Link } from "expo-router";
 export default function TabOneScreen() {
   return (
     <View style={styles.container}>
-      <Text>Ambassador home page</Text>
+      <Text>Ambassador home page (Forum)</Text>
       <Link href="/">
         <Text>Link</Text>
       </Link>
