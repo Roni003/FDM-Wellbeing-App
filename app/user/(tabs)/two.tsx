@@ -6,7 +6,7 @@ import { Stack } from "expo-router";
 export default function TabTwoScreen() {
   return (
     <View style={styles.container}>
-      <Text>Second page</Text>
+      <Text>User profile page</Text>
       {/* <Stack.Screen
         options={{
           // https://reactnavigation.org/docs/headers#setting-the-header-title

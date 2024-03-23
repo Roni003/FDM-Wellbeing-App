@@ -1,11 +1,15 @@
 import { StyleSheet } from "react-native";
 
 import { Text, View } from "@/components/Themed";
+import { Link } from "expo-router";
 
-export default function TabThreeScreen() {
+export default function MeditationScreen() {
   return (
     <View style={styles.container}>
-      <Text>User forum page</Text>
+      <Text>meditation tracker screen</Text>
+      <Link href="/user/(tabs)">
+        <Text>Link back to user tabs -for convenience in development</Text>
+      </Link>
     </View>
   );
 }

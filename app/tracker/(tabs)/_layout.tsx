@@ -20,9 +20,9 @@ export default function TabLayout() {
   return (
     <Tabs>
       <Tabs.Screen
-        name="index"
+        name="step"
         options={{
-          title: "Dashboard",
+          title: "step",
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
           // Generates a clickable icon on the top right of the page
           /* headerRight: () => (
@@ -42,16 +42,24 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="two"
+        name="fitness"
         options={{
-          title: "Profile",
+          title: "fitness",
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />
       <Tabs.Screen
-        name="three" // Name of the file that exports the screen
+        name="meditation" // Name of the file that exports the screen
         options={{
-          title: "Forum", // The name of the buton in the navbar
+          title: "meditation", // The name of the buton in the navbar
+          //headerShown: false, // If you dont want to show the title on top of the screen
+          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="sleep" // Name of the file that exports the screen
+        options={{
+          title: "sleep", // The name of the buton in the navbar
           //headerShown: false, // If you dont want to show the title on top of the screen
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
