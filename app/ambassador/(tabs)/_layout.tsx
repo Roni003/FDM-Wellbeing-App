@@ -22,7 +22,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Tab One",
+          title: "Home",
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
           // Generates a clickable icon on the top right of the page
           /* headerRight: () => (
@@ -42,9 +42,9 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="two"
+        name="profile"
         options={{
-          title: "Tab Two",
+          title: "Profile",
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />

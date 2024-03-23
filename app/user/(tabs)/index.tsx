@@ -10,16 +10,16 @@ export default function TabOneScreen() {
       <Link href="/">
         <Text>Link back to login page</Text>
       </Link>
-      <Link href="/tracker/(tabs)/step">
+      <Link href="/tracker/step">
         <Text>Link to step tracker page</Text>
       </Link>
-      <Link href="/tracker/(tabs)/fitness">
+      <Link href="/tracker/fitness">
         <Text>Link to fitness tracker page</Text>
       </Link>
-      <Link href="/tracker/(tabs)/meditation">
+      <Link href="/tracker/meditation">
         <Text>Link to meditiation tracker page</Text>
       </Link>
-      <Link href="/tracker/(tabs)/sleep">
+      <Link href="/tracker/sleep">
         <Text>Link to sleep tracker page</Text>
       </Link>
     </View>
