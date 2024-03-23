@@ -15,7 +15,7 @@ git clone https://github.com/Roni003/FDM-Wellbeing-App.git
 2. Navigate to the project directory (for the front end):
 
 ```
-cd FDM-Wellbeing-App/front-end
+cd FDM-Wellbeing-App
 ```
 
 3. Install the dependencies:
