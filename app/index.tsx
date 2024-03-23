@@ -1,10 +1,10 @@
-import { Alert, StyleSheet, useWindowDimensions } from "react-native";
-import React, { useState } from "react";
+import { Button, StyleSheet } from "react-native";
+import React, { useEffect, useState } from "react";
 import { Text, View } from "@/components/Themed";
-import { Link, router } from "expo-router";
-import LoginInputs from "@/components/loginComponents/LoginInputs";
-import LoginButton from "@/components/loginComponents/LoginButton";
-import SUPABASE_ANON_KEY from "@/constants/Supabase";
+import { Link } from "expo-router";
+import Auth from "@/components/Auth";
+import { supabase } from "@/lib/Supabase";
+import { Session } from "@supabase/supabase-js";
 export default function Entry() {
   // When user loads in, if authentiacted, get role from db
 
@@ -19,60 +19,33 @@ export default function Entry() {
 
   // use height to set a logo (if need be)
   //const { height } = useWindowDimensions();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [session, setSession] = useState<Session | null>(null);
 
-  function handlePress() {
-    if (!validateEmail(email)) {
-      Alert.alert("Please enter a valid email address");
-      return;
-    }
-    if (!validatePassword(password)) {
-      Alert.alert("Please a password that is 5 characters or longer");
-      return;
-    }
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log("Supabase session user:", session?.user.email);
+      setSession(session);
+    });
 
-    login(email, password);
-  }
+    supabase.auth.onAuthStateChange((_event, session) => {
+      console.log(
+        "Auth state changed, session user set to:",
+        session?.user.email
+      );
+      setSession(session);
+    });
+  }, []);
 
-  function login(email: string, password: string): void {}
-
-  // Kinda pointless for login, just so it can be used later for register
-  function validatePassword(val: string): boolean {
-    if (val == null || val.length < 5) return false;
-    return true;
-  }
-
-  function validateEmail(email: string) {
-    const atIndex = email.indexOf("@");
-    if (atIndex === -1 || atIndex === 0 || atIndex === email.length - 1) {
-      return false;
-    }
-
-    const domain = email.substring(atIndex + 1);
-    if (domain.indexOf(".") === -1) {
-      return false;
-    }
-
-    return true;
+  async function signOut() {
+    await supabase.auth.signOut();
   }
 
   return (
     <View style={styles.container}>
       <Text style={styles.welcomeText}>Welcome to Fit Mind</Text>
+      <Auth />
 
-      <LoginInputs
-        setValue={setEmail}
-        placeholder="Email address"
-        secureTextEntry={false}
-      />
-      <LoginInputs
-        setValue={setPassword}
-        placeholder="Password"
-        secureTextEntry={true}
-      />
-
-      <LoginButton pressHandler={handlePress} />
+      <Button title="sign out (for testing)" onPress={signOut} />
 
       <Link replace href="/user/(tabs)">
         <Text>Link to user home page</Text>
@@ -87,8 +60,6 @@ export default function Entry() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
     padding: 30,
   },
   welcomeText: {
