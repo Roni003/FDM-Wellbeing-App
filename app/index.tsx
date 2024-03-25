@@ -1,4 +1,4 @@
-import { Button, StyleSheet } from "react-native";
+import { Button, StyleSheet, Pressable, Keyboard } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Text, View } from "@/components/Themed";
 import { Link } from "expo-router";
@@ -42,17 +42,22 @@ export default function Entry() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.welcomeText}>Welcome to Fit Mind</Text>
-      <Auth />
+      <Pressable
+        style={styles.pressableContainer}
+        onPress={() => Keyboard.dismiss()}
+      >
+        <Text style={styles.welcomeText}>Welcome to Fit Mind</Text>
+        <Auth />
 
-      <Button title="sign out (for testing)" onPress={signOut} />
+        <Button title="sign out (for testing)" onPress={signOut} />
 
-      <Link replace href="/user/(tabs)">
-        <Text>Link to user home page</Text>
-      </Link>
-      <Link replace href="/ambassador/(tabs)">
-        <Text>Link to ambassador home page</Text>
-      </Link>
+        <Link replace href="/user/(tabs)">
+          <Text>Link to user home page</Text>
+        </Link>
+        <Link replace href="/ambassador/(tabs)">
+          <Text>Link to ambassador home page</Text>
+        </Link>
+      </Pressable>
     </View>
   );
 }
@@ -61,6 +66,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 30,
+    paddingTop: 50,
+  },
+  pressableContainer: {
+    flex: 1,
   },
   welcomeText: {
     fontSize: 32,
