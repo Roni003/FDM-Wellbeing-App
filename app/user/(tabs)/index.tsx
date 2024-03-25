@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet } from "react-native";
+import { Dimensions, ScrollView, StyleSheet } from "react-native";
 
 import { Text, View } from "@/components/Themed";
 import { Link } from "expo-router";
@@ -6,11 +6,15 @@ import { Link } from "expo-router";
 export default function TabOneScreen() {
 
   return (
-    <View>
-      <View style ={{marginTop:10}}>
-      <Text style={{fontSize:25}}>Trackers</Text>
+    <View style ={{flex:1}}>
 
-        <View style={styles.tracker_group}>
+      <View style ={{marginTop:10, flex:1}}>
+
+        <Text style={{fontSize:25, marginLeft:'1%'}}>Trackers</Text>
+
+        <View style={styles.tracker_collective}>
+
+          <View style={styles.tracker_group}>
             <View style={styles.tracker_container}>
               <Text style={styles.tracker_container_Text}>Todays steps</Text>
               <Text>0 steps</Text>
@@ -18,39 +22,40 @@ export default function TabOneScreen() {
                 <Text>Go to steps</Text>
               </Link>
             </View>
+            <View style={styles.tracker_container}>
+              <Text style={styles.tracker_container_Text}>Calories today</Text>
+              <Text>0 kcal</Text>
+              <Link href="/tracker/fitness" style={styles.link}>
+                <Text>Go to fitness tracker</Text>
+              </Link>
+            </View>
+          </View>
 
-          <View style={styles.tracker_container}>
-            <Text style={styles.tracker_container_Text}>Calories today</Text>
-            <Text>0 kcal</Text>
-            <Link href="/tracker/fitness" style={styles.link}>
-              <Text>Go to fitness tracker</Text>
-            </Link>
+          <View style={styles.tracker_group}>
+            <View style={styles.tracker_container}>
+                <Text style={styles.tracker_container_Text}>Meditation time</Text>
+                <Text>0 minutes</Text>
+                <Link href="/tracker/meditation" style={styles.link}>
+                  <Text>Go to meditation</Text>
+                </Link>
+            </View>
+            <View style={styles.tracker_container}>
+              <Text style={styles.tracker_container_Text}>Last night's sleep</Text>
+              <Text>0 hours 0 minutes</Text>
+              <Link href="/tracker/sleep" style={styles.link}>
+                <Text>Go to sleep tracker</Text>
+              </Link>
+            </View>
           </View>
 
         </View>
 
-        <View style={styles.tracker_group}>
-        <View style={styles.tracker_container}>
-            <Text style={styles.tracker_container_Text}>Meditation time</Text>
-            <Text>0 minutes</Text>
-            <Link href="/tracker/meditation" style={styles.link}>
-              <Text>Go to meditation</Text>
-            </Link>
-        </View>
-
-        <View style={styles.tracker_container}>
-          <Text style={styles.tracker_container_Text}>Last night's sleep</Text>
-          <Text>0 hours 0 minutes</Text>
-          <Link href="/tracker/sleep" style={styles.link}>
-            <Text>Go to sleep tracker</Text>
-          </Link>
-        </View>
-        </View>
       </View>
 
+      
       <View>
-        <Text style={{fontSize:25}}>Recent Forum Posts</Text>
-        <ScrollView style={{maxHeight:140, borderRadius: 10, borderWidth: 1, borderColor: 'white'}}>
+        <Text style={{fontSize:25, marginLeft:'1%'}}>Recent Forum Posts</Text>
+        <ScrollView style={{maxHeight:140, borderRadius: 10, borderWidth: 0, borderColor: 'white'}}>
         <View style={styles.notif_container}>
           <Text>Forum Post Title </Text>
           <Text>By: user1 @ 00:00</Text>
@@ -72,7 +77,7 @@ export default function TabOneScreen() {
             <Text>Go to forum</Text>
         </Link>
       </View>
-
+    
       <Link href="/" style={{marginTop:10}}>
             <Text>Return to login</Text>
       </Link>
@@ -80,25 +85,36 @@ export default function TabOneScreen() {
   );
 }
 
+const screenHeight = Dimensions.get('window').height;
+
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'rgba(200, 200, 200, 0.1)',
   },
 
+  tracker_collective: {
+    flex: 1,
+    flexDirection: 'column',
+    height: screenHeight,
+  },
+
   tracker_group: {
+    flex: 1,
     flexDirection: 'row',
-    margin: 5,
+    height: screenHeight * 0.5,
   },
 
   tracker_container: {
+    flex: 1,
+    height: screenHeight * 0.2,
     padding: 10,
-    backgroundColor: 'rgba(0, 0, 250, 0.2)',
+    backgroundColor: 'rgba(100, 160, 255, 0.5)',
     margin: 5,
     borderRadius: 10,
     borderColor: 'white',
-    borderWidth: 1,
-    minWidth: '46%',
-    minHeight: '23%',
+    borderWidth: 0,
+    //minWidth: '46%',
+    //minHeight: '23%',
   },
 
   tracker_container_inner: {
@@ -110,20 +126,20 @@ const styles = StyleSheet.create({
   },
 
   link: {
-    marginTop:90,
-    backgroundColor: 'rgba(250, 250, 250, 0.2)',
-    padding: 2,
+    marginTop: '50%',
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    padding: 3,
     borderRadius: 10,
-    borderWidth: 1,
+    borderWidth: 0.5,
     borderColor: 'rgba(250, 250, 250, 0.2)',
     overflow: 'hidden',
   },
 
   link_other: {
-    backgroundColor: 'rgba(250, 250, 250, 0.2)',
+    backgroundColor: 'rgba(100, 160, 255, 0.5)',
     padding: 2,
     borderRadius: 10,
-    borderWidth: 1,
+    borderWidth: 0.5,
     borderColor: 'rgba(250, 250, 250, 0.2)',
     overflow: 'hidden',
     maxWidth: '25%',
@@ -135,8 +151,8 @@ const styles = StyleSheet.create({
     margin: 7,
     borderRadius: 10,
     borderColor: 'white',
-    borderWidth: 1,
-    padding: 5,
-    backgroundColor: 'rgba(0, 55, 255, 0.2)',
+    borderWidth: 0,
+    padding: 7,
+    backgroundColor: 'rgba(100, 160, 255, 0.5)',
   },
 });
