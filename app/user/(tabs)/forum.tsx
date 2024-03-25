@@ -1,17 +1,36 @@
 import { StyleSheet, Button, TextInput } from "react-native";
 import { Formik, Field, Form } from "formik";
+import { supabase } from "@/lib/Supabase";
 
 import { Text, View } from "@/components/Themed";
 import { Link } from "expo-router";
 
 export default function TabThreeScreen() {
+  
+
   return (
     <View style={styles.container}>
       <Formik
         initialValues={{ title: "", body: "" }}
-        onSubmit={(values) => {
-          console.log(values);
+
+        onSubmit={async (values) => {
+
+        
+          const { data, error } = await supabase
+          .from('forum_posts')
+          .insert([{title: values.title, content: values.body},])
+          .select() 
+          
+          if (error){
+            console.log(error)
+          }
+
+          if (data){
+            console.log(data)
+          }
+          
         }}
+
       >
         {(props) => (
           <View>
