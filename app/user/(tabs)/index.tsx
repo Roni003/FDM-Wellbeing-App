@@ -7,31 +7,6 @@ export default function TabOneScreen() {
 
   return (
     <View>
-      <View style={{marginTop:10}}>
-        <Text style={{fontSize:25}}>Recent Forum Posts</Text>
-        <ScrollView style={{maxHeight:140, borderRadius: 10, borderWidth: 2, borderColor: 'white'}}>
-        <View style={styles.notif_container}>
-          <Text>Forum Post Title </Text>
-          <Text>By: user1 @ 00:00</Text>
-        </View>
-        <View style={styles.notif_container}>
-            <Text>Forum Post Title </Text>
-            <Text>By: user1 @ 00:00</Text>
-        </View>
-        <View style={styles.notif_container}>
-            <Text>Forum Post Title </Text>
-            <Text>By: user1 @ 00:00</Text>
-        </View>
-        <View style={styles.notif_container}>
-            <Text>Forum Post Title </Text>
-            <Text>By: user1 @ 00:00</Text>
-        </View>
-        </ScrollView>
-        <Link href="/"> 
-            <Text>Go to forum</Text>
-        </Link>
-      </View>
-
       <View style ={{marginTop:10}}>
       <Text style={{fontSize:25}}>Trackers</Text>
 
@@ -44,7 +19,6 @@ export default function TabOneScreen() {
               </Link>
             </View>
 
-
           <View style={styles.tracker_container}>
             <Text style={styles.tracker_container_Text}>Calories today</Text>
             <Text>0 kcal</Text>
@@ -52,6 +26,7 @@ export default function TabOneScreen() {
               <Text>Go to fitness tracker</Text>
             </Link>
           </View>
+
         </View>
 
         <View style={styles.tracker_group}>
@@ -72,7 +47,33 @@ export default function TabOneScreen() {
         </View>
         </View>
       </View>
-      <Link href="/" style={{marginTop:20}}>
+
+      <View>
+        <Text style={{fontSize:25}}>Recent Forum Posts</Text>
+        <ScrollView style={{maxHeight:140, borderRadius: 10, borderWidth: 1, borderColor: 'white'}}>
+        <View style={styles.notif_container}>
+          <Text>Forum Post Title </Text>
+          <Text>By: user1 @ 00:00</Text>
+        </View>
+        <View style={styles.notif_container}>
+            <Text>Forum Post Title </Text>
+            <Text>By: user1 @ 00:00</Text>
+        </View>
+        <View style={styles.notif_container}>
+            <Text>Forum Post Title </Text>
+            <Text>By: user1 @ 00:00</Text>
+        </View>
+        <View style={styles.notif_container}>
+            <Text>Forum Post Title </Text>
+            <Text>By: user1 @ 00:00</Text>
+        </View>
+        </ScrollView>
+        <Link href="/" style={styles.link_other}> 
+            <Text>Go to forum</Text>
+        </Link>
+      </View>
+
+      <Link href="/" style={{marginTop:10}}>
             <Text>Return to login</Text>
       </Link>
     </View>
@@ -81,15 +82,12 @@ export default function TabOneScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: 'rgba(200, 200, 200, 0.1)',
   },
 
   tracker_group: {
     flexDirection: 'row',
     margin: 5,
-    
   },
 
   tracker_container: {
@@ -98,9 +96,9 @@ const styles = StyleSheet.create({
     margin: 5,
     borderRadius: 10,
     borderColor: 'white',
-    borderWidth: 2,
-    minWidth: 180,
-    minHeight: 180,
+    borderWidth: 1,
+    minWidth: '46%',
+    minHeight: '23%',
   },
 
   tracker_container_inner: {
@@ -121,11 +119,24 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
 
+  link_other: {
+    backgroundColor: 'rgba(250, 250, 250, 0.2)',
+    padding: 2,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: 'rgba(250, 250, 250, 0.2)',
+    overflow: 'hidden',
+    maxWidth: '25%',
+    margin: '2%',
+    textAlign: 'center'
+  },
+
   notif_container: {
     margin: 7,
     borderRadius: 10,
     borderColor: 'white',
-    borderWidth: 2,
+    borderWidth: 1,
     padding: 5,
+    backgroundColor: 'rgba(0, 55, 255, 0.2)',
   },
 });
