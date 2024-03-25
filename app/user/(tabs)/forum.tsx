@@ -1,45 +1,39 @@
-import { StyleSheet,Button,TextInput} from "react-native";
+import { StyleSheet, Button, TextInput } from "react-native";
 import { Formik, Field, Form } from "formik";
 
-
-
 import { Text, View } from "@/components/Themed";
+import { Link } from "expo-router";
 
 export default function TabThreeScreen() {
   return (
     <View style={styles.container}>
-      <Formik 
-      initialValues={{title: '', body: ''}}
-      onSubmit={(values) => {
-        console.log(values);
-
-      }}>
-        
+      <Formik
+        initialValues={{ title: "", body: "" }}
+        onSubmit={(values) => {
+          console.log(values);
+        }}
+      >
         {(props) => (
-
           <View>
-
-
             <TextInput
-            placeholder="Title"
-            onChangeText={props.handleChange('title')}
-            value = {props.values.title}
-            style={styles.titleInput}
+              placeholder="Title"
+              onChangeText={props.handleChange("title")}
+              value={props.values.title}
+              style={styles.titleInput}
             />
 
             <TextInput
-            multiline
-            placeholder="Body"
-            onChangeText={props.handleChange('body')}
-            value = {props.values.body}
-            style={styles.bodyInput}
+              multiline
+              placeholder="Body"
+              onChangeText={props.handleChange("body")}
+              value={props.values.body}
+              style={styles.bodyInput}
             />
-            
-            <Button title = 'submit' onPress={props.handleSubmit}/>
 
+            <Button title="submit" onPress={props.handleSubmit} />
           </View>
         )}
-      </Formik> 
+      </Formik>
     </View>
   );
 }
@@ -51,9 +45,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 
-  label: {
-
-  },
+  label: {},
 
   titleInput: {
     color: "white",
@@ -77,10 +69,8 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     fontSize: 18,
     width: 150,
-    height: 250
+    height: 250,
   },
-
-
 
   title: {
     fontSize: 20,
