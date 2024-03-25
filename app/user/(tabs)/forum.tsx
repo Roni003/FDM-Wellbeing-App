@@ -1,4 +1,4 @@
-import { StyleSheet, Button, TextInput } from "react-native";
+import { StyleSheet, Button, TextInput, Alert } from "react-native";
 import { Formik, Field, Form } from "formik";
 import { supabase } from "@/lib/Supabase";
 
@@ -12,7 +12,14 @@ export default function TabThreeScreen() {
         initialValues={{ title: "", body: "" }}
         onSubmit={async (values) => {
           supabase.auth.getSession().then(async ({ data: { session } }) => {
-            const { data, error } = await supabase
+
+            if (!values.title || !values.body){
+                Alert.alert('Fill in all Fields')
+            }
+
+            else{
+
+              const { data, error } = await supabase
               .from("forum_posts")
               .insert([
                 {
@@ -30,6 +37,10 @@ export default function TabThreeScreen() {
             if (data) {
               console.log(data);
             }
+
+            }
+
+            
           });
         }}
       >
