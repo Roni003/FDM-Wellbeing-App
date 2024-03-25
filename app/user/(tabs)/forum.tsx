@@ -6,31 +6,32 @@ import { Text, View } from "@/components/Themed";
 import { Link } from "expo-router";
 
 export default function TabThreeScreen() {
-  
-
   return (
     <View style={styles.container}>
       <Formik
         initialValues={{ title: "", body: "" }}
-
         onSubmit={async (values) => {
+          supabase.auth.getSession().then(async ({ data: { session } }) => {
+            const { data, error } = await supabase
+              .from("forum_posts")
+              .insert([
+                {
+                  title: values.title,
+                  content: values.body,
+                  user_id: session?.user.id,
+                },
+              ])
+              .select();
 
-        
-          const { data, error } = await supabase
-          .from('forum_posts')
-          .insert([{title: values.title, content: values.body},])
-          .select() 
-          
-          if (error){
-            console.log(error)
-          }
+            if (error) {
+              console.log(error);
+            }
 
-          if (data){
-            console.log(data)
-          }
-          
+            if (data) {
+              console.log(data);
+            }
+          });
         }}
-
       >
         {(props) => (
           <View>
