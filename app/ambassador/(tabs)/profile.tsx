@@ -1,12 +1,15 @@
-import { StyleSheet, Image } from "react-native";
+import { StyleSheet, Image, Button } from "react-native";
 
 import { Text, View } from "@/components/Themed";
 import { Stack } from "expo-router";
+import { signOut } from "@/lib/auth";
 
 export default function TabTwoScreen() {
   return (
     <View style={styles.container}>
       <Text>Ambassador Second page</Text>
+      <Button title="sign out (for testing)" onPress={signOut} />
+
       {/* <Stack.Screen
         options={{
           // https://reactnavigation.org/docs/headers#setting-the-header-title

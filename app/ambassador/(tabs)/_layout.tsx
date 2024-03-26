@@ -18,12 +18,12 @@ export default function TabLayout() {
   const colorScheme = useColorScheme();
 
   return (
-    <Tabs>
+    <Tabs screenOptions={{ headerShown: false }}>
       <Tabs.Screen
         name="index"
         options={{
-          title: "Home",
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: "Forum",
+          tabBarIcon: ({ color }) => <TabBarIcon name="ticket" color={color} />,
           // Generates a clickable icon on the top right of the page
           /* headerRight: () => (
             <Link href="/abc" asChild>
@@ -45,7 +45,7 @@ export default function TabLayout() {
         name="profile"
         options={{
           title: "Profile",
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
         }}
       />
     </Tabs>
