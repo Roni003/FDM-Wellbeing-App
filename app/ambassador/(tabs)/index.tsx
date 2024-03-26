@@ -41,7 +41,12 @@ export default function TabOneScreen() {
     <Text >Ambassador home page (Forum)</Text>
     <View >
       {forum && forum.map(forum => (
-        <Text style = {styles.forumPost}>{forum.title}, {forum.content}</Text>
+        
+        <Text style={styles.forumPost}>
+          <Text style={styles.title}>{forum.title}</Text>
+          <Text style={styles.content}>{"\n"}{forum.content} </Text>
+        </Text>
+        
       ))}
     </View>
     <Link href="/">
@@ -53,11 +58,24 @@ export default function TabOneScreen() {
 
 const styles = StyleSheet.create({
 
+  title:{
+    fontSize: 25,
+    textAlign:"center",
+  },
+
+  content:{
+    fontSize:12,
+
+
+  },
+
   forumPost: {
+    minWidth:350,
     padding: 10,
     margin:10,
     borderColor: 'red',
-    borderWidth: 1, 
+    borderWidth: 2,
+    borderRadius:20, 
   },
 
   container: {
