@@ -8,7 +8,7 @@ export default function TabOneScreen() {
   return (
     <View style ={{flex:1}}>
 
-      <View style ={{marginTop:10, flex:1}}>
+      <View style ={{marginTop:'15%', flex:1}}>
 
         <Text style={{fontSize:25, marginLeft:'1%'}}>Trackers</Text>
 
@@ -53,7 +53,7 @@ export default function TabOneScreen() {
       </View>
 
       
-      <View>
+      <View style={styles.forum}>
         <Text style={{fontSize:25, marginLeft:'1%'}}>Recent Forum Posts</Text>
         <ScrollView style={{maxHeight:140, borderRadius: 10, borderWidth: 0, borderColor: 'white'}}>
         <View style={styles.notif_container}>
@@ -90,6 +90,11 @@ const screenHeight = Dimensions.get('window').height;
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'rgba(200, 200, 200, 0.1)',
+  },
+
+  forum : {
+    flex: 1,
+    maxHeight: screenHeight * 0.3,
   },
 
   tracker_collective: {
