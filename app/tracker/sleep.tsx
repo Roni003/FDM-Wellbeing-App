@@ -25,29 +25,29 @@ export default function SleepScreen() {
 
   return (
     <View style={styles.container}>
-      <BackButton destination="/user/(tabs)/" />
-      <Text style={styles.title}>Sleep Tracker</Text>
-      <View style={styles.inputContainer}>
-        <TextInput
-          placeholder="Enter sleep duration"
-          style={styles.input}
-          onChangeText={handleSleepDurationChange}
-          value={sleepDuration}
-          keyboardType="numeric"
-        />
+      <View style={styles.content}>
+        <Text style={styles.title}>Sleep Tracker</Text>
+        <View style={styles.inputContainer}>
+          <TextInput
+            placeholder="Enter sleep duration (hours)"
+            style={styles.input}
+            onChangeText={handleSleepDurationChange}
+            value={sleepDuration}
+            keyboardType="numeric"
+          />
+        </View>
+        <TouchableHighlight style={styles.button} onPress={handleTrackSleep}>
+          <Text style={styles.buttonText}>Track Sleep</Text>
+        </TouchableHighlight>
+        {trackedSleep !== null && (
+          <Text style={styles.trackedSleep}>
+            Tracked Sleep Duration: {trackedSleep} hours
+          </Text>
+        )}
       </View>
-      <TouchableHighlight style={styles.button} onPress={handleTrackSleep}>
-        <Text style={styles.buttonText}>Track Sleep</Text>
-      </TouchableHighlight>
-      {trackedSleep !== null && (
-        <Text style={styles.trackedSleep}>
-          Tracked Sleep Duration: {trackedSleep} hours
-        </Text>
-      )}
     </View>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {
@@ -55,9 +55,19 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  content: {
+    width: "80%",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#303030",
+    borderRadius: 10,
+    padding: 20,
+    marginTop: 20,
+  },
   title: {
     fontSize: 20,
     fontWeight: "bold",
+    marginBottom: 20,
   },
   inputContainer: {
     backgroundColor: "white",
@@ -75,8 +85,8 @@ const styles = StyleSheet.create({
     width: "50%",
     borderColor: "grey",
     borderWidth: 1,
-    borderRadius: 5,
-    padding: 13,
+    borderRadius: 20,
+    padding: 10,
     marginVertical: 5,
     alignItems: "center",
   },
@@ -87,3 +97,4 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
 });
+
