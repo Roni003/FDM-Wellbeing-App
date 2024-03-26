@@ -1,30 +1,42 @@
 import { Button, StyleSheet, Pressable, Keyboard } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Text, View } from "@/components/Themed";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import Auth from "@/components/Auth";
 import { supabase } from "@/lib/Supabase";
 import { Session } from "@supabase/supabase-js";
+import { signOut } from "@/lib/auth";
 export default function Entry() {
-  // When user loads in, if authentiacted, get role from db
-
-  // If role == fdm
-  // router.replace(/user/(tabs))
-
-  // If role == ambassador
-  // router.replace(/ambassador/(tabs))
-
-  // this will be login page, user stays here if theyre not authed,
-  // then gets redirected to home page after login
-
-  // use height to set a logo (if need be)
-  //const { height } = useWindowDimensions();
   const [session, setSession] = useState<Session | null>(null);
+
+  async function redirectUser(uid: string) {
+    console.log("uid:", uid);
+    if (uid == null) {
+      console.log("No uid, redirecting to login page");
+      router.navigate("/");
+      return;
+    }
+
+    const { data: user_roles } = await supabase
+      .from("user_roles")
+      .select("*")
+      .eq("user_id", uid);
+
+    if (!user_roles || user_roles.length == 0 || user_roles[0].role_id == 0) {
+      console.log("User is a consultant");
+      router.navigate("/user/(tabs)/");
+      return;
+    }
+
+    console.log("User is an ambassador");
+    router.navigate("/ambassador/(tabs)/");
+  }
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      console.log("Supabase session user:", session?.user.email);
-      setSession(session);
+      //console.log("Supabase session user:", session?.user.email);
+      //setSession(session);
+      redirectUser(session?.user.id);
     });
 
     supabase.auth.onAuthStateChange((_event, session) => {
@@ -32,13 +44,10 @@ export default function Entry() {
         "Auth state changed, session user set to:",
         session?.user.email
       );
-      setSession(session);
+      //setSession(session);
+      redirectUser(session?.user.id);
     });
   }, []);
-
-  async function signOut() {
-    await supabase.auth.signOut();
-  }
 
   return (
     <View style={styles.container}>

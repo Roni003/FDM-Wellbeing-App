@@ -8,7 +8,7 @@ import BackButton from "@/components/BackButton";
 export default function SleepScreen() {
   return (
     <View style={styles.container}>
-      <BackButton destination="/user/(tabs)/" />
+      <BackButton destination="/user/(tabs)/" name="Dashboard" />
       <Text>sleep tracker screen</Text>
       <Link href="/user/(tabs)">
         <Text>Link back to user tabs -for convenience in development</Text>
