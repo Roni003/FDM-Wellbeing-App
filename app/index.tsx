@@ -4,11 +4,8 @@ import { Text, View } from "@/components/Themed";
 import { Link, router } from "expo-router";
 import Auth from "@/components/Auth";
 import { supabase } from "@/lib/Supabase";
-import { Session } from "@supabase/supabase-js";
 import { signOut } from "@/lib/auth";
 export default function Entry() {
-  const [session, setSession] = useState<Session | null>(null);
-
   async function redirectUser(uid: string) {
     console.log("uid:", uid);
     if (uid == null) {

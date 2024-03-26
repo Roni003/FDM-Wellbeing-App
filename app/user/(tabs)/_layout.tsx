@@ -1,62 +1,72 @@
 import React from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { FontAwesome5 } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
-
+import { MaterialIcons } from "@expo/vector-icons";
+import { StyleSheet } from "react-native";
 import { useColorScheme } from "@/components/useColorScheme";
-import EvilIcons from "@expo/vector-icons/EvilIcons";
-
-// You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>["name"];
-  color: string;
-}) {
-  return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
-}
+import Colors from "@/lib/Colors";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const tabStyle = colorScheme === "light" ? styles.lightTab : styles.darkTab;
 
   return (
-    <Tabs screenOptions={{ headerShown: false }}>
+    <Tabs
+      screenOptions={{
+        headerShown: false,
+        tabBarStyle: tabStyle,
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
           title: "Dashboard",
           tabBarIcon: ({ color }) => (
-            <TabBarIcon name="pie-chart" color={color} />
+            <MaterialIcons
+              name="space-dashboard"
+              style={{ marginBottom: -3 }}
+              size={28}
+              color={color}
+            />
           ),
-          // Generates a clickable icon on the top right of the page
-          /* headerRight: () => (
-            <Link href="/abc" asChild>
-              <Pressable>
-                {({ pressed }) => (
-                  <FontAwesome
-                    name="info-circle"
-                    size={25}
-                    color={Colors[colorScheme ?? "light"].text}
-                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                  />
-                )}
-              </Pressable>
-            </Link>
-          ), */
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
           title: "Profile",
-          tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
+          tabBarIcon: ({ color }) => (
+            <FontAwesome5
+              name="user-circle"
+              style={{ marginBottom: -3 }}
+              size={28}
+              color={color}
+            />
+          ),
         }}
       />
       <Tabs.Screen
         name="forum" // Name of the file that exports the screen
         options={{
           title: "Forum", // The name of the buton in the navbar
-          //headerShown: false, // If you dont want to show the title on top of the screen
-          tabBarIcon: ({ color }) => <TabBarIcon name="ticket" color={color} />,
+          tabBarIcon: ({ color }) => (
+            <MaterialIcons
+              name="forum"
+              style={{ marginBottom: -3 }}
+              size={28}
+              color={color}
+            />
+          ),
         }}
       />
     </Tabs>
   );
 }
+
+const styles = StyleSheet.create({
+  lightTab: {},
+  darkTab: {
+    backgroundColor: Colors.tabColors.dark,
+  },
+});
