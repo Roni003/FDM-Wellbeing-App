@@ -1,11 +1,17 @@
 import { StyleSheet, Button, TextInput, Alert } from "react-native";
 import { Formik, Field, Form } from "formik";
 import { supabase } from "@/lib/Supabase";
+import React, { useState } from 'react';
+
 
 import { Text, View } from "@/components/Themed";
 import { Link } from "expo-router";
 
 export default function TabThreeScreen() {
+
+  const [titleError, setTitleError] = useState(false);
+  const [bodyError, setBodyError] = useState(false);
+
   return (
     <View style={styles.container}>
       <Formik
@@ -14,10 +20,32 @@ export default function TabThreeScreen() {
           supabase.auth.getSession().then(async ({ data: { session } }) => {
 
             if (!values.title || !values.body){
+
                 Alert.alert('Fill in all Fields')
+
+            }
+
+            if (!values.title && !values.body) {
+              setTitleError(true);
+              setBodyError(true);
+            }
+
+            else if (!values.title ){
+              setTitleError(true);
+              setBodyError(false);
+
+            }
+
+            else if (!values.body ){
+              setTitleError(false);
+              setBodyError(true);
             }
 
             else{
+
+              setTitleError(false);
+              setBodyError(false);
+
 
               const { data, error } = await supabase
               .from("forum_posts")
@@ -37,6 +65,7 @@ export default function TabThreeScreen() {
             if (data) {
               console.log(data);
             }
+            
 
             }
 
@@ -50,7 +79,7 @@ export default function TabThreeScreen() {
               placeholder="Title"
               onChangeText={props.handleChange("title")}
               value={props.values.title}
-              style={styles.titleInput}
+              style={[styles.titleInput, styles.inputReset, titleError && styles.inputError]}
             />
 
             <TextInput
@@ -58,7 +87,7 @@ export default function TabThreeScreen() {
               placeholder="Body"
               onChangeText={props.handleChange("body")}
               value={props.values.body}
-              style={styles.bodyInput}
+              style={[styles.bodyInput, styles.inputReset, bodyError && styles.inputError]}
             />
 
             <Button title="submit" onPress={props.handleSubmit} />
@@ -70,6 +99,15 @@ export default function TabThreeScreen() {
 }
 
 const styles = StyleSheet.create({
+
+  inputReset: {
+    borderColor: 'white',
+  },
+
+  inputError: {
+    borderColor: 'red', 
+  },
+
   container: {
     flex: 1,
     alignItems: "center",
