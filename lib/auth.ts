@@ -1,4 +1,5 @@
 import { Alert } from "react-native";
+import { supabase } from "./Supabase";
 
 export function validatePassword(val: string): boolean {
   if (val == null || val.length < 5) return false;
@@ -30,4 +31,8 @@ export function validateInputs(email: string, password: string): boolean {
   }
 
   return true;
+}
+
+export async function signOut() {
+  await supabase.auth.signOut();
 }
