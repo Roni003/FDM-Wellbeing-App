@@ -1,13 +1,18 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Button, TouchableOpacity} from "react-native";
 
 import { Text, View } from "@/components/Themed";
 import { Link } from "expo-router";
 import { supabase } from "@/lib/Supabase";
 import { useEffect,useState } from "react";
+import { useNavigation } from '@react-navigation/native';
+
 
 
 
 export default function TabOneScreen() {
+
+  const navigation = useNavigation();
+
 
   const[fetchError, setFetchError] = useState(null)
   const[forum, setForum] = useState<any[] | null>(null);
@@ -39,13 +44,22 @@ export default function TabOneScreen() {
   return (
     <View style={styles.container}>
     <Text >Ambassador home page (Forum)</Text>
+
+    
     <View >
       {forum && forum.map(forum => (
+
+        <TouchableOpacity onPress={() => {
+          // navigate to fullscreen page
+        }}>
         
-        <Text style={styles.forumPost}>
-          <Text style={styles.title}>{forum.title}</Text>
-          <Text style={styles.content}>{"\n"}{forum.content} </Text>
-        </Text>
+          <Text style={styles.forumPost}>
+            <Text style={styles.title}>{forum.title}</Text>
+            <Text style={styles.content}>{"\n"}{forum.content} </Text>
+            
+          </Text>
+
+        </TouchableOpacity>
         
       ))}
     </View>
