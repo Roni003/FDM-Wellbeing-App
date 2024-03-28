@@ -1,14 +1,12 @@
 import { StyleSheet, Button, TextInput, Alert } from "react-native";
 import { Formik, Field, Form } from "formik";
 import { supabase } from "@/lib/Supabase";
-import React, { useState } from 'react';
-
+import React, { useState } from "react";
 
 import { Text, View } from "@/components/Themed";
 import { Link } from "expo-router";
 
-export default function TabThreeScreen() {
-
+export default function CreatePostForm() {
   const [titleError, setTitleError] = useState(false);
   const [bodyError, setBodyError] = useState(false);
 
@@ -18,58 +16,42 @@ export default function TabThreeScreen() {
         initialValues={{ title: "", body: "" }}
         onSubmit={async (values) => {
           supabase.auth.getSession().then(async ({ data: { session } }) => {
-
-            if (!values.title || !values.body){
-
-                Alert.alert('Fill in all Fields')
-
+            if (!values.title || !values.body) {
+              Alert.alert("Fill in all Fields");
             }
 
             if (!values.title && !values.body) {
               setTitleError(true);
               setBodyError(true);
-            }
-
-            else if (!values.title ){
+            } else if (!values.title) {
               setTitleError(true);
               setBodyError(false);
-
-            }
-
-            else if (!values.body ){
+            } else if (!values.body) {
               setTitleError(false);
               setBodyError(true);
-            }
-
-            else{
-
+            } else {
               setTitleError(false);
               setBodyError(false);
 
-
               const { data, error } = await supabase
-              .from("forum_posts")
-              .insert([
-                {
-                  title: values.title,
-                  content: values.body,
-                  user_id: session?.user.id,
-                },
-              ])
-              .select();
+                .from("forum_posts")
+                .insert([
+                  {
+                    title: values.title,
+                    content: values.body,
+                    user_id: session?.user.id,
+                  },
+                ])
+                .select();
 
-            if (error) {
-              console.log(error);
+              if (error) {
+                console.log(error);
+              }
+
+              if (data) {
+                console.log(data);
+              }
             }
-
-            if (data) {
-              console.log(data);
-            }
-            
-
-            }
-
-            
           });
         }}
       >
@@ -79,7 +61,11 @@ export default function TabThreeScreen() {
               placeholder="Title"
               onChangeText={props.handleChange("title")}
               value={props.values.title}
-              style={[styles.titleInput, styles.inputReset, titleError && styles.inputError]}
+              style={[
+                styles.titleInput,
+                styles.inputReset,
+                titleError && styles.inputError,
+              ]}
             />
 
             <TextInput
@@ -87,7 +73,11 @@ export default function TabThreeScreen() {
               placeholder="Body"
               onChangeText={props.handleChange("body")}
               value={props.values.body}
-              style={[styles.bodyInput, styles.inputReset, bodyError && styles.inputError]}
+              style={[
+                styles.bodyInput,
+                styles.inputReset,
+                bodyError && styles.inputError,
+              ]}
             />
 
             <Button title="submit" onPress={props.handleSubmit} />
@@ -99,13 +89,12 @@ export default function TabThreeScreen() {
 }
 
 const styles = StyleSheet.create({
-
   inputReset: {
-    borderColor: 'white',
+    borderColor: "white",
   },
 
   inputError: {
-    borderColor: 'red', 
+    borderColor: "red",
   },
 
   container: {

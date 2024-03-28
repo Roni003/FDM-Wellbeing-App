@@ -23,7 +23,6 @@ export default function TabOneScreen() {
             .select("*")
             .order("created_at", { ascending: false })
             .limit(5);
-          console.log(data);
           if (isActive) {
             setPosts(data || []);
           }
@@ -41,8 +40,8 @@ export default function TabOneScreen() {
   );
 
   return (
-    <View style={{ flex: 1, padding: 10 }}>
-      <View style={{ marginTop: "10%", flex: 1 }}>
+    <View style={globalStyles.container}>
+      <View style={{ flex: 1 }}>
         <Text style={styles.header}>Trackers</Text>
 
         <View style={styles.tracker_grid}>
