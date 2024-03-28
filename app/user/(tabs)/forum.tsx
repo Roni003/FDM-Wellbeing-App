@@ -41,13 +41,13 @@ export default function TabThreeScreen() {
   return (
     <View style={globalStyles.container}>
       <Text style={styles.header}>Forum Posts</Text>
+      <ForumPostList posts={posts} />
       <Pressable style={({ pressed }) => [
                     { backgroundColor: pressed ? 'rgba(100, 160, 255, 0.5)' : 'rgba(100, 160, 255, 0.1)'},
                     styles.pressable
                 ]} onPress={() => router.navigate('/forumpost/createPost')}>
-        <Text style={styles.buttonText}>Create Post</Text>
+        <Text style={styles.buttonText}>Add new Post</Text>
       </Pressable>
-      <ForumPostList posts={posts} />
     </View>
   );
 }
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
   pressable: {
     padding: 10,
     borderRadius: 10,
-    marginBottom: 10,
+    marginTop: 10,
     overflow: 'hidden',
     alignItems: 'center',
   },
