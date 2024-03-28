@@ -1,20 +1,14 @@
 import { StyleSheet, Button, TouchableOpacity } from "react-native";
 
 import { Text, View } from "@/components/Themed";
-import { Link, useFocusEffect } from "expo-router";
+import { useFocusEffect } from "expo-router";
 import { supabase } from "@/lib/Supabase";
-import { useCallback, useEffect, useState } from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useCallback, useState } from "react";
 import { globalStyles } from "@/lib/Styles";
 import ForumPostList from "@/components/ForumPostList";
 
 export default function TabOneScreen() {
   const [posts, setPosts] = useState<Array<Post>>([]);
-
-  const navigation = useNavigation();
-
-  const [fetchError, setFetchError] = useState(null);
-  const [forum, setForum] = useState<any[] | null>(null);
 
   useFocusEffect(
     useCallback(() => {
