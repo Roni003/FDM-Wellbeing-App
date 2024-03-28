@@ -11,7 +11,7 @@ const BackButton = ({ destination, name }: BackButtonProps) => {
   return (
     <View style={styles.container}>
       <Pressable
-        onPress={() => router.navigate(destination)}
+        onPress={() => router.push(destination)}
         style={styles.pressable}
       >
         <Ionicons name="chevron-back" size={22} color="rgb(10,132,255)" />
