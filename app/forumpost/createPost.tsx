@@ -5,6 +5,7 @@ import React, { useState } from "react";
 
 import { Text, View } from "@/components/Themed";
 import { Link } from "expo-router";
+import BackButton from "@/components/BackButton";
 
 export default function CreatePostForm() {
   const [titleError, setTitleError] = useState(false);
@@ -12,6 +13,7 @@ export default function CreatePostForm() {
 
   return (
     <View style={styles.container}>
+      <BackButton destination={"/"} name={"home page"} />
       <Formik
         initialValues={{ title: "", body: "" }}
         onSubmit={async (values) => {

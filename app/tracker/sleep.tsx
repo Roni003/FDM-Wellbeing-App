@@ -25,6 +25,7 @@ export default function SleepScreen() {
 
   return (
     <View style={styles.container}>
+      <BackButton destination={"/user/(tabs)/"} name={"Dashboard"} />
       <View style={styles.content}>
         <Text style={styles.title}>Sleep Tracker</Text>
         <View style={styles.inputContainer}>
