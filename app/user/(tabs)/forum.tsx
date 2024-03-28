@@ -1,5 +1,4 @@
-import { StyleSheet, Button, TextInput, Alert, ScrollView } from "react-native";
-import { Formik, Field, Form } from "formik";
+import { StyleSheet } from "react-native";
 import { supabase } from "@/lib/Supabase";
 import React, { useCallback, useState } from "react";
 
@@ -7,7 +6,7 @@ import { Post } from "@/lib/Post";
 import { Text, View } from "@/components/Themed";
 import { Link, useFocusEffect } from "expo-router";
 import { globalStyles } from "@/lib/Styles";
-import ForumPost from "@/components/ForumPost";
+import ForumPostList from "@/components/ForumPostList";
 
 export default function TabThreeScreen() {
   const [posts, setPosts] = useState<Array<Post>>([]);
@@ -42,15 +41,7 @@ export default function TabThreeScreen() {
   return (
     <View style={globalStyles.container}>
       <Text style={styles.header}>Forum Posts</Text>
-      <ScrollView style={styles.scrollView}>
-        {!posts || posts.length == 0 ? (
-          <Text style={styles.noPostsText}>No forum posts</Text>
-        ) : (
-          posts.map((post, index) => {
-            return <ForumPost key={post.post_id} post={post}></ForumPost>;
-          })
-        )}
-      </ScrollView>
+      <ForumPostList posts={posts} />
     </View>
   );
 }
