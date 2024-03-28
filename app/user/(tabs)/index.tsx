@@ -1,14 +1,50 @@
-import { Dimensions, ScrollView, StyleSheet } from "react-native";
+import { Dimensions, ScrollView, StyleSheet, Pressable } from "react-native";
 
 import { Text, View } from "@/components/Themed";
-import { Link } from "expo-router";
+import { supabase } from "@/lib/Supabase";
 import Tracker from "@/components/Tracker";
+import { useFocusEffect } from "expo-router";
+import { useCallback, useState } from "react";
+import { Post } from "@/lib/Post";
+import MiniForumPost from "@/components/MiniForumPost";
 
 export default function TabOneScreen() {
+  const [posts, setPosts] = useState<Array<Post>>([]);
+
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+
+      const fetchPosts = async () => {
+        try {
+          const { data } = await supabase.from("forum_posts").select("*");
+          if (isActive) {
+            setPosts(data || []);
+          }
+        } catch (err) {
+          console.log(err);
+        }
+      };
+
+      fetchPosts();
+
+      return () => {
+        isActive = false;
+      };
+    }, [])
+  );
+
   return (
     <View style={{ flex: 1, padding: 10 }}>
       <View style={{ marginTop: "10%", flex: 1 }}>
-        <Text style={{ fontSize: 25, marginLeft: "1%", paddingBottom: 5 }}>
+        <Text
+          style={{
+            fontSize: 25,
+            marginLeft: "1%",
+            paddingBottom: 5,
+            fontWeight: "600",
+          }}
+        >
           Trackers
         </Text>
 
@@ -42,7 +78,7 @@ export default function TabOneScreen() {
       </View>
 
       <View style={styles.forum}>
-        <Text style={{ fontSize: 25, marginLeft: "1%" }}>
+        <Text style={{ fontSize: 25, marginLeft: "1%", fontWeight: "600" }}>
           Recent Forum Posts
         </Text>
         <ScrollView
@@ -53,26 +89,16 @@ export default function TabOneScreen() {
             borderColor: "white",
           }}
         >
-          <View style={styles.notif_container}>
-            <Text>Forum Post Title </Text>
-            <Text>By: user1 @ 00:00</Text>
-          </View>
-          <View style={styles.notif_container}>
-            <Text>Forum Post Title </Text>
-            <Text>By: user1 @ 00:00</Text>
-          </View>
-          <View style={styles.notif_container}>
-            <Text>Forum Post Title </Text>
-            <Text>By: user1 @ 00:00</Text>
-          </View>
-          <View style={styles.notif_container}>
-            <Text>Forum Post Title </Text>
-            <Text>By: user1 @ 00:00</Text>
-          </View>
+          {!posts || posts.length == 0 ? (
+            <Text style={styles.noPostsText}>No recent posts</Text>
+          ) : (
+            posts.map((post, index) => {
+              return (
+                <MiniForumPost key={post.post_id} post={post}></MiniForumPost>
+              );
+            })
+          )}
         </ScrollView>
-        {/* <Link href="/user/(tabs)/forum" style={styles.link}>
-          <Text>Go to forum</Text> 
-        </Link> */}
       </View>
     </View>
   );
@@ -84,7 +110,6 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "rgba(200, 200, 200, 0.1)",
   },
-
   forum: {
     flex: 1,
     maxHeight: screenHeight * 0.3,
@@ -113,12 +138,9 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 
-  notif_container: {
-    margin: 7,
-    borderRadius: 10,
-    borderColor: "rgba(250, 250, 250, 0.2)",
-    borderWidth: 0.5,
-    padding: 7,
-    backgroundColor: "rgba(100, 160, 255, 0.5)",
+  noPostsText: {
+    alignSelf: "center",
+    marginTop: 12,
+    fontSize: 24,
   },
 });
