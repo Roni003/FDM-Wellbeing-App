@@ -17,7 +17,12 @@ export default function TabOneScreen() {
 
       const fetchPosts = async () => {
         try {
-          const { data } = await supabase.from("forum_posts").select("*");
+          const { data } = await supabase
+            .from("forum_posts")
+            .select("*")
+            .order("created_at", { ascending: false })
+            .limit(5);
+          console.log(data);
           if (isActive) {
             setPosts(data || []);
           }
