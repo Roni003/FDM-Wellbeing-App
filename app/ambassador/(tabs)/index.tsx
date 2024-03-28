@@ -9,6 +9,7 @@ import { useNavigation } from '@react-navigation/native';
 
 
 
+
 export default function TabOneScreen() {
 
   const navigation = useNavigation();
@@ -41,6 +42,8 @@ export default function TabOneScreen() {
 
   }, [])
 
+
+
   return (
     <View style={styles.container}>
     <Text >Ambassador home page (Forum)</Text>
@@ -49,8 +52,18 @@ export default function TabOneScreen() {
     <View >
       {forum && forum.map(forum => (
 
-        <TouchableOpacity onPress={() => {
-          // navigate to fullscreen page
+        <TouchableOpacity
+        
+        onPress={() => {
+
+          <Link href={{
+            pathname: "/forumpost/[postid]",
+            params: { postid: "48" },
+            }}>
+
+          </Link>
+
+          
         }}>
         
           <Text style={styles.forumPost}>
