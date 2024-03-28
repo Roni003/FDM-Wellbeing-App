@@ -7,6 +7,7 @@ import { useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 import { Post } from "@/lib/Post";
 import MiniForumPost from "@/components/MiniForumPost";
+import { globalStyles } from "@/lib/Styles";
 
 export default function TabOneScreen() {
   const [posts, setPosts] = useState<Array<Post>>([]);
@@ -42,16 +43,7 @@ export default function TabOneScreen() {
   return (
     <View style={{ flex: 1, padding: 10 }}>
       <View style={{ marginTop: "10%", flex: 1 }}>
-        <Text
-          style={{
-            fontSize: 25,
-            marginLeft: "1%",
-            paddingBottom: 5,
-            fontWeight: "600",
-          }}
-        >
-          Trackers
-        </Text>
+        <Text style={styles.header}>Trackers</Text>
 
         <View style={styles.tracker_grid}>
           <View style={styles.tracker_row}>
@@ -61,8 +53,8 @@ export default function TabOneScreen() {
               link="/tracker/step"
             />
             <Tracker
-              head="Calories today"
-              counter="0 kcal"
+              head="Exercise today"
+              counter="0 minutes"
               link="/tracker/fitness"
             />
           </View>
@@ -83,9 +75,7 @@ export default function TabOneScreen() {
       </View>
 
       <View style={styles.forum}>
-        <Text style={{ fontSize: 25, marginLeft: "1%", fontWeight: "600" }}>
-          Recent Forum Posts
-        </Text>
+        <Text style={styles.header}>Recent Forum Posts</Text>
         <ScrollView
           style={{
             maxHeight: 140,
@@ -115,6 +105,11 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "rgba(200, 200, 200, 0.1)",
   },
+  header: {
+    ...globalStyles.header2,
+    marginLeft: "1.5%",
+    marginBottom: 4,
+  },
   forum: {
     flex: 1,
     maxHeight: screenHeight * 0.3,
@@ -129,18 +124,6 @@ const styles = StyleSheet.create({
   tracker_row: {
     flex: 1,
     flexDirection: "row",
-  },
-
-  link: {
-    backgroundColor: "rgba(100, 160, 255, 0.5)",
-    padding: 5,
-    borderRadius: 10,
-    borderWidth: 0.5,
-    borderColor: "rgba(250, 250, 250, 0.2)",
-    overflow: "hidden",
-    maxWidth: "30%",
-    margin: "2%",
-    textAlign: "center",
   },
 
   noPostsText: {
