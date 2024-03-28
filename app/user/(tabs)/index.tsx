@@ -70,14 +70,10 @@ export default function TabOneScreen() {
             <Text>By: user1 @ 00:00</Text>
           </View>
         </ScrollView>
-        <Link href="/user/(tabs)/forum" style={styles.link}>
-          <Text>Go to forum</Text>
-        </Link>
+        {/* <Link href="/user/(tabs)/forum" style={styles.link}>
+          <Text>Go to forum</Text> 
+        </Link> */}
       </View>
-
-      <Link href="/" style={{ marginTop: 10 }}>
-        <Text>Return to login</Text>
-      </Link>
     </View>
   );
 }
