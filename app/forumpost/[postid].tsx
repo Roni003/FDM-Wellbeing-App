@@ -79,15 +79,23 @@ export default function SinglePost() {
         onSubmit={async (values) => {
           supabase.auth.getSession().then(async ({ data: { session } }) => {
 
-            const { data, error } = await supabase
-            .from("post_replies")
-                .insert([
-                  {
-                    user_id: session?.user.id,
-                    post_id:postid,
-                    content: values.replyMessage,
-                  },
-                ])
+            if (!values.replyMessage) {
+              Alert.alert("Fill in all Fields");
+            }
+
+            else{
+
+              const { data, error } = await supabase
+              .from("post_replies")
+                  .insert([
+                    {
+                      user_id: session?.user.id,
+                      post_id:postid,
+                      content: values.replyMessage,
+                    },
+                  ])
+
+            }
             
             }
           );
@@ -160,6 +168,7 @@ const styles = StyleSheet.create({
 
   repliesContainer: {
     flex: 1,
+
   },
 
   replyFormontainer: {
