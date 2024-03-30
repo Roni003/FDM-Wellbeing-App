@@ -60,6 +60,20 @@ export default function TabLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="health" // Name of the file that exports the screen
+        options={{
+          title: "Health", // The name of the buton in the navbar
+          tabBarIcon: ({ color }) => (
+            <MaterialIcons
+              name="favorite"
+              style={{ marginBottom: -3 }}
+              size={28}
+              color={color}
+            />
+          ),
+        }}
+      />
     </Tabs>
   );
 }
