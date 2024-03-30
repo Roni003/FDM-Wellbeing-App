@@ -16,6 +16,10 @@ export default function SinglePost() {
   const [post, setPost] = useState<Post>();
   const [date, setDate] = useState<string>();
 
+  const[reply, setReply] = useState('');
+
+
+
   useFocusEffect(
     useCallback(() => {
       let isActive = true;
@@ -71,23 +75,42 @@ export default function SinglePost() {
             
               {/*Reply container, make a form here to post a reply to the form above*/}
               <Formik
-              initialValues={{ replyMessage: ""}}
-              onSubmit={async (values) =>{
-                
-              }}
-              >
+        initialValues={{ replyMessage: ''}}
+        onSubmit={async (values) => {
+          supabase.auth.getSession().then(async ({ data: { session } }) => {
+
+            const { data, error } = await supabase
+            .from("post_replies")
+                .insert([
+                  {
+                    user_id: session?.user.id,
+                    post_id:postid,
+                    content: values.replyMessage,
+                  },
+                ])
+            
+            }
+          );
+        }}
+      >
 
             {(props) => (
               
-                <TextInput
-                  placeholder="Reply to Post"
-                  onChangeText={props.handleChange("Reply to post")}
-                  value={props.values.replyMessage}
-                  style = {styles.replyMessage}
-                />
+              <>
+              <TextInput
+                placeholder="Reply to Post"
+                onChangeText={props.handleChange("replyMessage")}
+                value={props.values.replyMessage}
+                style={styles.replyMessage}
+              />
+              <Button title="Submit" onPress={props.handleSubmit} />
+            </>
+
 
 
             )}
+
+            
 
               </Formik>
           </KeyboardAvoidingView>
