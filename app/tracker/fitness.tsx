@@ -36,7 +36,7 @@ export default function FitnessPage() {
       <BackButton destination={"/user/(tabs)/"} name={"Dashboard"} />
       <View style={styles.goal}>
         <Text style={styles.goalHeader}>Daily Goal</Text>
-        <Goal radius={60} goalComplete={totalFitnessHours} goal={0} />
+        <Goal radius={60} progress={totalFitnessHours} goal={10} />
       </View>
       <View style={styles.container}>
         <View style={styles.row}>
