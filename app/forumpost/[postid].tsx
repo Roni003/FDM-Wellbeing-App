@@ -1,4 +1,4 @@
-import { StyleSheet, Button, TextInput, Alert, KeyboardAvoidingView } from "react-native";
+import { StyleSheet, Button, TextInput, Alert, KeyboardAvoidingView, ScrollView } from "react-native";
 import { Formik, Field, Form } from "formik";
 
 
@@ -7,8 +7,9 @@ import { Text, View } from "@/components/Themed";
 import { Link, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { globalStyles } from "@/lib/Styles";
 import { supabase } from "@/lib/Supabase";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Post } from "@/lib/Post";
+import { Reply } from "@/lib/Reply";
 import BackButton from "@/components/BackButton";
 
 export default function SinglePost() {
@@ -17,6 +18,36 @@ export default function SinglePost() {
   const [date, setDate] = useState<string>();
 
   const[reply, setReply] = useState('');
+  const[replies, setReplies] = useState<Reply>();
+
+    
+
+  useFocusEffect(
+    useCallback(() => {
+      const postReplies = async () => {
+        try {
+          const { data, error } = await supabase
+            .from('post_replies')
+            .select("*")
+            .eq("post_id", postid);
+  
+          if (error) {
+            console.log(error);
+            return;
+          }
+  
+          if (data) {
+            setReplies(data);
+          }
+        } catch (err) {
+          console.error("Error fetching replies:", err);
+        }
+      };
+  
+      postReplies();
+    }, [postid])
+  );
+  
 
 
 
@@ -65,13 +96,29 @@ export default function SinglePost() {
           ) : (
             <Text>Fetching</Text>
           )}
-          <View style={styles.repliesContainer}>
-            <Text>List of existing replies here</Text>
-            {/* Make a component that takes in the post id as a prop, returns a scrollView 
+          <ScrollView style={styles.repliesContainer}>
+             {/* Make a component that takes in the post id as a prop, returns a scrollView 
               which contains a list of replies for the current post
             */}
-          </View>
-          <KeyboardAvoidingView style={styles.replyFormontainer} behavior="padding">
+            
+
+            {replies && Array.isArray(replies) && replies.length > 0 ? (
+              replies.map((reply, index) => (
+                <View style = { styles.replyMessage}>
+                  <Text key={index}>{reply.content}</Text>
+                </View>
+                
+                
+              ))
+            ) : (
+              <Text>No replies available.</Text>
+            )}
+          </ScrollView>
+         
+
+
+
+          <KeyboardAvoidingView style={styles.replyFormcontainer} behavior="padding">
             
               {/*Reply container, make a form here to post a reply to the form above*/}
               <Formik
@@ -109,7 +156,7 @@ export default function SinglePost() {
                 placeholder="Reply to Post"
                 onChangeText={props.handleChange("replyMessage")}
                 value={props.values.replyMessage}
-                style={styles.replyMessage}
+                style={styles.replyInputField}
               />
               <Button title="Submit" onPress={props.handleSubmit} />
             </>
@@ -129,7 +176,7 @@ export default function SinglePost() {
 
 const styles = StyleSheet.create({
 
-  replyMessage: {
+  replyInputField: {
     backgroundColor: "rgba(100, 160, 255, 0.3)",
     color: "white",
     borderWidth: 1,
@@ -141,6 +188,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+
+  replyMessage: {
+    backgroundColor : 'red',
+    margin:10,
+    padding:15,
+  },
+
 
   postContainer: {
     flex: 1,
@@ -171,7 +225,7 @@ const styles = StyleSheet.create({
 
   },
 
-  replyFormontainer: {
+  replyFormcontainer: {
     flex: 1,
   },
 });
