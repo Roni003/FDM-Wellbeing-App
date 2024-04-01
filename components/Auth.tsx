@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Alert, StyleSheet, View } from "react-native";
+import { Alert, StyleSheet, View, useColorScheme } from "react-native";
 import { supabase } from "@/lib/Supabase";
 import { Button, Input } from "react-native-elements";
 import { validateInputs } from "@/lib/auth";
@@ -8,6 +8,9 @@ export default function Auth() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const colorScheme = useColorScheme();
+  const textColor = colorScheme === "light" ? "black" : "white";
 
   async function signInWithEmail() {
     if (!validateInputs(email, password)) return;
@@ -50,6 +53,7 @@ export default function Auth() {
           value={email}
           placeholder="email@address.com"
           autoCapitalize={"none"}
+          style={{ color: textColor }}
         />
       </View>
       <View style={styles.verticallySpaced}>
@@ -61,6 +65,7 @@ export default function Auth() {
           secureTextEntry={true}
           placeholder="Password"
           autoCapitalize={"none"}
+          style={{ color: textColor }}
         />
       </View>
       <View style={[styles.verticallySpaced, styles.mt20]}>
