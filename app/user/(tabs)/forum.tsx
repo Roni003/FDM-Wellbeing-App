@@ -38,47 +38,47 @@ export default function TabThreeScreen() {
     }, [])
   );
 
+  const styles = StyleSheet.create({
+    header: {
+      ...globalStyles.header2,
+      marginLeft: "1.5%",
+      marginBottom: 4,
+    },
+    noPostsText: {
+      alignSelf: "center",
+      marginTop: 12,
+      fontSize: 24,
+    },
+    pressable: {
+      padding: 10,
+      borderRadius: 10,
+      marginTop: 10,
+      overflow: "hidden",
+      alignItems: "center",
+    },
+    buttonText: {
+      fontSize: 18,
+      fontWeight: "600",
+    },
+  });
+
   return (
     <View style={globalStyles.container}>
       <Text style={styles.header}>Forum Posts</Text>
       <ForumPostList posts={posts} />
-      <Pressable style={({ pressed }) => [
-                    { backgroundColor: pressed ? 'rgba(100, 160, 255, 0.5)' : 'rgba(100, 160, 255, 0.1)'},
-                    styles.pressable
-                ]} onPress={() => router.navigate('/forumpost/createPost')}>
+      <Pressable
+        style={({ pressed }) => [
+          {
+            backgroundColor: pressed
+              ? "rgba(100, 160, 255, 0.5)"
+              : "rgba(100, 160, 255, 0.1)",
+          },
+          styles.pressable,
+        ]}
+        onPress={() => router.navigate("/forumpost/createPost")}
+      >
         <Text style={styles.buttonText}>Add new Post</Text>
       </Pressable>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  header: {
-    ...globalStyles.header2,
-    marginLeft: "1.5%",
-    marginBottom: 4,
-  },
-  scrollView: {
-    flex: 1,
-    borderRadius: 10,
-    borderWidth: 0,
-    borderColor: "white",
-    padding: 5,
-    backgroundColor: "rgba(100, 120, 220, 0.1)",
-  },
-  noPostsText: {
-    alignSelf: "center",
-    marginTop: 12,
-    fontSize: 24,
-  },
-  pressable: {
-    padding: 10,
-    borderRadius: 10,
-    marginTop: 10,
-    overflow: 'hidden',
-    alignItems: 'center',
-  },
-  buttonText: {
-    fontSize: 18,
-  },
-});
