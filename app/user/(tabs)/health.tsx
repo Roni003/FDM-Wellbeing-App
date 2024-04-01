@@ -1,7 +1,76 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native'
+import { StyleSheet, TextInput, TouchableOpacity, Alert, useColorScheme } from 'react-native'
+import { View, Text } from "@/components/Themed";
 import React, { useState } from 'react'
 import { globalStyles } from '@/lib/Styles'
-const health = () => {
+import Colors from '@/lib/Colors'
+import { Input } from 'react-native-elements';
+
+export default function health() {
+  const colorScheme = useColorScheme();
+  const textColor =
+    colorScheme === "light" ? Colors.light.text : Colors.dark.text;
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      padding: 10,
+      paddingTop: "12%",
+    },
+    inputs: {
+        paddingTop: 8,
+        paddingBottom: 8,
+        paddingHorizontal: 8,
+        alignSelf: "stretch",
+        borderRadius: 5,
+        color: textColor,
+    },
+    button: {
+        height: 50,
+        maxWidth: '50%',
+        margin: 20,
+        borderRadius: 5,
+        backgroundColor: colorScheme === "light"
+        ? Colors.light.cardBackground
+        : Colors.dark.cardBackground,
+        padding: 15,
+        alignItems: 'center',
+        alignSelf: 'center',
+    },
+    buttonText: {
+        fontSize: 16
+    },
+    resultView: {
+        margin: 20,
+    },
+    result: {
+        fontSize: 20
+    },
+    buttonSelector: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+    },
+    buttonOption: {
+        flex: 1,
+        maxWidth: 120,
+        padding: 10,
+        marginTop: 20,
+        backgroundColor:
+        colorScheme === "light"
+          ? Colors.light.cardBackground
+          : Colors.dark.cardBackground,
+        borderRadius: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    buttonOptionText: {
+        fontSize: 14,
+    },
+    selectedOption: {
+        backgroundColor: 'rgba(100, 160, 255, 0.4)'
+    }
+})
+
+  
     const [weight, setWeight] = useState('');
     const [height, setHeight] = useState('');
     const [sex, setSex] = useState('');
@@ -69,7 +138,7 @@ const health = () => {
     }
 
   return (
-    <View style={globalStyles.container}>
+    <View style={styles.container}>
       <Text style={globalStyles.header2}>Health Data</Text>
       <View style={styles.buttonSelector}>
         <TouchableOpacity
@@ -108,22 +177,23 @@ const health = () => {
           <Text style={styles.buttonOptionText}>Gain Weight</Text>
         </TouchableOpacity>
       </View>
-      <TextInput 
-      style={styles.input}
+      <View style={{ height: 20 }} />
+      <Input 
+      style={styles.inputs}
       value={weight}
       onChangeText={(text) => {setWeight(text); enableButton()}}
       placeholder='Enter: Weight in kg'
       keyboardType='numeric'
        />
-      <TextInput 
-      style={styles.input}
+      <Input 
+      style={styles.inputs}
       value={height}
       onChangeText={(text) => {setHeight(text); enableButton()}}
       placeholder='Enter: Height in cm'
       keyboardType='numeric'
        />
-      <TextInput 
-      style={styles.input}
+      <Input 
+      style={styles.inputs}
       value={age}
       onChangeText={(number) => {setAge(number); enableButton()}}
       placeholder='Enter: Age'
@@ -139,60 +209,3 @@ const health = () => {
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-    input: {
-        paddingTop: 8,
-        paddingBottom: 8,
-        paddingHorizontal: 8,
-        alignSelf: "stretch",
-        marginTop: 20,
-        backgroundColor: 'rgba(100, 160, 255, 0.2)',
-        borderRadius: 5,
-    },
-    button: {
-        height: 50,
-        maxWidth: '30%',
-        margin: 20,
-        borderRadius: 5,
-        backgroundColor: 'rgba(100, 160, 255, 0.5)',
-        padding: 15,
-        alignItems: 'center',
-        alignSelf: 'center',
-    },
-    buttonText: {
-        fontSize: 16
-    },
-    resultView: {
-        margin: 20,
-    },
-    result: {
-        fontSize: 24
-    },
-    buttonSelector: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-    },
-    buttonOption: {
-        flex: 1,
-        maxWidth: 120,
-        padding: 10,
-        marginTop: 20,
-        backgroundColor: 'rgba(100, 160, 255, 0.2)',
-        borderRadius: 5,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    buttonOptionText: {
-        fontSize: 14,
-    },
-    selectedOption: {
-        backgroundColor: 'rgba(100, 160, 255, 0.4)'
-    },
-    weightSelector: {
-
-    },
-})
-
-
-export default health
