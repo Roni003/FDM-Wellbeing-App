@@ -3,6 +3,7 @@ import { Alert, StyleSheet, View, useColorScheme } from "react-native";
 import { supabase } from "@/lib/Supabase";
 import { Button, Input } from "react-native-elements";
 import { validateInputs } from "@/lib/auth";
+import Colors from "@/lib/Colors";
 
 export default function Auth() {
   const [email, setEmail] = useState("");
@@ -10,7 +11,8 @@ export default function Auth() {
   const [loading, setLoading] = useState(false);
 
   const colorScheme = useColorScheme();
-  const textColor = colorScheme === "light" ? "black" : "white";
+  const textColor =
+    colorScheme === "light" ? Colors.light.text : Colors.dark.text;
 
   async function signInWithEmail() {
     if (!validateInputs(email, password)) return;
