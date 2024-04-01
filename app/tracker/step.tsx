@@ -1,15 +1,13 @@
 import { StyleSheet } from "react-native";
 
 import { Text, View } from "@/components/Themed";
-import { Link } from "expo-router";
+import BackButton from "@/components/BackButton";
 
 export default function StepScreen() {
   return (
     <View style={styles.container}>
+      <BackButton name="Dashboard" destination="/user/(tabs)/"></BackButton>
       <Text>Step tracker screen</Text>
-      <Link href="/user/(tabs)">
-        <Text>Link back to user tabs -for convenience in development</Text>
-      </Link>
     </View>
   );
 }

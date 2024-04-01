@@ -9,13 +9,17 @@ import { FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-  const tabStyle = colorScheme === "light" ? styles.lightTab : styles.darkTab;
 
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarStyle: tabStyle,
+        tabBarStyle: {
+          backgroundColor:
+            colorScheme === "light"
+              ? Colors.light.tabBarBackground
+              : Colors.dark.tabBarBackground,
+        },
       }}
     >
       <Tabs.Screen
@@ -64,10 +68,3 @@ export default function TabLayout() {
     </Tabs>
   );
 }
-
-const styles = StyleSheet.create({
-  lightTab: {},
-  darkTab: {
-    backgroundColor: Colors.tabColors.dark,
-  },
-});

@@ -1,4 +1,12 @@
-import { StyleSheet } from "react-native";
+import {
+  StyleSheet,
+  Button,
+  TextInput,
+  Alert,
+  KeyboardAvoidingView,
+  useColorScheme,
+} from "react-native";
+import { Formik, Field, Form } from "formik";
 
 import { Text, View } from "@/components/Themed";
 import { Link, useFocusEffect, useLocalSearchParams } from "expo-router";
@@ -7,11 +15,15 @@ import { supabase } from "@/lib/Supabase";
 import { useCallback, useState } from "react";
 import { Post } from "@/lib/Post";
 import BackButton from "@/components/BackButton";
+import Colors from "@/lib/Colors";
 
 export default function SinglePost() {
   const { postid } = useLocalSearchParams();
   const [post, setPost] = useState<Post>();
   const [date, setDate] = useState<string>();
+  const [reply, setReply] = useState("");
+
+  const colorScheme = useColorScheme();
 
   useFocusEffect(
     useCallback(() => {
@@ -41,6 +53,61 @@ export default function SinglePost() {
     }, [])
   );
 
+  const styles = StyleSheet.create({
+    replyMessage: {
+      backgroundColor:
+        colorScheme === "light"
+          ? Colors.light.cardBackground
+          : Colors.dark.cardBackground,
+      color: "white",
+      borderWidth: 1,
+      borderColor: "rgba(250, 250, 250, 0.2)",
+      padding: 12,
+      borderRadius: 6,
+      fontSize: 18,
+      width: "100%",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+
+    postContainer: {
+      flex: 1,
+      margin: 7,
+      borderRadius: 10,
+      borderColor: "rgba(250, 250, 250, 0.2)",
+      borderWidth: 0.5,
+      padding: 10,
+      backgroundColor:
+        colorScheme === "light"
+          ? Colors.light.cardBackground
+          : Colors.dark.cardBackground,
+    },
+    title: {
+      fontSize: 20,
+      fontWeight: "600",
+      marginBottom: 8,
+    },
+    content: {
+      fontSize: 14,
+      marginBottom: 10,
+    },
+    date: {
+      fontSize: 12,
+      alignSelf: "flex-end",
+      marginTop: "auto",
+      color:
+        colorScheme === "light"
+          ? Colors.light.textSecondary
+          : Colors.dark.textSecondary,
+    },
+
+    repliesContainer: {
+      flex: 1,
+    },
+
+    replyFormontainer: {},
+  });
+
   return (
     <View style={globalStyles.container}>
       {/* need to make the button redirect to the right page, check if user or ambassador etc */}
@@ -57,48 +124,44 @@ export default function SinglePost() {
       <View style={styles.repliesContainer}>
         <Text>List of existing replies here</Text>
         {/* Make a component that takes in the post id as a prop, returns a scrollView 
-          which contains a list of replies for the current post
-        */}
+              which contains a list of replies for the current post
+            */}
       </View>
-      <View style={styles.replyFormontainer}>
-        <Text>
-          Reply container, make a form here to post a reply to the form above
-        </Text>
-      </View>
+      <KeyboardAvoidingView style={styles.replyFormontainer} behavior="padding">
+        {/*Reply container, make a form here to post a reply to the form above*/}
+        <Formik
+          initialValues={{ replyMessage: "" }}
+          onSubmit={async (values) => {
+            supabase.auth.getSession().then(async ({ data: { session } }) => {
+              if (!values.replyMessage) {
+                Alert.alert("Fill in all Fields");
+              } else {
+                const { data, error } = await supabase
+                  .from("post_replies")
+                  .insert([
+                    {
+                      user_id: session?.user.id,
+                      post_id: postid,
+                      content: values.replyMessage,
+                    },
+                  ]);
+              }
+            });
+          }}
+        >
+          {(props) => (
+            <>
+              <TextInput
+                placeholder="Reply to Post"
+                onChangeText={props.handleChange("replyMessage")}
+                value={props.values.replyMessage}
+                style={styles.replyMessage}
+              />
+              <Button title="Submit" onPress={props.handleSubmit} />
+            </>
+          )}
+        </Formik>
+      </KeyboardAvoidingView>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  postContainer: {
-    flex: 1,
-    margin: 7,
-    borderRadius: 10,
-    borderColor: "rgba(250, 250, 250, 0.2)",
-    borderWidth: 0.5,
-    padding: 10,
-    backgroundColor: "rgba(100, 160, 255, 0.5)",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "600",
-    marginBottom: 8,
-  },
-  content: {
-    fontSize: 14,
-    marginBottom: 10,
-  },
-  date: {
-    fontSize: 12,
-    alignSelf: "flex-end",
-    marginTop: "auto",
-  },
-
-  repliesContainer: {
-    flex: 1,
-  },
-
-  replyFormontainer: {
-    flex: 1,
-  },
-});

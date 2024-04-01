@@ -1,13 +1,25 @@
 import React, { useState } from "react";
-import { Alert, StyleSheet, View } from "react-native";
+import {
+  Alert,
+  StyleSheet,
+  View,
+  useColorScheme,
+  TouchableHighlight,
+} from "react-native";
 import { supabase } from "@/lib/Supabase";
-import { Button, Input } from "react-native-elements";
+import { Button, Input, colors } from "react-native-elements";
 import { validateInputs } from "@/lib/auth";
+import Colors from "@/lib/Colors";
+import { Text } from "./Themed";
 
 export default function Auth() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const colorScheme = useColorScheme();
+  const textColor =
+    colorScheme === "light" ? Colors.light.text : Colors.dark.text;
 
   async function signInWithEmail() {
     if (!validateInputs(email, password)) return;
@@ -40,9 +52,41 @@ export default function Auth() {
     setLoading(false);
   }
 
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      marginTop: 40,
+      padding: 12,
+    },
+    verticallySpaced: {
+      paddingTop: 4,
+      paddingBottom: 4,
+      alignSelf: "stretch",
+    },
+    mt15: {
+      marginTop: 15,
+    },
+    buttons: {
+      paddingTop: 4,
+      paddingBottom: 4,
+      alignSelf: "stretch",
+      backgroundColor:
+        colorScheme === "light"
+          ? Colors.light.cardBackground
+          : Colors.dark.cardBackground,
+      borderRadius: 5,
+      alignItems: "center",
+      marginBottom: 8,
+    },
+    buttonText: {
+      fontSize: 18,
+      padding: 5,
+    },
+  });
+
   return (
     <View style={styles.container}>
-      <View style={[styles.verticallySpaced, styles.mt20]}>
+      <View style={[styles.verticallySpaced, styles.mt15]}>
         <Input
           label="Email"
           leftIcon={{ type: "font-awesome", name: "envelope" }}
@@ -50,6 +94,7 @@ export default function Auth() {
           value={email}
           placeholder="email@address.com"
           autoCapitalize={"none"}
+          style={{ color: textColor }}
         />
       </View>
       <View style={styles.verticallySpaced}>
@@ -61,38 +106,25 @@ export default function Auth() {
           secureTextEntry={true}
           placeholder="Password"
           autoCapitalize={"none"}
+          style={{ color: textColor }}
         />
       </View>
-      <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Button
-          title="Sign in"
-          disabled={loading}
-          onPress={() => signInWithEmail()}
-        />
-      </View>
-      <View style={styles.verticallySpaced}>
-        <Button
-          title="Sign up"
-          disabled={loading}
-          onPress={() => signUpWithEmail()}
-        />
-      </View>
+
+      <TouchableHighlight
+        style={[styles.buttons, styles.mt15]}
+        disabled={loading}
+        onPress={() => signInWithEmail()}
+      >
+        <Text style={styles.buttonText}>Sign in</Text>
+      </TouchableHighlight>
+
+      <TouchableHighlight
+        style={styles.buttons}
+        disabled={loading}
+        onPress={() => signUpWithEmail()}
+      >
+        <Text style={styles.buttonText}>Sign up</Text>
+      </TouchableHighlight>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginTop: 40,
-    padding: 12,
-  },
-  verticallySpaced: {
-    paddingTop: 4,
-    paddingBottom: 4,
-    alignSelf: "stretch",
-  },
-  mt20: {
-    marginTop: 20,
-  },
-});
