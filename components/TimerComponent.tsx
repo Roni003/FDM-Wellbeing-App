@@ -1,9 +1,13 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet, useColorScheme } from 'react-native'
 import React, { useState, useRef } from 'react'
 import { StatusBar } from 'expo-status-bar'
+import Colors from "@/lib/Colors";
 
 
 const TimerComponent = () => {
+  const colorScheme = useColorScheme();
+  const themeColors = colorScheme === "light" ? Colors.light : Colors.dark;
+
   const [timer, setTimer] = useState(0)
   const [isActive, setIsActive] = useState(false)
   const [isPaused, setPaused] = useState(false)
@@ -50,26 +54,26 @@ const TimerComponent = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.timerContainer}>
-        <Text style={styles.timer}>{formatTime(timer)}</Text>
+      <View style={[styles.timerContainer, { borderColor: themeColors.tabIconDefault}]}>
+        <Text style={[styles.timer, { color: themeColors.textSecondary}]}>{formatTime(timer)}</Text>
       </View>
       <View style={styles.buttonContainer}>
         {!isActive && !isPaused ? (
-          <TouchableOpacity style={styles.button} onPress={startHandler}>
-            <Text style={styles.buttonText}>Start</Text>
+          <TouchableOpacity style={[styles.button, { backgroundColor: themeColors.tint }]} onPress={startHandler}>
+            <Text style={[styles.buttonText, { color: themeColors.text }]}>Start</Text>
           </TouchableOpacity>
         ) : (
           <>
-            <TouchableOpacity style={styles.button} onPress={resetHandler}>
-              <Text style={styles.buttonText}>Reset</Text>
+            <TouchableOpacity style={[styles.button, { backgroundColor: themeColors.tint }]} onPress={resetHandler}>
+              <Text style={[styles.buttonText, { color: themeColors.text }]}>Reset</Text>
             </TouchableOpacity>
             {!isPaused ? (
-              <TouchableOpacity style={styles.button} onPress={pauseHandler}>
-                <Text style={styles.buttonText}>Pause</Text>
+              <TouchableOpacity style={[styles.button, { backgroundColor: themeColors.tint }]} onPress={pauseHandler}>
+                <Text style={[styles.buttonText, { color: themeColors.text }]}>Pause</Text>
               </TouchableOpacity>
             ) : (
-              <TouchableOpacity style={styles.button} onPress={continueHandler}>
-                <Text style={styles.buttonText}>Continue</Text>
+              <TouchableOpacity style={[styles.button, { backgroundColor: themeColors.tint }]} onPress={continueHandler}>
+                <Text style={[styles.buttonText, { color: themeColors.text }]}>Continue</Text>
               </TouchableOpacity>
             )}
           </>
@@ -88,10 +92,9 @@ const styles = StyleSheet.create({
   timerContainer: {
     borderWidth: 4,
     borderColor: 'white',
-    width: 100,
-    height: 100,
-    marginTop: '10%',
-    borderRadius: 200 / 2,
+    width: 90,
+    height: 90,
+    borderRadius: 45,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -101,13 +104,12 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: 'row',
-    marginTop: 30,
+    marginTop: 10,
   },
   button: {
     width: 50,
     height: 50,
     borderRadius: 70 / 2,
-    backgroundColor: '#00BBFF',
     alignItems: 'center',
     justifyContent: 'center',
     marginHorizontal: 15,
