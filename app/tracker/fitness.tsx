@@ -54,7 +54,7 @@ export default function FitnessPage() {
         <View style={styles.fitnessPage}>
           <BackButton destination={"/user/(tabs)/"} name={"Dashboard"} />
           <Text style={styles.pastHeader}>Past progress</Text>
-          <View style={styles.past}>
+          <View style={styles.pastGoals}>
             <PastGoals data={data} goal={goal} />
           </View>
           <View style={styles.goal}>
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
   scrollViewContent: {
     flexGrow: 1,
   },
-  past: {
+  pastGoals: {
     height: 100,
   },
   pastHeader: {
@@ -129,12 +129,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'center',
-  },
-  slide: {
-    flex: 1,
-    width: 70,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   container: {
     flex: 1,
