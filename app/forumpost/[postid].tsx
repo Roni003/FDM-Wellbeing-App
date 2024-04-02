@@ -31,17 +31,15 @@ export default function SinglePost() {
   const [post, setPost] = useState<Post>();
   const [date, setDate] = useState<string>();
 
-  const colorScheme = useColorScheme();  
   const[replies, setReplies] = useState<Reply>();
 
   
 
   const formatDate = (timestamp: string | number | Date) => {
     const date = new Date(timestamp);
-    return date.toDateString(); // or any other date formatting method you prefer
+    return date.toDateString(); 
   };
 
-// Inside your component or function where you need to access the userID
 
 
   
@@ -141,61 +139,6 @@ const handleDeletePost = () => {
       };
     }, [])
   );
-
-  const styles = StyleSheet.create({
-    replyMessage: {
-      backgroundColor:
-        colorScheme === "light"
-          ? Colors.light.cardBackground
-          : Colors.dark.cardBackground,
-      color: "white",
-      borderWidth: 1,
-      borderColor: "rgba(250, 250, 250, 0.2)",
-      padding: 12,
-      borderRadius: 6,
-      fontSize: 18,
-      width: "100%",
-      alignItems: "center",
-      justifyContent: "center",
-    },
-
-    postContainer: {
-      flex: 1,
-      margin: 7,
-      borderRadius: 10,
-      borderColor: "rgba(250, 250, 250, 0.2)",
-      borderWidth: 0.5,
-      padding: 10,
-      backgroundColor:
-        colorScheme === "light"
-          ? Colors.light.cardBackground
-          : Colors.dark.cardBackground,
-    },
-    title: {
-      fontSize: 20,
-      fontWeight: "600",
-      marginBottom: 8,
-    },
-    content: {
-      fontSize: 14,
-      marginBottom: 10,
-    },
-    date: {
-      fontSize: 12,
-      alignSelf: "flex-end",
-      marginTop: "auto",
-      color:
-        colorScheme === "light"
-          ? Colors.light.textSecondary
-          : Colors.dark.textSecondary,
-    },
-
-    repliesContainer: {
-      flex: 1,
-    },
-
-    replyFormontainer: {},
-  });
 
   return (
 
@@ -302,7 +245,6 @@ const handleDeletePost = () => {
 
 const styles = StyleSheet.create({
   lightTab:{
-    backgroundColor:Colors.tabColors.light,
     
   },
   darkTab:{
