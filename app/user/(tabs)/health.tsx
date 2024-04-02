@@ -21,14 +21,14 @@ export default function health() {
         paddingBottom: 8,
         paddingHorizontal: 8,
         alignSelf: "stretch",
-        borderRadius: 5,
+        borderRadius: 8,
         color: textColor,
     },
     button: {
         height: 50,
-        maxWidth: '50%',
-        margin: 20,
-        borderRadius: 5,
+        width: '70%',
+        marginVertical: 10,
+        borderRadius: 8,
         backgroundColor: colorScheme === "light"
         ? Colors.light.cardBackground
         : Colors.dark.cardBackground,
@@ -37,33 +37,38 @@ export default function health() {
         alignSelf: 'center',
     },
     buttonText: {
-        fontSize: 16
+        fontSize: 16,
+        color: textColor,
     },
     resultView: {
         margin: 20,
+        alignItems: 'center',
     },
     result: {
-        fontSize: 20
+        fontSize: 20,
+        color: textColor,
+        marginBottom: 8,
     },
     buttonSelector: {
         flexDirection: 'row',
         justifyContent: 'center',
+        marginBottom: 20,
     },
     buttonOption: {
-        flex: 1,
-        maxWidth: 120,
-        padding: 10,
-        marginTop: 20,
+      flex: 1,
+      maxWidth: 120,
+      paddingVertical: 10,
         backgroundColor:
         colorScheme === "light"
           ? Colors.light.cardBackground
           : Colors.dark.cardBackground,
-        borderRadius: 5,
+        borderRadius: 8,
         alignItems: 'center',
         justifyContent: 'center',
     },
     buttonOptionText: {
         fontSize: 14,
+        color: textColor,
     },
     selectedOption: {
         backgroundColor: 'rgba(100, 160, 255, 0.4)'
@@ -137,9 +142,22 @@ export default function health() {
         }
     }
 
+    const handleReset = () => {
+      setWeight('');
+      setHeight('');
+      setSex('');
+      setAge('');
+      setBmi('');
+      setCalories('');
+      setDescription('');
+      setWeightState('');
+      setButtonDisabled(true);
+    };
+
   return (
     <View style={styles.container}>
       <Text style={globalStyles.header2}>Health Data</Text>
+      <View style={{height: 10}} />
       <View style={styles.buttonSelector}>
         <TouchableOpacity
           style={[styles.buttonOption, sex === 'male' && styles.selectedOption]}
@@ -206,6 +224,9 @@ export default function health() {
           <Text style={styles.result}>{bmi}{description}</Text>
           <Text style={styles.result}>{calories}</Text>
       </View>
+      <TouchableOpacity style={styles.button} onPress={handleReset}>
+        <Text style={styles.buttonText}>Clear</Text>
+      </TouchableOpacity>
     </View>
   )
 }
