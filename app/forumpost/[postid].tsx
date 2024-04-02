@@ -1,8 +1,9 @@
-import { StyleSheet, Button, TextInput, Alert, KeyboardAvoidingView, ScrollView } from "react-native";
+import { StyleSheet, Button, TextInput, Alert, KeyboardAvoidingView, ScrollView, useColorScheme } from "react-native";
 import { Formik, Field, Form } from "formik";
 
 
 
+import Colors from "@/lib/Colors";
 import { Text, View } from "@/components/Themed";
 import { Link, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { globalStyles } from "@/lib/Styles";
@@ -11,16 +12,77 @@ import { useCallback, useEffect, useState } from "react";
 import { Post } from "@/lib/Post";
 import { Reply } from "@/lib/Reply";
 import BackButton from "@/components/BackButton";
+import { color } from "react-native-elements/dist/helpers";
+import { useNavigation } from '@react-navigation/native';
+
+
 
 export default function SinglePost() {
+  const colorScheme = useColorScheme();
+  const tabstyle =  colorScheme === "light" ? styles.lightTab : styles.darkTab;
+
+  
+
   const { postid } = useLocalSearchParams();
   const [post, setPost] = useState<Post>();
   const [date, setDate] = useState<string>();
 
-  const[reply, setReply] = useState('');
+  const[reply, setReply] = useState('');  
   const[replies, setReplies] = useState<Reply>();
 
-    
+  
+
+  const formatDate = (timestamp: string | number | Date) => {
+    const date = new Date(timestamp);
+    return date.toDateString(); // or any other date formatting method you prefer
+  };
+
+// Inside your component or function where you need to access the userID
+
+
+  
+const handleDeletePost = () => {
+  
+
+  Alert.alert(
+    'Delete Post',
+    'Are you sure you want to DELETE this post?',
+    [
+      {
+        text: 'YES', onPress: async () => {
+          console.log("YES")
+          console.log(postid)
+
+          try {
+            // Delete from post_replies table
+            await supabase
+              .from('post_replies')
+              .delete()
+              .eq('post_id', postid); 
+
+            // Delete from forum_post table
+            await supabase
+              .from('forum_posts')
+              .delete()
+              .eq('post_id', postid);
+
+            console.log("Post deleted successfully");
+          } catch (error) {
+            console.error("Error deleting post:", error);
+          }
+  
+        },
+      },
+      {
+        text: 'NO', onPress: () => {
+          console.log("NO")
+        },
+      }
+    ]
+  );
+};
+
+
 
   useFocusEffect(
     useCallback(() => {
@@ -104,8 +166,10 @@ export default function SinglePost() {
 
             {replies && Array.isArray(replies) && replies.length > 0 ? (
               replies.map((reply, index) => (
-                <View style = { styles.replyMessage}>
-                  <Text key={index}>{reply.content}</Text>
+                <View key={index} style={[styles.replyMessage]}>
+
+                  <Text style = {styles.content}>{reply.content}</Text>
+                  <Text style={styles.date}>Posted at: {formatDate(reply.created_at)}</Text>
                 </View>
                 
                 
@@ -158,7 +222,16 @@ export default function SinglePost() {
                 value={props.values.replyMessage}
                 style={styles.replyInputField}
               />
-              <Button title="Submit" onPress={props.handleSubmit} />
+              <View style = {styles.submitButtonContainer}>
+                <Button title="Submit" onPress={props.handleSubmit} />
+              </View>
+              
+
+              <View style={styles.deleteButtonContainer}>
+                <Button title="Delete Post" onPress={handleDeletePost} />
+              </View>
+
+              
             </>
 
 
@@ -169,12 +242,36 @@ export default function SinglePost() {
 
               </Formik>
           </KeyboardAvoidingView>
+
+          
         </View>
 
   );
 }
 
 const styles = StyleSheet.create({
+  lightTab:{
+    backgroundColor:Colors.tabColors.light,
+    
+  },
+  darkTab:{
+
+  },
+
+  submitButtonContainer:{
+    backgroundColor: 'rgba(0, 255, 0, 0.3)', 
+    borderRadius: 20, 
+    padding: 5, 
+    marginBottom: 10,
+    marginTop:10,
+  },
+
+  deleteButtonContainer: {
+    backgroundColor: 'rgba(255, 0, 0, 0.25)', 
+    borderRadius: 20, 
+    padding: 5, 
+    marginBottom: 10, 
+  },
 
   replyInputField: {
     backgroundColor: "rgba(100, 160, 255, 0.3)",
@@ -190,9 +287,15 @@ const styles = StyleSheet.create({
   },
 
   replyMessage: {
-    backgroundColor : 'red',
     margin:10,
     padding:15,
+    borderColor: "rgba(250, 250, 250, 0.2)",
+    borderWidth: 0.5,
+    backgroundColor: "rgba(100, 160, 255, 0.5)",
+  },
+
+  userReplyMessage:{
+    backgroundColor:"red",
   },
 
 
