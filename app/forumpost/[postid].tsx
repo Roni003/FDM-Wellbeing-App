@@ -1,9 +1,16 @@
-import { StyleSheet, Button, TextInput, Alert, KeyboardAvoidingView, ScrollView, useColorScheme } from "react-native";
+import {
+  StyleSheet,
+  Button,
+  TextInput,
+  Alert,
+  KeyboardAvoidingView,
+  useColorScheme,
+  ScrollView,
+} from "react-native";
 import { Formik, Field, Form } from "formik";
 
 
 
-import Colors from "@/lib/Colors";
 import { Text, View } from "@/components/Themed";
 import { Link, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { globalStyles } from "@/lib/Styles";
@@ -12,10 +19,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Post } from "@/lib/Post";
 import { Reply } from "@/lib/Reply";
 import BackButton from "@/components/BackButton";
-import { color } from "react-native-elements/dist/helpers";
-import { useNavigation } from '@react-navigation/native';
-
-
+import Colors from "@/lib/Colors";
 
 export default function SinglePost() {
   const colorScheme = useColorScheme();
@@ -27,7 +31,7 @@ export default function SinglePost() {
   const [post, setPost] = useState<Post>();
   const [date, setDate] = useState<string>();
 
-  const[reply, setReply] = useState('');  
+  const colorScheme = useColorScheme();  
   const[replies, setReplies] = useState<Reply>();
 
   
@@ -110,9 +114,6 @@ const handleDeletePost = () => {
     }, [postid])
   );
   
-
-
-
   useFocusEffect(
     useCallback(() => {
       let isActive = true;
@@ -140,6 +141,61 @@ const handleDeletePost = () => {
       };
     }, [])
   );
+
+  const styles = StyleSheet.create({
+    replyMessage: {
+      backgroundColor:
+        colorScheme === "light"
+          ? Colors.light.cardBackground
+          : Colors.dark.cardBackground,
+      color: "white",
+      borderWidth: 1,
+      borderColor: "rgba(250, 250, 250, 0.2)",
+      padding: 12,
+      borderRadius: 6,
+      fontSize: 18,
+      width: "100%",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+
+    postContainer: {
+      flex: 1,
+      margin: 7,
+      borderRadius: 10,
+      borderColor: "rgba(250, 250, 250, 0.2)",
+      borderWidth: 0.5,
+      padding: 10,
+      backgroundColor:
+        colorScheme === "light"
+          ? Colors.light.cardBackground
+          : Colors.dark.cardBackground,
+    },
+    title: {
+      fontSize: 20,
+      fontWeight: "600",
+      marginBottom: 8,
+    },
+    content: {
+      fontSize: 14,
+      marginBottom: 10,
+    },
+    date: {
+      fontSize: 12,
+      alignSelf: "flex-end",
+      marginTop: "auto",
+      color:
+        colorScheme === "light"
+          ? Colors.light.textSecondary
+          : Colors.dark.textSecondary,
+    },
+
+    repliesContainer: {
+      flex: 1,
+    },
+
+    replyFormontainer: {},
+  });
 
   return (
 
@@ -201,21 +257,16 @@ const handleDeletePost = () => {
                   .insert([
                     {
                       user_id: session?.user.id,
-                      post_id:postid,
+                      post_id: postid,
                       content: values.replyMessage,
                     },
-                  ])
-
-            }
-            
-            }
-          );
-        }}
-      >
-
-            {(props) => (
-              
-              <>
+                  ]);
+              }
+            });
+          }}
+        >
+          {(props) => (
+            <>
               <TextInput
                 placeholder="Reply to Post"
                 onChangeText={props.handleChange("replyMessage")}
