@@ -60,6 +60,9 @@ const TimerComponent = () => {
           </TouchableOpacity>
         ) : (
           <>
+            <TouchableOpacity style={styles.button} onPress={resetHandler}>
+              <Text style={styles.buttonText}>Reset</Text>
+            </TouchableOpacity>
             {!isPaused ? (
               <TouchableOpacity style={styles.button} onPress={pauseHandler}>
                 <Text style={styles.buttonText}>Pause</Text>
@@ -69,9 +72,6 @@ const TimerComponent = () => {
                 <Text style={styles.buttonText}>Continue</Text>
               </TouchableOpacity>
             )}
-            <TouchableOpacity style={styles.button} onPress={resetHandler}>
-              <Text style={styles.buttonText}>Reset</Text>
-            </TouchableOpacity>
           </>
         )}
       </View>
@@ -84,7 +84,6 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'black',
   },
   timerContainer: {
     borderWidth: 4,
