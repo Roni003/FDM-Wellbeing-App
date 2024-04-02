@@ -15,11 +15,12 @@ import { Text, View } from "@/components/Themed";
 import { Link, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { globalStyles } from "@/lib/Styles";
 import { supabase } from "@/lib/Supabase";
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Post } from "@/lib/Post";
 import { Reply } from "@/lib/Reply";
 import BackButton from "@/components/BackButton";
 import Colors from "@/lib/Colors";
+import { EvilIcons, FontAwesome} from "@expo/vector-icons";
 
 export default function SinglePost() {
   const colorScheme = useColorScheme();
@@ -210,20 +211,19 @@ const handleDeletePost = () => {
         >
           {(props) => (
             <>
-              <TextInput
-                placeholder="Reply to Post"
-                onChangeText={props.handleChange("replyMessage")}
-                value={props.values.replyMessage}
-                style={styles.replyInputField}
-              />
-              <View style = {styles.submitButtonContainer}>
-                <Button title="Submit" onPress={props.handleSubmit} />
+              <View style={styles.inputContainer}>
+                <TextInput
+                  placeholder="Reply to Post"
+                  onChangeText={props.handleChange("replyMessage")}
+                  value={props.values.replyMessage}
+                  style={styles.replyInputField}
+                />
+                <FontAwesome name="paper-plane" size={28} style={styles.submitButton} onPress={props.handleSubmit} />
               </View>
-              
 
-              <View style={styles.deleteButtonContainer}>
-                <Button title="Delete Post" onPress={handleDeletePost} />
-              </View>
+              
+              <FontAwesome name="trash" size={32} style={styles.deleteButton} onPress={handleDeletePost} />
+                 
 
               
             </>
@@ -250,18 +250,21 @@ const styles = StyleSheet.create({
   darkTab:{
 
   },
-
-  submitButtonContainer:{
-    backgroundColor: 'rgba(0, 255, 0, 0.3)', 
-    borderRadius: 20, 
-    padding: 5, 
-    marginBottom: 10,
-    marginTop:10,
+  inputContainer:{
+    flexDirection: 'row', 
+    alignItems: 'center',
   },
 
-  deleteButtonContainer: {
-    backgroundColor: 'rgba(255, 0, 0, 0.25)', 
-    borderRadius: 20, 
+  submitButton:{
+    color: 'rgba(0, 210, 0, 0.9)', 
+    alignSelf: 'center',
+    padding: 5, 
+    marginBottom: 10, 
+  },
+
+  deleteButton: {
+    color:"rgba(255, 0, 0, 0.9)",
+    alignSelf: 'center',
     padding: 5, 
     marginBottom: 10, 
   },
@@ -274,7 +277,7 @@ const styles = StyleSheet.create({
     padding:10,
     borderRadius: 6,
     fontSize: 18,
-    width: "100%",
+    width: "90%",
     alignItems: "center",
     justifyContent: "center",
   },
