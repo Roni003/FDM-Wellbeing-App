@@ -12,6 +12,7 @@ import React, { useState } from "react";
 import { globalStyles } from "@/lib/Styles";
 import Colors from "@/lib/Colors";
 import { Input } from "react-native-elements";
+import { FontAwesome } from "@expo/vector-icons";
 
 export default function health() {
   const colorScheme = useColorScheme();
@@ -19,19 +20,19 @@ export default function health() {
     colorScheme === "light" ? Colors.light.text : Colors.dark.text;
 
   const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      padding: 10,
-      paddingTop: "12%",
-    },
     header: {
+      flexDirection: 'row',
+      justifyContent: "space-between",
+    },
+    headerText: {
       ...globalStyles.header2,
-      padding: 8,
+      padding: 8
     },
     inputs: {
       paddingTop: 8,
       paddingBottom: 8,
       paddingHorizontal: 8,
+      marginBottom: 5,
       alignSelf: "stretch",
       borderRadius: 8,
       color: textColor,
@@ -39,13 +40,13 @@ export default function health() {
     button: {
       height: 50,
       width: "70%",
-      marginVertical: 10,
       borderRadius: 8,
       backgroundColor:
         colorScheme === "light"
           ? Colors.light.cardBackground
           : Colors.dark.cardBackground,
       padding: 15,
+      marginTop: 10,
       alignItems: "center",
       alignSelf: "center",
     },
@@ -85,6 +86,13 @@ export default function health() {
     },
     selectedOption: {
       backgroundColor: "rgba(100, 160, 255, 0.4)",
+    },
+    clearButton: {
+      color: colorScheme === "light" ? Colors.light.text : Colors.dark.text,
+      opacity: 0.7,
+      alignSelf: "center",
+      padding: 5,
+      marginBottom: 10,
     },
   });
 
@@ -176,7 +184,15 @@ export default function health() {
   return (
     <View style={globalStyles.container}>
       <Pressable onPress={() => Keyboard.dismiss()}>
-        <Text style={styles.header}>Health Data</Text>
+        <View style={styles.header}>
+          <Text style={styles.headerText}>Health Data</Text>
+          <FontAwesome
+                  name="eraser"
+                  size={28}
+                  style={[styles.clearButton, { transform: [{ rotate: '180deg' }] }]}
+                  onPress={handleReset}
+                />
+        </View>
         <View style={{ height: 10 }} />
         <View style={styles.buttonSelector}>
           <TouchableOpacity
@@ -290,9 +306,6 @@ export default function health() {
           </Text>
           <Text style={styles.result}>{calories}</Text>
         </View>
-        <TouchableOpacity style={styles.button} onPress={handleReset}>
-          <Text style={styles.buttonText}>Clear</Text>
-        </TouchableOpacity>
       </Pressable>
     </View>
   );
