@@ -10,7 +10,12 @@ import {
 import { Formik, Field, Form } from "formik";
 
 import { Text, View } from "@/components/Themed";
-import { Link, useFocusEffect, useLocalSearchParams } from "expo-router";
+import {
+  Link,
+  router,
+  useFocusEffect,
+  useLocalSearchParams,
+} from "expo-router";
 import { globalStyles } from "@/lib/Styles";
 import { supabase } from "@/lib/Supabase";
 import React, { useCallback, useEffect, useState } from "react";
@@ -54,6 +59,7 @@ export default function SinglePost() {
             console.log(error);
           } else {
             console.log("Post deleted successfully");
+            router.navigate("/user/(tabs)/forum");
           }
         },
       },
@@ -194,7 +200,6 @@ export default function SinglePost() {
         style={styles.replyFormcontainer}
         behavior="padding"
       >
-        {/*Reply container, make a form here to post a reply to the form above*/}
         <Formik
           initialValues={{ replyMessage: "" }}
           onSubmit={async (values) => {
@@ -288,7 +293,7 @@ const styles = StyleSheet.create({
 
   postContainer: {
     flex: 1,
-    margin: 7,
+    margin: 6,
     marginTop: 12,
     borderRadius: 10,
     borderColor: "rgba(250, 250, 250, 0.2)",
@@ -313,9 +318,13 @@ const styles = StyleSheet.create({
 
   repliesContainer: {
     flex: 1,
+    margin: 6,
   },
 
-  replyFormcontainer: {},
+  replyFormcontainer: {
+    padding: 4,
+    paddingBottom: 20,
+  },
 
   postHeader: {
     flexDirection: "row",

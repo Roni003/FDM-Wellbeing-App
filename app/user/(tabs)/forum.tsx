@@ -42,7 +42,7 @@ export default function TabThreeScreen() {
     header: {
       ...globalStyles.header2,
       marginLeft: "1.5%",
-      marginBottom: 4,
+      marginBottom: 6,
     },
     noPostsText: {
       alignSelf: "center",
