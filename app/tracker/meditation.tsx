@@ -18,7 +18,7 @@ const MeditationApp = () => {
   const options = ['Meditate', 'Exercises', 'Statistics'];
 
   const meditationSessions = [
-    { id: 1, level: 'Beginner', name: 'Quick Meditation', duration: 5 * 60, audioPath: require('./../../../assets/audio/5min.mp3'), image: require('./../../../assets/images/calm.jpg') },
+    { id: 1, level: 'Beginner', name: 'Quick Meditation', duration: 5 * 60, audioPath: require('./../../assets/audio/5min.mp3'), image: require('./../../../assets/images/calm.jpg') },
     { id: 2, level: 'Beginner', name: 'Let Go Of Stress', duration: 10 * 60, audioPath: require('./../../../assets/audio/10min.mp3'), image: require('./../../../assets/images/letGo.jpeg') },
     { id: 3, level: 'Intermediate', name: 'Train Your Mind', duration: 20 * 60, audioPath: require('./../../../assets/audio/20min.mp3'), image: require('./../../../assets/images/trainMind.jpg') },
     {id: 14, level: 'Intermidiate', name: 'Daily Calm', duration: 30 * 60, audioPath: require('./../../../assets/audio/30min.mp3'), image: require('./../../../assets/images/nature.jpg') },
