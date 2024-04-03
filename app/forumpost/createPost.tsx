@@ -4,12 +4,14 @@ import { supabase } from "@/lib/Supabase";
 import React, { useState } from "react";
 
 import { Text, View } from "@/components/Themed";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import BackButton from "@/components/BackButton";
+import { err } from "react-native-svg";
 
 export default function CreatePostForm() {
   const [titleError, setTitleError] = useState(false);
   const [bodyError, setBodyError] = useState(false);
+  const [errorText, setErrorText] = useState("");
 
   return (
     <View style={styles.container}>
@@ -17,42 +19,41 @@ export default function CreatePostForm() {
       <Formik
         initialValues={{ title: "", body: "" }}
         onSubmit={async (values) => {
+          if (!values.title) {
+            setTitleError(true);
+            Alert.alert("Fill in the title field");
+            return;
+          }
+          setTitleError(false);
+
+          if (!values.body) {
+            setBodyError(true);
+            Alert.alert("Fill in the body field");
+            return;
+          }
+          setBodyError(false);
+
           supabase.auth.getSession().then(async ({ data: { session } }) => {
-            if (!values.title || !values.body) {
-              Alert.alert("Fill in all Fields");
+            const { data, error } = await supabase
+              .from("forum_posts")
+              .insert([
+                {
+                  title: values.title,
+                  content: values.body,
+                  user_id: session?.user.id,
+                },
+              ])
+              .select();
+
+            if (error) {
+              console.log(error);
+              setErrorText("Failed to submit form");
             }
 
-            if (!values.title && !values.body) {
-              setTitleError(true);
-              setBodyError(true);
-            } else if (!values.title) {
-              setTitleError(true);
-              setBodyError(false);
-            } else if (!values.body) {
-              setTitleError(false);
-              setBodyError(true);
-            } else {
-              setTitleError(false);
-              setBodyError(false);
-
-              const { data, error } = await supabase
-                .from("forum_posts")
-                .insert([
-                  {
-                    title: values.title,
-                    content: values.body,
-                    user_id: session?.user.id,
-                  },
-                ])
-                .select();
-
-              if (error) {
-                console.log(error);
-              }
-
-              if (data) {
-                console.log(data);
-              }
+            if (data) {
+              setErrorText("");
+              console.log("Inserted new post: ", data);
+              router.navigate("/");
             }
           });
         }}
@@ -82,6 +83,7 @@ export default function CreatePostForm() {
               ]}
             />
 
+            <Text style={styles.errorText}>{errorText}</Text>
             <Button title="submit" onPress={props.handleSubmit} />
           </View>
         )}
@@ -106,6 +108,11 @@ const styles = StyleSheet.create({
   },
 
   label: {},
+  errorText: {
+    color: "red",
+    fontWeight: "600",
+    fontSize: 16,
+  },
 
   titleInput: {
     color: "white",
