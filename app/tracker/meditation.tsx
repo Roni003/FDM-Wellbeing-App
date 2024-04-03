@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Image } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Image, Modal, TextInput } from 'react-native';
 import AudioPlayer from '@/components/audioPlayer';
 import VideoPlayer from '@/components/VideoPlayer';
+import DailyGoalModal from '@/components/DailyGoalModal';
+import AddMinutesModal from '@/components/AddMinutesModal';
+import { meditationSessions, intro, exercises, extras } from '@/data/index'
+import Options from '@/components/meditationOptions';
 
 const MeditationApp = () => {
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedOption, setSelectedOption] = useState('Statistics'); // Default is 'Statistics' section
   const [selectedSession, setSelectedSession] = useState(null);
   const [showSessionOptions, setShowSessionOptions] = useState(true);
   const [sessionStarted, setSessionStarted] = useState(false);
@@ -13,46 +17,71 @@ const MeditationApp = () => {
   const [previousSessions, setPreviousSessions] = useState([]);
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [lessonsWatched, setLessonsWatched] = useState(0);
-  const [videoEnded, setVideoEnded] = useState(false);
+  const [userInputGoal, setUserInputGoal] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
+  const [additionalMinutes, setAdditionalMinutes] = useState('');
+  const [addMinutesModalVisible, setAddMinutesModalVisible] = useState(false);
 
-  const options = ['Meditate', 'Exercises', 'Statistics'];
 
-  const meditationSessions = [
-    { id: 1, level: 'Beginner', name: 'Quick Meditation', duration: 5 * 60, audioPath: require('./../../assets/audio/5min.mp3'), image: require('./../../assets/images/calm.jpg') },
-    { id: 2, level: 'Beginner', name: 'Let Go Of Stress', duration: 10 * 60, audioPath: require('./../../assets/audio/10min.mp3'), image: require('./../../assets/images/letGo.jpeg') },
-    { id: 3, level: 'Intermediate', name: 'Train Your Mind', duration: 20 * 60, audioPath: require('./../../assets/audio/20min.mp3'), image: require('./../../assets/images/trainMind.jpg') },
-    {id: 14, level: 'Intermidiate', name: 'Daily Calm', duration: 30 * 60, audioPath: require('./../../assets/audio/30min.mp3'), image: require('./../../assets/images/nature.jpg') },
-    { id: 4, level: 'Advanced', name: 'Deep Meditation', duration: 45 * 60, audioPath: require('./../../assets/audio/45min.mp3'), image: require('./../../assets/images/deep.jpg') },
-  ];
-
-  const intro = [
-    { id: 5, level: 'Beginner', name: 'How-To Meditate', videoSource: require('./../../assets/video/HowTo.mp4'), image: 'https://i.pinimg.com/originals/5c/43/ee/5c43ee2ccc1076dfbad0281c948406be.png' },
-  ];
-
-  const exercises = [
-    { id: 6, level: 'Beginner', name: 'Deep Breathing', videoSource: require('./../../assets/video/deepBreathing.mp4'), image: 'https://post.healthline.com/wp-content/uploads/2022/11/400x400_Breathing_Techniques_For_Stress_Relief_and_More_Deep_Breathing.gif' },
-    { id: 7, level: 'Intermediate', name: 'Square Breathing', videoSource: require('./../../assets/video/boxBreathing.mp4'), image: 'https://post.healthline.com/wp-content/uploads/2022/11/400x400_Breathing_Techniques_For_Stress_Relief_and_More_Equal_Breathing.gif' },
-    { id: 8, level: 'Intermediate', name: 'Lions Breathing', videoSource: require('./../../assets/video/lionsBreathing.mp4'), image: 'https://post.healthline.com/wp-content/uploads/2022/11/400x400_Practicing_Lions_Breath_Lions_Breath.gif' },
-    { id: 9, level: 'Advanced', name: 'Alternate Nostril', videoSource: require('./../../assets/video/nostrilBreathing.mp4'), image: 'https://post.healthline.com/wp-content/uploads/2022/11/400x400_Breathing_Techniques_For_Stress_Relief_and_More_Alternate_Nostril_Breathing.gif' },
-  ];
-
-  const extras = [
-    { id: 10, level: 'Intermediate', name: 'Movement', videoSource: require('./../../assets/video/movement.mp4'), image: 'https://imageio.forbes.com/blogs-images/alicegwalton/files/2015/02/0728_deep-brain-stimulation_650x455.jpg?height=455&width=650&fit=bounds' },
-    { id: 11, level: 'Intermediate', name: 'Mantra', videoSource: require('./../../assets/video/mantra.mp4'), image: 'https://images.squarespace-cdn.com/content/v1/5b2a8a5a45776ef37acb6ad6/1571914374300-0PR69AZRU3EXF5HF0635/image-asset.jpeg?format=1500w' },
-    { id: 12, level: 'Intermediate', name: 'Visualization', videoSource: require('./../../assets/video/visualisation.mp4'), image: 'https://img.freepik.com/free-photo/3d-abstract-flowing-geometric-shapes_1048-11947.jpg?w=996&t=st=1711854821~exp=1711855421~hmac=3b3d575344aa2be52edd4d0861258d3a7fba0f2cbf92079a82f6ab47bac348c2' },
-    { id: 13, level: 'Advanced', name: 'Body Scan', videoSource: require('./../../assets/video/bodyScan.mp4'), image: 'https://media.istockphoto.com/id/1330215408/photo/visualized-3d-models-of-the-female-human-body-as-well-as-the-human-skeleton-in-x-rays-using.webp?s=2048x2048&w=is&k=20&c=re2rCUEkqBG5d5tb2tWeYiJSPwjnOs6DXsRpk2tbeqQ=' },
-  ];
-
-  const dailyGoal = 10;
+  const dailyGoal = userInputGoal !== '' ? parseInt(userInputGoal) : 10; // Use userInputGoal if available, otherwise default to 10
   const dailyGoalAchieved = totalMinutes >= dailyGoal;
   const dailyGoalBoxColor = dailyGoalAchieved ? 'green' : '#333333';
 
+  //functions below for setting daily goal
+  const handleDailyGoalInputChange = (text) => {
+    setUserInputGoal(text);
+  };
 
+  const handleDailyGoalModalOpen = () => {
+    setModalVisible(true);
+  };
+
+  const handleSetDailyGoal = () => {
+    const goal = parseInt(userInputGoal);
+    // Check if input is a number and greater than 0
+    if (!isNaN(goal) && goal > 0) {
+      setTotalMinutes(0);
+      setModalVisible(false);
+    } else {
+      // If userInputGoal is not a valid number, show an error message or handle it appropriately
+      alert('Please enter a valid positive number for the daily goal.');
+      setUserInputGoal('');
+    }
+  };
+
+  //functions below for adding meditation minutes completed outside of the app
+  const handleAddDailyMinutes = () => {
+    const minutesToAdd = parseInt(additionalMinutes);
+    // Check if input is a number and greater than 0
+    if (!isNaN(minutesToAdd) && minutesToAdd > 0) {
+      setTotalMinutes(totalMinutes + minutesToAdd);
+      setAdditionalMinutes('');
+      setAddMinutesModalVisible(false);
+    } else {
+      // If userInputGoal is not a valid number, show an error message or handle it appropriately
+      alert('Please enter a valid positive number of minutes.');
+    }
+  };
+  
+  const handleAddMinutesInputChange = (text) => {
+    setAdditionalMinutes(text);
+  };
+  
+  const handleAddMinutesModalOpen = () => {
+    setAddMinutesModalVisible(true);
+  };
+  
+  const handleAddMinutesModalClose = () => {
+    setAdditionalMinutes('');
+    setAddMinutesModalVisible(false);
+  };
+  
+
+  //function for the start session button
   const startTimer = (session) => {
     console.log("hey");
     setShowSessionOptions(false);
     setSessionStarted(true);
-    //setTotalSessions(totalSessions + 1);
 
     setTotalMinutes(totalMinutes + session.duration / 60);
 
@@ -62,25 +91,79 @@ const MeditationApp = () => {
   
   };
 
+  //function for the end session button 
   const stopTimer = () => {
     setShowSessionOptions(true);
     setSessionStarted(false);
   };
 
+  //function for rendering the diff sections
   const handleOptionPress = (option) => {
     setSelectedOption(option);
   };
 
+  // Increment lessonsWatched by 1 only when the video ends
   const handleVideoEnd = () => {
-    setLessonsWatched(lessonsWatched + 1); // Increment lessonsWatched by 1 when the video ends
+    setLessonsWatched(lessonsWatched + 1); 
   };
-
+  // Increment totalSessions by 1 only when the audio ends
   const incrementTotalSessions = () => {
     setTotalSessions(totalSessions + 1);
   };
-
+ 
   const renderContent = () => {
     switch (selectedOption) {
+      case 'Statistics':
+        return (
+          <View style={styles.statisticsContainer}>
+            <View style={styles.statisticBoxContainer}>
+              <View style={styles.statisticBox}>
+                <Text style={styles.statisticLabel}>Sessions Completed</Text>
+                <Text style={styles.statisticValue}>{totalSessions}</Text>
+              </View>
+              <View style={styles.statisticBox}>
+                <Text style={styles.statisticLabel}>Lessons{'\n'}Watched</Text>
+                <Text style={styles.statisticValue}>{lessonsWatched}</Text>
+              </View>
+            </View>
+            <View style={styles.statisticBoxContainer}>
+              <View style={styles.statisticBox}>
+                <Text style={styles.statisticLabel}>Minutes Meditated</Text>
+                <Text style={styles.statisticValue}>{totalMinutes} mins</Text>
+              </View>
+              <View style={[styles.statisticBox, { backgroundColor: dailyGoalBoxColor }]}>
+                <Text style={styles.statisticLabel}>Daily {'\n'}Goal:</Text>
+                <Text style={styles.statisticValue}>{dailyGoal} mins</Text>
+                {dailyGoalAchieved && <Text style={styles.completed}>Completed!</Text>}
+              </View>
+            </View>
+            
+            <View style={styles.addSetButtons}>
+            <TouchableOpacity style={styles.setGoalButton} onPress={handleDailyGoalModalOpen}>
+                <Text style={styles.addSetButtonsText}>Set Daily Goal</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.setGoalButton} onPress={handleAddMinutesModalOpen}>
+              <Text style={styles.addSetButtonsText}>Add Minutes</Text>       
+            </TouchableOpacity>
+            </View>
+
+            <Text style={styles.reviewHeader}>Session History</Text>
+            <View style={styles.reviewSection}>
+              <ScrollView horizontal>
+                <View style={styles.sessionBoxContainer}>
+                  {previousSessions.map(item => (
+                    <View style={styles.sessionBox} key={item.id}>
+                      <Text style={styles.sessionText}>{item.completionDate.toLocaleString()}</Text>
+                      <Text style={styles.sessionText}>{item.name}</Text>
+                      <Text style={styles.sessionText}>Level: {item.level}</Text>
+                      <Text style={styles.sessionText}>Duration: {item.duration / 60} mins</Text>
+                    </View>
+                  ))}
+                </View>
+              </ScrollView>
+            </View>
+          </View>
+        );
       case 'Meditate':
         return (
           <View>
@@ -130,9 +213,8 @@ const MeditationApp = () => {
 
         case 'Exercises':
           return (
-            <View style={styles.container}>
-              {/* Your header and options container */}
-              <View style={styles.contentContainer}>
+            <View>
+              <View>
                 {selectedVideo ? (
                   // Render only the selected video
                   <View style={styles.videoPlayerContainer}>
@@ -140,7 +222,6 @@ const MeditationApp = () => {
                       videoSource={selectedVideo.videoSource}
                       style={styles.videoPlayer}
                       onVideoEnd={handleVideoEnd}
-                     
                     />
                     <TouchableOpacity
                       style={styles.goBackButton}
@@ -163,7 +244,7 @@ const MeditationApp = () => {
         
                           <View style={styles.eSessionInfoContainer}>
                             <Text style={styles.eSessionInfoHead}>{eSession.name}</Text>
-                            <Text style={styles.eSessionInfoText}>Techniques, Benfits{'\n'} and a Beginner's {'\n'}How-To</Text>
+                            <Text style={styles.eSessionInfoText}>Techniques, Benfits{'\n'}and a Beginner's {'\n'}How-To</Text>
                           </View>
                           <Image
                             source={{ uri: eSession.image }}
@@ -222,49 +303,6 @@ const MeditationApp = () => {
             </View>
           );
 
-      case 'Statistics':
-        return (
-          <View style={styles.statisticsContainer}>
-            <View style={styles.statisticBoxContainer}>
-              <View style={styles.statisticBox}>
-                <Text style={styles.statisticLabel}>Sessions Completed</Text>
-                <Text style={styles.statisticValue}>{totalSessions}</Text>
-              </View>
-              <View style={styles.statisticBox}>
-                <Text style={styles.statisticLabel}>Lessons{'\n'}Watched</Text>
-                <Text style={styles.statisticValue}>{lessonsWatched}</Text>
-              </View>
-            </View>
-            <View style={styles.statisticBoxContainer}>
-              <View style={styles.statisticBox}>
-                <Text style={styles.statisticLabel}>Minutes Meditated</Text>
-                <Text style={styles.statisticValue}>{totalMinutes} mins</Text>
-              </View>
-              <View style={[styles.statisticBox, { backgroundColor: dailyGoalBoxColor }]}>
-                <Text style={styles.statisticLabel}>Daily {'\n'}Goal:</Text>
-                <Text style={styles.statisticValue}>{dailyGoal} mins</Text>
-                {dailyGoalAchieved && <Text style={styles.completed}>Completed!</Text>}
-              </View>
-            </View>
-            
-            <Text style={styles.reviewHeader}>Session History</Text>
-            <View style={styles.reviewSection}>
-              <ScrollView horizontal>
-                <View style={styles.sessionBoxContainer}>
-                  {previousSessions.map(item => (
-                    <View style={styles.sessionBox} key={item.id}>
-                      <Text style={styles.sessionText}>{item.completionDate.toLocaleString()}</Text>
-                      <Text style={styles.sessionText}>{item.name}</Text>
-                      <Text style={styles.sessionText}>Level: {item.level}</Text>
-                      <Text style={styles.sessionText}>Duration: {item.duration / 60} mins</Text>
-                    </View>
-                  ))}
-                </View>
-              </ScrollView>
-            </View>
-          </View>
-        );
-
       default:
         return (
           <View>
@@ -279,28 +317,39 @@ const MeditationApp = () => {
       <View style={styles.headerContainer}>
         {/* Conditionally render options based on sessionStarted */}
         {!sessionStarted && (
-          <View style={styles.optionsContainer}>
-            {options.map(option => (
-              <TouchableOpacity
-                key={option}
-                style={[
-                  styles.option,
-                  selectedOption === option && styles.selectedOption
-                ]}
-                onPress={() => handleOptionPress(option)}
-              >
-                <Text style={styles.optionText}>{option}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
+            <Options
+              options={['Statistics', 'Meditate', 'Exercises']}
+              selectedOption={selectedOption}
+              onSelectOption={handleOptionPress}
+            />
         )}
       </View>
       <View style={styles.contentContainer}>
         {renderContent()}
       </View>
+      
+      
+  
+      <DailyGoalModal
+        modalVisible={modalVisible}
+        handleDailyGoalInputChange={handleDailyGoalInputChange}
+        userInputGoal={userInputGoal}
+        handleSetDailyGoal={handleSetDailyGoal}
+        setModalVisible={setModalVisible}
+      />
+      
+      <AddMinutesModal
+        addMinutesModalVisible={addMinutesModalVisible}
+        handleAddMinutesInputChange={handleAddMinutesInputChange}
+        additionalMinutes={additionalMinutes}
+        handleAddDailyMinutes={handleAddDailyMinutes}
+        handleAddMinutesModalClose={handleAddMinutesModalClose}
+      />
+      
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
@@ -309,31 +358,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: 'black',
   },
+  //top navigate options
   headerContainer: {
     flexDirection: 'row',
     flex: 0.2,
-    marginTop: 20,
+    marginTop: 90,
     backgroundColor: 'black',
     paddingBottom: 10,
-  },
-  option: {
-    paddingHorizontal: 0,
-    marginHorizontal: 15,
-    borderBottomWidth: 2,
-    borderColor: 'transparent',
-  },
-  selectedOption: {
-    borderColor: 'white',
-    marginBottom: 10,
-  },
-  optionText: {
-    fontSize: 15,
-    color: 'white',
   },
   contentContainer: {
     flex: 3,
     marginTop: 30,
   },
+  //meditate section
   sessionButton: {
     flexDirection: 'row',
     height: 90,
@@ -368,7 +405,6 @@ const styles = StyleSheet.create({
     height: 550,
     marginBottom:20,
   },
-
   image: {
     flex: 1,
     resizeMode: 'cover',
@@ -389,14 +425,9 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
     opacity: 0.7,
     borderRadius: 20,
-    marginRight: 20,
-  },
-  selectedSection: {
-    marginTop: 20,
-    alignItems: 'center',
   },
   sessionInfoContainer: {
-    marginRight: 100,
+    marginRight: 110,
   },
   sessionInfoHead: {
     color: 'white',
@@ -406,6 +437,8 @@ const styles = StyleSheet.create({
     color: '#d3d3d3',
     fontSize: 12,
   },
+
+  //statistics section 
   statisticsContainer: {
     alignItems: 'center',
     marginTop: 70,
@@ -450,27 +483,12 @@ const styles = StyleSheet.create({
     color: 'white',
     marginTop: 20,
   },
-  sessionBoxContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    height: 200,
-  },
-  sessionBox: {
-    backgroundColor: '#DDDD',
-    padding: 15,
-    borderRadius: 10,
-    marginBottom: 40,
-    marginRight: 10,
-  },
-  sessionText: {
-    color: 'black',
-    fontSize: 16,
-  },
   completed: {
     color: 'black',
     fontSize: 20,
   },
+
+  //exercises section
   exerciseInfoContainer: {
     alignItems: 'center',
   },
@@ -487,8 +505,8 @@ const styles = StyleSheet.create({
   eSessionButton: {
     flexDirection: 'row',
     padding: 10,
-    backgroundColor: '#333333',
-    width: 400,
+    backgroundColor: '#303030',
+    width: 350,
     alignItems: 'center',
     borderRadius: 10,
     justifyContent: 'space-between',
@@ -509,19 +527,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   scrollContainer: {
-     marginLeft: 10,
-     marginBottom: 60,
+     marginLeft: 30,
+     height: 530,
      marginTop: 20,
   },
   exercisesContainer: {
     height: 170,
     flexDirection: 'row',
-    marginTop: 0,
+    marginTop: 10,
   },
   extrasContainer: {
     height: 170,
     marginBottom: 100,
     flexDirection: 'row',
+    marginTop: 10,
   },
   exerciseButton: {
     flexDirection: 'column',
@@ -559,6 +578,33 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginLeft: 10,
+  },
+
+
+//styles for the modal buttons
+  setGoalButton: {
+    backgroundColor: '#333333',
+    borderRadius: 10,
+    padding: 10,
+    marginTop: 30,
+  },
+  addMinutesButton: {
+    backgroundColor: '#333333',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginTop: 10, 
+  },
+  addMinutesButtonText: {
+    color: '#ffffff',
+    fontSize: 16,
+  },
+  addSetButtons: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+  addSetButtonsText: {
+    color: 'white',
   }
 });
 

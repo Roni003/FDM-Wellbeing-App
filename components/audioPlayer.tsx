@@ -167,7 +167,7 @@ export default function App({ audioPath, onAudioEnd, onBackSession}) {
 
     </ImageBackground>
     <TouchableOpacity style={styles.stopButton} onPress={handleBackSessionPress}>
-      <Text style={styles.buttonText}>Back Session</Text>
+      <Text style={styles.buttonText}>End Session</Text>
     </TouchableOpacity>
     </View>
   );
