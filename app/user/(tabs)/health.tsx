@@ -24,6 +24,10 @@ export default function health() {
       padding: 10,
       paddingTop: "12%",
     },
+    header: {
+      ...globalStyles.header2,
+      padding: 8,
+    },
     inputs: {
       paddingTop: 8,
       paddingBottom: 8,
@@ -172,7 +176,7 @@ export default function health() {
   return (
     <View style={globalStyles.container}>
       <Pressable onPress={() => Keyboard.dismiss()}>
-        <Text style={globalStyles.header2}>Health Data</Text>
+        <Text style={styles.header}>Health Data</Text>
         <View style={{ height: 10 }} />
         <View style={styles.buttonSelector}>
           <TouchableOpacity

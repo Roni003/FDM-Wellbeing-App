@@ -14,7 +14,7 @@ const BackButton = ({ destination, name }: BackButtonProps) => {
         onPress={() => router.push(destination)}
         style={styles.pressable}
       >
-        <Ionicons name="chevron-back" size={22} color="rgb(10,132,255)" />
+        <Ionicons name="chevron-back" size={24} color="rgb(10,132,255)" />
         <Text style={styles.text}>{name}</Text>
       </Pressable>
     </View>
@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   text: {
-    fontSize: 14,
+    fontSize: 16,
     color: "rgb(10, 132, 255)",
   },
 });
