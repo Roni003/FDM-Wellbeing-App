@@ -90,7 +90,12 @@ export default function CreatePostForm() {
     placeholderText: {
       fontSize: 16,
       color: textColor,
-    }
+    },
+    errorText: {
+      color: "red",
+      fontWeight: "600",
+      fontSize: 16,
+    },
   });
 
   return (
