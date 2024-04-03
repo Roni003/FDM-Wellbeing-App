@@ -25,10 +25,110 @@ import BackButton from "@/components/BackButton";
 import Colors from "@/lib/Colors";
 import { EvilIcons, FontAwesome } from "@expo/vector-icons";
 import { err } from "react-native-svg";
+import PostReplies from "@/components/PostReplies";
 
 export default function SinglePost() {
   const colorScheme = useColorScheme();
-  const tabstyle = colorScheme === "light" ? styles.lightTab : styles.darkTab;
+
+  const styles = StyleSheet.create({
+    inputContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+    },
+
+    submitButton: {
+      color: "rgba(0, 210, 0, 0.9)",
+      alignSelf: "center",
+      padding: 5,
+      marginBottom: 10,
+    },
+
+    deleteButton: {
+      color: "rgba(255, 0, 0, 0.9)",
+      alignSelf: "center",
+      padding: 5,
+      marginBottom: 10,
+    },
+
+    miniHeader: {
+      fontWeight: "500",
+      fontSize: 20,
+      padding: 8,
+    },
+    replyInputField: {
+      backgroundColor:
+        colorScheme === "light"
+          ? Colors.light.cardBackground
+          : Colors.dark.cardBackground,
+      color: "white",
+      borderWidth: 1,
+      borderColor: "rgba(250, 250, 250, 0.2)",
+      padding: 10,
+      borderRadius: 6,
+      fontSize: 18,
+      width: "90%",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+
+    replyMessage: {
+      margin: 10,
+      padding: 15,
+      borderColor: "rgba(250, 250, 250, 0.2)",
+      borderWidth: 0.5,
+      backgroundColor: "rgba(100, 160, 255, 0.5)",
+    },
+
+    userReplyMessage: {
+      backgroundColor: "red",
+    },
+
+    postContainer: {
+      flex: 1,
+      margin: 6,
+      marginTop: 12,
+      borderRadius: 10,
+      borderColor: "rgba(250, 250, 250, 0.2)",
+      borderWidth: 0.5,
+      padding: 10,
+      backgroundColor:
+        colorScheme === "light"
+          ? Colors.light.cardBackground
+          : Colors.dark.cardBackground,
+    },
+    title: {
+      fontSize: 20,
+      fontWeight: "600",
+      marginBottom: 8,
+    },
+    content: {
+      fontSize: 14,
+      marginBottom: 10,
+    },
+    date: {
+      fontSize: 12,
+      alignSelf: "flex-end",
+      marginTop: "auto",
+    },
+
+    repliesContainer: {
+      flex: 1,
+      margin: 6,
+    },
+
+    replyFormcontainer: {
+      padding: 4,
+      paddingBottom: 20,
+    },
+
+    postHeader: {
+      flexDirection: "row",
+      backgroundColor: "rgba(0,0,0,0)",
+      alignItems: "center",
+      justifyContent: "space-between",
+      paddingRight: 10,
+    },
+  });
 
   const { postid } = useLocalSearchParams();
   const [post, setPost] = useState<Post>();
@@ -71,36 +171,6 @@ export default function SinglePost() {
       },
     ]);
   }
-
-  const handleDeletePost = () => {
-    Alert.alert("Delete Post", "Are you sure you want to DELETE this post?", [
-      {
-        text: "YES",
-        onPress: async () => {
-          console.log("YES");
-          console.log(postid);
-
-          try {
-            // Delete from post_replies table
-            await supabase.from("post_replies").delete().eq("post_id", postid);
-
-            // Delete from forum_post table
-            await supabase.from("forum_posts").delete().eq("post_id", postid);
-
-            console.log("Post deleted successfully");
-          } catch (error) {
-            console.error("Error deleting post:", error);
-          }
-        },
-      },
-      {
-        text: "NO",
-        onPress: () => {
-          console.log("NO");
-        },
-      },
-    ]);
-  };
 
   useFocusEffect(
     useCallback(() => {
@@ -177,24 +247,9 @@ export default function SinglePost() {
       ) : (
         <Text>Fetching</Text>
       )}
-      <ScrollView style={styles.repliesContainer}>
-        {/* Make a component that takes in the post id as a prop, returns a scrollView 
-              which contains a list of replies for the current post
-            */}
 
-        {replies && Array.isArray(replies) && replies.length > 0 ? (
-          replies.map((reply, index) => (
-            <View key={index} style={[styles.replyMessage]}>
-              <Text style={styles.content}>{reply.content}</Text>
-              <Text style={styles.date}>
-                Posted at: {formatDate(reply.created_at)}
-              </Text>
-            </View>
-          ))
-        ) : (
-          <Text>No replies available.</Text>
-        )}
-      </ScrollView>
+      <Text style={styles.miniHeader}>Replies</Text>
+      <PostReplies replies={replies} />
 
       <KeyboardAvoidingView
         style={styles.replyFormcontainer}
@@ -243,94 +298,3 @@ export default function SinglePost() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  lightTab: {},
-  darkTab: {},
-  inputContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-
-  submitButton: {
-    color: "rgba(0, 210, 0, 0.9)",
-    alignSelf: "center",
-    padding: 5,
-    marginBottom: 10,
-  },
-
-  deleteButton: {
-    color: "rgba(255, 0, 0, 0.9)",
-    alignSelf: "center",
-    padding: 5,
-    marginBottom: 10,
-  },
-
-  replyInputField: {
-    backgroundColor: "rgba(100, 160, 255, 0.3)",
-    color: "white",
-    borderWidth: 1,
-    borderColor: "rgba(250, 250, 250, 0.2)",
-    padding: 10,
-    borderRadius: 6,
-    fontSize: 18,
-    width: "90%",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-  replyMessage: {
-    margin: 10,
-    padding: 15,
-    borderColor: "rgba(250, 250, 250, 0.2)",
-    borderWidth: 0.5,
-    backgroundColor: "rgba(100, 160, 255, 0.5)",
-  },
-
-  userReplyMessage: {
-    backgroundColor: "red",
-  },
-
-  postContainer: {
-    flex: 1,
-    margin: 6,
-    marginTop: 12,
-    borderRadius: 10,
-    borderColor: "rgba(250, 250, 250, 0.2)",
-    borderWidth: 0.5,
-    padding: 10,
-    backgroundColor: "rgba(100, 160, 255, 0.5)",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "600",
-    marginBottom: 8,
-  },
-  content: {
-    fontSize: 14,
-    marginBottom: 10,
-  },
-  date: {
-    fontSize: 12,
-    alignSelf: "flex-end",
-    marginTop: "auto",
-  },
-
-  repliesContainer: {
-    flex: 1,
-    margin: 6,
-  },
-
-  replyFormcontainer: {
-    padding: 4,
-    paddingBottom: 20,
-  },
-
-  postHeader: {
-    flexDirection: "row",
-    backgroundColor: "rgba(0,0,0,0)",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingRight: 10,
-  },
-});
