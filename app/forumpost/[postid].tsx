@@ -37,14 +37,16 @@ export default function SinglePost() {
     },
 
     submitButton: {
-      color: "rgba(0, 210, 0, 0.9)",
+      color: colorScheme === "light" ? Colors.light.text : Colors.dark.text,
+      opacity: 0.6,
       alignSelf: "center",
       padding: 5,
       marginBottom: 10,
     },
 
     deleteButton: {
-      color: "rgba(255, 0, 0, 0.9)",
+      color: colorScheme === "light" ? Colors.light.text : Colors.dark.text,
+      opacity: 0.7,
       alignSelf: "center",
       padding: 5,
       marginBottom: 10,
