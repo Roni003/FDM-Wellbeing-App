@@ -135,7 +135,7 @@ export default function SinglePost() {
   const { postid } = useLocalSearchParams();
   const [post, setPost] = useState<Post>();
   const [date, setDate] = useState<string>();
-
+  const [userId, setUserId] = useState("");
   const [replies, setReplies] = useState<Reply>();
 
   const formatDate = (timestamp: string | number | Date) => {
@@ -148,8 +148,7 @@ export default function SinglePost() {
       {
         text: "YES",
         onPress: async () => {
-          console.log("YES");
-          console.log(postid);
+          console.log("Attemting to delete post, ID:", postid);
 
           const { error } = await supabase
             .from("forum_posts")
@@ -196,6 +195,12 @@ export default function SinglePost() {
         }
       };
 
+      const setId = async () => {
+        const data = await supabase.auth.getSession();
+        setUserId(data.data.session?.user.id || "");
+      };
+
+      setId();
       postReplies();
     }, [postid])
   );
@@ -236,12 +241,17 @@ export default function SinglePost() {
         <View style={styles.postContainer}>
           <View style={styles.postHeader}>
             <Text style={styles.title}>{post.title}</Text>
-            <FontAwesome
-              name="trash"
-              size={28}
-              style={styles.deleteButton}
-              onPress={() => deletePost(post.post_id)}
-            />
+            {/* Need to only render this if user id matches post user id */}
+            {post && post.user_id == userId ? (
+              <FontAwesome
+                name="trash"
+                size={28}
+                style={styles.deleteButton}
+                onPress={() => deletePost(post.post_id)}
+              />
+            ) : (
+              <View></View>
+            )}
           </View>
           <Text style={styles.content}>{post.content}</Text>
           <Text style={styles.date}>Posted at: {date}</Text>
@@ -259,10 +269,10 @@ export default function SinglePost() {
       >
         <Formik
           initialValues={{ replyMessage: "" }}
-          onSubmit={async (values) => {
+          onSubmit={async (values, { resetForm }) => {
             supabase.auth.getSession().then(async ({ data: { session } }) => {
               if (!values.replyMessage) {
-                Alert.alert("Fill in all Fields");
+                Alert.alert("Cannot reply with an empty message");
               } else {
                 const { data, error } = await supabase
                   .from("post_replies")
@@ -273,6 +283,11 @@ export default function SinglePost() {
                       content: values.replyMessage,
                     },
                   ]);
+                if (error) {
+                  console.log(error);
+                } else {
+                  resetForm();
+                }
               }
             });
           }}
