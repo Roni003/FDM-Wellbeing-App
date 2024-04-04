@@ -384,7 +384,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 4,
-    marginTop: 50,
+    marginTop: 70,
   },
   //meditate section
   meditateButton: {
