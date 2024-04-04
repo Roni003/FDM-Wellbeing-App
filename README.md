@@ -12,7 +12,7 @@
 git clone https://github.com/Roni003/FDM-Wellbeing-App.git
 ```
 
-2. Navigate to the project directory (for the front end):
+2. Navigate to the project directory:
 
 ```
 cd FDM-Wellbeing-App
@@ -32,5 +32,6 @@ npm i
 npm run start
 ```
 
-2. Follow the instructions given to open the app
-   Example: click "i" for IOS etc (this requires Xcode to be installed)
+2. Follow the instructions given to open the app:  
+   - Click "i" to open the iPhone emulator (this requires Xcode to be installed)  
+   - Install Expo Go then scan the QR code with your mobile phone

@@ -1,40 +1,142 @@
-import { StyleSheet, Button, TextInput, Alert } from "react-native";
+import {
+  StyleSheet,
+  Button,
+  TextInput,
+  Alert,
+  useColorScheme,
+  TouchableOpacity,
+  Pressable,
+  Keyboard,
+} from "react-native";
 import { Formik, Field, Form } from "formik";
 import { supabase } from "@/lib/Supabase";
 import React, { useState } from "react";
 
 import { Text, View } from "@/components/Themed";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import BackButton from "@/components/BackButton";
+import { err } from "react-native-svg";
+import Colors from "@/lib/Colors";
+import { globalStyles } from "@/lib/Styles";
 
 export default function CreatePostForm() {
   const [titleError, setTitleError] = useState(false);
   const [bodyError, setBodyError] = useState(false);
+  const [errorText, setErrorText] = useState("");
+
+  const colorScheme = useColorScheme();
+  const textColor =
+    colorScheme === "light" ? Colors.light.text : Colors.dark.text;
+
+  const styles = StyleSheet.create({
+    inputReset: {
+      borderColor:
+        colorScheme === "light" ? Colors.light.text : Colors.dark.text,
+    },
+
+    header: {
+      ...globalStyles.header2,
+      padding: 10,
+    },
+
+    inputError: {
+      borderColor: "red",
+    },
+
+    label: {},
+
+    titleInput: {
+      backgroundColor:
+        colorScheme === "light"
+          ? Colors.light.cardBackground
+          : Colors.dark.cardBackground,
+      color: textColor,
+      borderWidth: 1,
+      borderColor: "#ddd",
+      padding: 10,
+      margin: 10,
+      borderRadius: 6,
+      fontSize: 18,
+      width: "95%",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+
+    bodyInput: {
+      backgroundColor:
+        colorScheme === "light"
+          ? Colors.light.cardBackground
+          : Colors.dark.cardBackground,
+      color: textColor,
+      borderWidth: 1,
+      padding: 10,
+      margin: 10,
+      borderRadius: 6,
+      fontSize: 18,
+      width: "95%",
+      height: "70%",
+    },
+
+    title: {
+      fontSize: 20,
+      fontWeight: "bold",
+    },
+    separator: {
+      marginVertical: 30,
+      height: 1,
+      width: "80%",
+    },
+    button: {
+      height: 50,
+      width: "70%",
+      marginVertical: 10,
+      borderRadius: 8,
+      backgroundColor:
+        colorScheme === "light"
+          ? Colors.light.cardBackground
+          : Colors.dark.cardBackground,
+      padding: 15,
+      alignItems: "center",
+      alignSelf: "center",
+    },
+    textStyle: {
+      fontSize: 16,
+      color: textColor,
+    },
+    placeholderText: {
+      fontSize: 16,
+      color: textColor,
+    },
+    errorText: {
+      color: "red",
+      fontWeight: "600",
+      fontSize: 16,
+    },
+  });
 
   return (
-    <View style={styles.container}>
-      <BackButton destination={"/"} name={"home page"} />
-      <Formik
-        initialValues={{ title: "", body: "" }}
-        onSubmit={async (values) => {
-          supabase.auth.getSession().then(async ({ data: { session } }) => {
-            if (!values.title || !values.body) {
-              Alert.alert("Fill in all Fields");
+    <View style={globalStyles.container}>
+      <Pressable onPress={() => Keyboard.dismiss()}>
+        <BackButton destination={"/"} name={"home page"} />
+        <Text style={styles.header}>Create a new post</Text>
+        <Formik
+          initialValues={{ title: "", body: "" }}
+          onSubmit={async (values) => {
+            if (!values.title) {
+              setTitleError(true);
+              Alert.alert("Fill in the title field");
+              return;
             }
+            setTitleError(false);
 
-            if (!values.title && !values.body) {
-              setTitleError(true);
+            if (!values.body) {
               setBodyError(true);
-            } else if (!values.title) {
-              setTitleError(true);
-              setBodyError(false);
-            } else if (!values.body) {
-              setTitleError(false);
-              setBodyError(true);
-            } else {
-              setTitleError(false);
-              setBodyError(false);
+              Alert.alert("Fill in the body field");
+              return;
+            }
+            setBodyError(false);
 
+            supabase.auth.getSession().then(async ({ data: { session } }) => {
               const { data, error } = await supabase
                 .from("forum_posts")
                 .insert([
@@ -48,97 +150,55 @@ export default function CreatePostForm() {
 
               if (error) {
                 console.log(error);
+                setErrorText("Failed to submit form");
               }
 
               if (data) {
-                console.log(data);
+                setErrorText("");
+                console.log("Inserted new post: ", data);
+                router.navigate("/");
               }
-            }
-          });
-        }}
-      >
-        {(props) => (
-          <View>
-            <TextInput
-              placeholder="Title"
-              onChangeText={props.handleChange("title")}
-              value={props.values.title}
-              style={[
-                styles.titleInput,
-                styles.inputReset,
-                titleError && styles.inputError,
-              ]}
-            />
+            });
+          }}
+        >
+          {(props) => (
+            <View>
+              <TextInput
+                placeholder="Title"
+                onChangeText={props.handleChange("title")}
+                value={props.values.title}
+                style={[
+                  styles.titleInput,
+                  styles.inputReset,
+                  titleError && styles.inputError,
+                ]}
+                placeholderTextColor={styles.placeholderText.color}
+              />
 
-            <TextInput
-              multiline
-              placeholder="Body"
-              onChangeText={props.handleChange("body")}
-              value={props.values.body}
-              style={[
-                styles.bodyInput,
-                styles.inputReset,
-                bodyError && styles.inputError,
-              ]}
-            />
+              <TextInput
+                multiline
+                placeholder="Body"
+                onChangeText={props.handleChange("body")}
+                value={props.values.body}
+                style={[
+                  styles.bodyInput,
+                  styles.inputReset,
+                  bodyError && styles.inputError,
+                ]}
+                placeholderTextColor={styles.placeholderText.color}
+              />
 
-            <Button title="submit" onPress={props.handleSubmit} />
-          </View>
-        )}
-      </Formik>
+              <Text style={styles.errorText}>{errorText}</Text>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={props.handleSubmit}
+              >
+                <Text style={styles.textStyle}>Submit</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </Formik>
+      </Pressable>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  inputReset: {
-    borderColor: "white",
-  },
-
-  inputError: {
-    borderColor: "red",
-  },
-
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-  label: {},
-
-  titleInput: {
-    color: "white",
-    borderWidth: 1,
-    borderColor: "#ddd",
-    padding: 10,
-    margin: 10,
-    borderRadius: 6,
-    fontSize: 18,
-    width: 150,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-  bodyInput: {
-    color: "white",
-    borderWidth: 1,
-    borderColor: "#ddd",
-    padding: 10,
-    margin: 10,
-    borderRadius: 6,
-    fontSize: 18,
-    width: 150,
-    height: 250,
-  },
-
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
-  },
-});
