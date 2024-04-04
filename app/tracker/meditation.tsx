@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Image, useColorScheme } from 'react-native';
-import AudioPlayer from '@/components/audioPlayer';
+import AudioPlayer from '@/components/audioPlayer'
 import VideoPlayer from '@/components/VideoPlayer';
 import DailyGoalModal from '@/components/DailyGoalModal';
 import AddMinutesModal from '@/components/AddMinutesModal';
