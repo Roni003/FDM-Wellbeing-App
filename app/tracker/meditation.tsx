@@ -420,13 +420,12 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   audioPlayer: {
-    marginBottom: 20,
+    marginTop: 50,
   },
   audioPlayerContainer: {
     justifyContent: 'center',
     alignItems: 'center',
     height: 550,
-    marginBottom:20,
   },
 
   //exercises section
