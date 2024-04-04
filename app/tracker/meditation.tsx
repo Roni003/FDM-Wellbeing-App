@@ -123,7 +123,7 @@ const MeditationApp = () => {
       case 'Statistics':
         return (
           <View style={styles.statisticsContainer}>
-            <Text style={[styles.pastHeader, { color: themeColors.text }]}>Past progress</Text>
+            <Text style={[styles.pastHeader, { color: 'white' }]}>Past progress</Text>
             <View style={styles.past}>
               <PastGoals data={data} goal={dailyGoal} />
             </View>
@@ -145,7 +145,6 @@ const MeditationApp = () => {
               <View style={[styles.statisticBox, { backgroundColor: dailyGoalBoxColor }]}>
                 <Text style={styles.statisticLabel}>Daily {'\n'}Goal:</Text>
                 <Text style={styles.statisticValue}>{dailyGoal} mins</Text>
-                {dailyGoalAchieved && <Text style={styles.completed}>Completed!</Text>}
               </View>
             </View>
             
@@ -164,7 +163,7 @@ const MeditationApp = () => {
                 <View style={styles.sessionHistoryContainer}>
                   {previousSessions.map(item => (
                     <View style={styles.sessionHistoryBox} key={item.id}>
-                      <Text style={styles.sessionHistoryText}>{item.completionDate.toLocaleString()}</Text>
+                      <Text style={styles.sessionHistoryText}>{item.completionDate.toLocaleString([], {dateStyle: 'short', timeStyle: 'short'})}</Text>
                       <Text style={styles.sessionHistoryText}>{item.name}</Text>
                       <Text style={styles.sessionHistoryText}>Duration: {item.duration / 60} mins</Text>
                     </View>
@@ -245,6 +244,7 @@ const MeditationApp = () => {
                 ) : (
                   // Render only when no video is selected
                   <>
+                
                     <View style={styles.exercisesIntroContainer}>
                       {showSessionOptions && intro.map((eSession) => (
                         <TouchableOpacity
@@ -323,7 +323,7 @@ const MeditationApp = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={[styles.scrollViewContent, { backgroundColor: 'black'}]}>
       
       <View style={styles.headerContainer}>
         <BackButton destination={"/user/(tabs)/"} name={"Dashboard"} />
@@ -357,19 +357,13 @@ const MeditationApp = () => {
         handleAddDailyMinutes={handleAddDailyMinutes}
         handleAddMinutesModalClose={handleAddMinutesModalClose}
       />
-      
-    </View>
+    
+    </ScrollView>
   );
 };
 
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'black',
-  },
   //top navigate options
   headerContainer: {
     flexDirection: 'column',
@@ -382,9 +376,14 @@ const styles = StyleSheet.create({
   optionsContainer: {
     flexDirection: 'row',
   },
+  scrollViewContent: {
+    flexGrow: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   contentContainer: {
     flex: 4,
-    marginTop: 70,
+    marginTop: 30,
   },
   //meditate section
   meditateButton: {
@@ -445,7 +444,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: 10,
   },
-  exerciseIntroInfoContainer: {
+  exerciseInfoContainer: {
     alignItems: 'center',
   },
   exerciseName: {
