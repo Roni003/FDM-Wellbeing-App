@@ -7,6 +7,8 @@ import AddMinutesModal from '@/components/AddMinutesModal';
 import { meditationSessions, intro, exercises, extras } from '@/data/index'
 import Options from '@/components/meditationOptions';
 
+
+
 const MeditationApp = () => {
   const [selectedOption, setSelectedOption] = useState('Statistics'); // Default is 'Statistics' section
   const [selectedSession, setSelectedSession] = useState(null);
@@ -213,8 +215,8 @@ const MeditationApp = () => {
 
         case 'Exercises':
           return (
-            <View>
-              <View>
+            <View style={styles.exercisesPageContainer}>
+              <View  style={{ flex: 1 }}>
                 {selectedVideo ? (
                   // Render only the selected video
                   <View style={styles.videoPlayerContainer}>
@@ -532,7 +534,7 @@ const styles = StyleSheet.create({
      marginTop: 20,
   },
   exercisesContainer: {
-    height: 170,
+    flex: 1,
     flexDirection: 'row',
     marginTop: 10,
   },
@@ -549,8 +551,6 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     marginRight: 20,
-    //marginTop: 50,
-    
   },
   videoPlayerContainer: {
     height: 500,
@@ -578,6 +578,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginLeft: 10,
+    marginTop:5,
   },
 
 
