@@ -398,7 +398,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   meditateInfoContainer: {
-    marginRight: 110,
+    marginRight: 100,
   },
   meditateInfoHead: {
     color: 'white',
@@ -445,7 +445,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: 10,
   },
-  exerciseInfoContainer: {
+  exerciseIntroInfoContainer: {
     alignItems: 'center',
   },
   exerciseName: {

@@ -23,7 +23,7 @@ const AddMinutesModal = ({
             style={styles.input}
             onChangeText={handleAddMinutesInputChange}
             value={additionalMinutes}
-            placeholder="Enter the number of minutes to add"
+            placeholder="Enter minutes  meditated outside the app"
             keyboardType="numeric"
           />
           <TouchableOpacity style={styles.modalButton} onPress={handleAddDailyMinutes}>
