@@ -1,15 +1,20 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Image, Modal, TextInput } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Image, useColorScheme } from 'react-native';
 import AudioPlayer from '@/components/audioPlayer';
 import VideoPlayer from '@/components/VideoPlayer';
 import DailyGoalModal from '@/components/DailyGoalModal';
 import AddMinutesModal from '@/components/AddMinutesModal';
 import { meditationSessions, intro, exercises, extras } from '@/data/index'
 import Options from '@/components/meditationOptions';
-
-
+import PastGoals from '@/components/pastGoalComponent';
+import Colors from "@/lib/Colors";
+import BackButton from '@/components/BackButton';
 
 const MeditationApp = () => {
+  const colorScheme = useColorScheme();
+  const themeColors = colorScheme === "light" ? Colors.light : Colors.dark;
+  
+  const data = [20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160];
   const [selectedOption, setSelectedOption] = useState('Statistics'); // Default is 'Statistics' section
   const [selectedSession, setSelectedSession] = useState(null);
   const [showSessionOptions, setShowSessionOptions] = useState(true);
@@ -118,6 +123,10 @@ const MeditationApp = () => {
       case 'Statistics':
         return (
           <View style={styles.statisticsContainer}>
+            <Text style={[styles.pastHeader, { color: themeColors.text }]}>Past progress</Text>
+            <View style={styles.past}>
+              <PastGoals data={data} goal={dailyGoal} />
+            </View>
             <View style={styles.statisticBoxContainer}>
               <View style={styles.statisticBox}>
                 <Text style={styles.statisticLabel}>Sessions Completed</Text>
@@ -152,13 +161,12 @@ const MeditationApp = () => {
             <Text style={styles.reviewHeader}>Session History</Text>
             <View style={styles.reviewSection}>
               <ScrollView horizontal>
-                <View style={styles.sessionBoxContainer}>
+                <View style={styles.sessionHistoryContainer}>
                   {previousSessions.map(item => (
-                    <View style={styles.sessionBox} key={item.id}>
-                      <Text style={styles.sessionText}>{item.completionDate.toLocaleString()}</Text>
-                      <Text style={styles.sessionText}>{item.name}</Text>
-                      <Text style={styles.sessionText}>Level: {item.level}</Text>
-                      <Text style={styles.sessionText}>Duration: {item.duration / 60} mins</Text>
+                    <View style={styles.sessionHistoryBox} key={item.id}>
+                      <Text style={styles.sessionHistoryText}>{item.completionDate.toLocaleString()}</Text>
+                      <Text style={styles.sessionHistoryText}>{item.name}</Text>
+                      <Text style={styles.sessionHistoryText}>Duration: {item.duration / 60} mins</Text>
                     </View>
                   ))}
                 </View>
@@ -173,17 +181,17 @@ const MeditationApp = () => {
               {showSessionOptions && meditationSessions.map((session) => (
                 <TouchableOpacity
                   key={session.id}
-                  style={styles.sessionButton}
+                  style={styles.meditateButton}
                   onPress={() => setSelectedSession(session)}>
 
                   <Image
                     source= {session.image}
                     style={styles.sessionImage}
                   />
-                  <View style={styles.sessionInfoContainer}>
-                    <Text style={styles.sessionInfoHead}>{session.name}</Text>
-                    <Text style={styles.sessionInfoText}>Level: {session.level}</Text>
-                    <Text style={styles.sessionInfoText}>Duration: {session.duration / 60} mins</Text>
+                  <View style={styles.meditateInfoContainer}>
+                    <Text style={styles.meditateInfoHead}>{session.name}</Text>
+                    <Text style={styles.meditateInfoText}>Level: {session.level}</Text>
+                    <Text style={styles.meditateInfoText}>Duration: {session.duration / 60} mins</Text>
                   </View>
                 </TouchableOpacity>
               ))}
@@ -192,7 +200,7 @@ const MeditationApp = () => {
             {selectedSession && !sessionStarted && (
               <View>
                 <>
-                  <Text style={styles.subHeader}>Selected Duration: {selectedSession.duration / 60} minutes</Text>
+                  <Text style={styles.meditateSubHeader}>Selected Duration: {selectedSession.duration / 60} minutes</Text>
                   <TouchableOpacity style={styles.startButton} onPress={() => startTimer(selectedSession)}>
                     <Text>Start Session</Text>
                   </TouchableOpacity>
@@ -215,7 +223,7 @@ const MeditationApp = () => {
 
         case 'Exercises':
           return (
-            <View style={styles.exercisesPageContainer}>
+            <View>
               <View  style={{ flex: 1 }}>
                 {selectedVideo ? (
                   // Render only the selected video
@@ -237,16 +245,16 @@ const MeditationApp = () => {
                 ) : (
                   // Render only when no video is selected
                   <>
-                    <View style={styles.introContainer}>
+                    <View style={styles.exercisesIntroContainer}>
                       {showSessionOptions && intro.map((eSession) => (
                         <TouchableOpacity
                           key={eSession.id}
-                          style={styles.eSessionButton}
+                          style={styles.exerciseIntroButton}
                           onPress={() => setSelectedVideo(eSession)}>
         
-                          <View style={styles.eSessionInfoContainer}>
-                            <Text style={styles.eSessionInfoHead}>{eSession.name}</Text>
-                            <Text style={styles.eSessionInfoText}>Techniques, Benfits{'\n'}and a Beginner's {'\n'}How-To</Text>
+                          <View style={styles.exerciseIntroInfoContainer}>
+                            <Text style={styles.exerciseIntroInfoHead}>{eSession.name}</Text>
+                            <Text style={styles.exerciseIntroInfoText}>Techniques, Benfits{'\n'}and a Beginner's {'\n'}How-To</Text>
                           </View>
                           <Image
                             source={{ uri: eSession.image }}
@@ -316,7 +324,9 @@ const MeditationApp = () => {
 
   return (
     <View style={styles.container}>
+      
       <View style={styles.headerContainer}>
+        <BackButton destination={"/user/(tabs)/"} name={"Dashboard"} />
         {/* Conditionally render options based on sessionStarted */}
         {!sessionStarted && (
             <Options
@@ -362,18 +372,22 @@ const styles = StyleSheet.create({
   },
   //top navigate options
   headerContainer: {
-    flexDirection: 'row',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: 5,
     flex: 0.2,
-    marginTop: 90,
+    marginTop: 70, // Adjust the margin top as needed
     backgroundColor: 'black',
-    paddingBottom: 10,
+  },
+  optionsContainer: {
+    flexDirection: 'row',
   },
   contentContainer: {
-    flex: 3,
-    marginTop: 30,
+    flex: 4,
+    marginTop: 50,
   },
   //meditate section
-  sessionButton: {
+  meditateButton: {
     flexDirection: 'row',
     height: 90,
     marginBottom: 10,
@@ -383,7 +397,18 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     justifyContent: 'space-between',
   },
-  subHeader: {
+  meditateInfoContainer: {
+    marginRight: 110,
+  },
+  meditateInfoHead: {
+    color: 'white',
+    fontSize: 15,
+  },
+  meditateInfoText: {
+    color: '#d3d3d3',
+    fontSize: 12,
+  },
+  meditateSubHeader: {
     width: 200,
     color: 'white',
   },
@@ -395,9 +420,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 10,
   },
-  optionsContainer: {
-    flexDirection: 'row',
-  },
   audioPlayer: {
     marginBottom: 20,
   },
@@ -407,124 +429,9 @@ const styles = StyleSheet.create({
     height: 550,
     marginBottom:20,
   },
-  image: {
-    flex: 1,
-    resizeMode: 'cover',
-    justifyContent: 'center',
-    width: 420,
-    height: 200,
-  },
-  eSessionImage: {
-    resizeMode: 'cover',
-    justifyContent: 'center',
-    width: 200,
-    height: 80,
-    borderRadius: 20,
-  },
-  sessionImage: {
-    width: 120,
-    height: 90,
-    resizeMode: 'cover',
-    opacity: 0.7,
-    borderRadius: 20,
-  },
-  sessionInfoContainer: {
-    marginRight: 110,
-  },
-  sessionInfoHead: {
-    color: 'white',
-    fontSize: 15,
-  },
-  sessionInfoText: {
-    color: '#d3d3d3',
-    fontSize: 12,
-  },
-
-  //statistics section 
-  statisticsContainer: {
-    alignItems: 'center',
-    marginTop: 70,
-    height: 600,
-  },
-  statisticsText: {
-    color: 'white',
-    fontSize: 18,
-    marginBottom: 10,
-  },
-  statisticBoxContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    marginTop: 20,
-    width: 400,
-  },
-  statisticBox: {
-    flex: 1,
-    backgroundColor: '#303030',
-    padding: 20,
-    borderRadius: 10,
-    marginHorizontal: 5,
-  },
-  statisticLabel: {
-    color: 'white',
-    fontSize: 16,
-    marginBottom: 10,
-  },
-  statisticValue: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  reviewSection: {
-    flexDirection: 'row',
-    marginTop: 30,
-    alignItems: 'center',
-  },
-  reviewHeader: {
-    fontSize: 18,
-    color: 'white',
-    marginTop: 20,
-  },
-  completed: {
-    color: 'black',
-    fontSize: 20,
-  },
 
   //exercises section
-  exerciseInfoContainer: {
-    alignItems: 'center',
-  },
-  exerciseName: {
-    marginTop: 10,
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: 'white',
-  },
-  exerciseLevel: {
-    fontSize: 14,
-    color: '#d3d3d3',
-  },
-  eSessionButton: {
-    flexDirection: 'row',
-    padding: 10,
-    backgroundColor: '#303030',
-    width: 350,
-    alignItems: 'center',
-    borderRadius: 10,
-    justifyContent: 'space-between',
-  },
-  eSessionInfoHead: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 5,
-    color: 'white',
-  },
-  eSessionInfoText: {
-    fontSize: 14,
-    color: '#d3d3d3',
-  },
-//containers
-  introContainer: {
+  exercisesIntroContainer: {
     height: 100,
     alignItems: 'center',
   },
@@ -538,11 +445,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: 10,
   },
-  extrasContainer: {
-    height: 170,
-    marginBottom: 100,
-    flexDirection: 'row',
+  exerciseInfoContainer: {
+    alignItems: 'center',
+  },
+  exerciseName: {
     marginTop: 10,
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+  exerciseLevel: {
+    fontSize: 14,
+    color: '#d3d3d3',
   },
   exerciseButton: {
     flexDirection: 'column',
@@ -580,9 +494,34 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     marginTop:5,
   },
+  exerciseIntroButton: {
+    flexDirection: 'row',
+    padding: 10,
+    backgroundColor: '#303030',
+    width: 350,
+    alignItems: 'center',
+    borderRadius: 10,
+    justifyContent: 'space-between',
+  },
+  exerciseIntroInfoHead: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 5,
+    color: 'white',
+  },
+  exerciseIntroInfoText: {
+    fontSize: 14,
+    color: '#d3d3d3',
+  },
+  extrasContainer: {
+    height: 170,
+    marginBottom: 100,
+    flexDirection: 'row',
+    marginTop: 10,
+  },
 
 
-//styles for the modal buttons
+//styles for the statistics part
   setGoalButton: {
     backgroundColor: '#333333',
     borderRadius: 10,
@@ -606,7 +545,106 @@ const styles = StyleSheet.create({
   },
   addSetButtonsText: {
     color: 'white',
-  }
+  },
+  past: {
+    height: 100,
+  },
+  pastHeader: {
+    marginVertical: 15,
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: 'white',
+  },
+  sessionHistoryContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    height: 150,
+  },
+  sessionHistoryText: {
+    color: 'black',
+    fontSize: 16,
+  },
+  sessionHistoryBox: {
+    backgroundColor: '#DDDD',
+    padding: 15,
+    borderRadius: 10,
+    marginBottom: 40,
+    marginRight: 10,
+  },
+   statisticsContainer: {
+    alignItems: 'center',
+    height: 600,
+  },
+  statisticsText: {
+    color: 'white',
+    fontSize: 18,
+    marginBottom: 10,
+  },
+  statisticBoxContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    marginTop: 20,
+    width: 400,
+  },
+  statisticBox: {
+    flex: 1,
+    backgroundColor: '#303030',
+    padding: 20,
+    borderRadius: 10,
+    marginHorizontal: 5,
+  },
+  statisticLabel: {
+    color: 'white',
+    fontSize: 16,
+    marginBottom: 10,
+  },
+  statisticValue: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  reviewSection: {
+    flexDirection: 'row',
+    marginTop: 10,
+    alignItems: 'center',
+  },
+  reviewHeader: {
+    fontSize: 18,
+    color: 'white',
+    marginTop: 10,
+  },
+  completed: {
+    color: 'black',
+    fontSize: 20,
+  },
+  
+
+  //images
+  sessionImage: {
+    width: 120,
+    height: 90,
+    resizeMode: 'cover',
+    opacity: 0.7,
+    borderRadius: 20,
+  },
+
+  image: {
+    flex: 1,
+    resizeMode: 'cover',
+    justifyContent: 'center',
+    width: 420,
+    height: 200,
+  },
+  eSessionImage: {
+    resizeMode: 'cover',
+    justifyContent: 'center',
+    width: 200,
+    height: 80,
+    borderRadius: 20,
+  },
 });
 
 export default MeditationApp;
