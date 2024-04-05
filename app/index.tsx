@@ -54,14 +54,14 @@ export default function Entry() {
         <Text style={styles.welcomeText}>Welcome to Fit Mind</Text>
         <Auth />
 
-        <Button title="sign out (for testing)" onPress={signOut} />
+        {/*         <Button title="sign out (for testing)" onPress={signOut} />
 
         <Link replace href="/user/(tabs)">
           <Text>Link to user home page</Text>
         </Link>
         <Link replace href="/ambassador/(tabs)">
           <Text>Link to ambassador home page</Text>
-        </Link>
+        </Link> */}
       </Pressable>
     </View>
   );

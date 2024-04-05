@@ -13,7 +13,10 @@ import Colors from "@/lib/Colors";
 import { Text } from "./Themed";
 
 export default function Auth() {
+  const [pageState, setPageState] = useState("login"); // "login" or "signup"
+
   const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -22,6 +25,10 @@ export default function Auth() {
     colorScheme === "light" ? Colors.light.text : Colors.dark.text;
 
   async function signInWithEmail() {
+    if (pageState === "signup") {
+      setPageState("login");
+      return;
+    }
     if (!validateInputs(email, password)) return;
 
     setLoading(true);
@@ -35,6 +42,10 @@ export default function Auth() {
   }
 
   async function signUpWithEmail() {
+    if (pageState === "login") {
+      setPageState("signup");
+      return;
+    }
     if (!validateInputs(email, password)) return;
 
     setLoading(true);
@@ -55,8 +66,10 @@ export default function Auth() {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      marginTop: 40,
       padding: 12,
+    },
+    usernameFieldPlaceholder: {
+      height: 92,
     },
     verticallySpaced: {
       paddingTop: 4,
@@ -66,7 +79,7 @@ export default function Auth() {
     mt15: {
       marginTop: 15,
     },
-    buttons: {
+    loginButton: {
       paddingTop: 4,
       paddingBottom: 4,
       alignSelf: "stretch",
@@ -74,9 +87,27 @@ export default function Auth() {
         colorScheme === "light"
           ? Colors.light.cardBackground
           : Colors.dark.cardBackground,
+      borderColor: colorScheme === "light" ? Colors.light.text : "#3ECF8E",
       borderRadius: 5,
       alignItems: "center",
       marginBottom: 8,
+      borderWidth: pageState === "login" ? 2 : 0,
+      opacity: pageState === "login" ? 1 : 0.65,
+    },
+    signupButton: {
+      paddingTop: 4,
+      paddingBottom: 4,
+      alignSelf: "stretch",
+      backgroundColor:
+        colorScheme === "light"
+          ? Colors.light.cardBackground
+          : Colors.dark.cardBackground,
+      borderColor: colorScheme === "light" ? Colors.light.text : "#3ECF8E",
+      borderRadius: 5,
+      alignItems: "center",
+      marginBottom: 8,
+      borderWidth: pageState === "signup" ? 2 : 0,
+      opacity: pageState === "signup" ? 1 : 0.65,
     },
     buttonText: {
       fontSize: 18,
@@ -87,6 +118,19 @@ export default function Auth() {
   return (
     <View style={styles.container}>
       <View style={[styles.verticallySpaced, styles.mt15]}>
+        {pageState === "signup" ? (
+          <Input
+            label="Full name"
+            leftIcon={{ type: "font-awesome", name: "user" }}
+            onChangeText={(text) => setName(text)}
+            value={name}
+            placeholder="John Doe"
+            autoCapitalize={"words"}
+            style={{ color: textColor }}
+          />
+        ) : (
+          <View style={styles.usernameFieldPlaceholder}></View>
+        )}
         <Input
           label="Email"
           leftIcon={{ type: "font-awesome", name: "envelope" }}
@@ -111,7 +155,7 @@ export default function Auth() {
       </View>
 
       <TouchableHighlight
-        style={[styles.buttons, styles.mt15]}
+        style={[styles.loginButton, styles.mt15]}
         disabled={loading}
         onPress={() => signInWithEmail()}
       >
@@ -119,7 +163,7 @@ export default function Auth() {
       </TouchableHighlight>
 
       <TouchableHighlight
-        style={styles.buttons}
+        style={styles.signupButton}
         disabled={loading}
         onPress={() => signUpWithEmail()}
       >
