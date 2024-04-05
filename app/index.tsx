@@ -7,25 +7,24 @@ import { supabase } from "@/lib/Supabase";
 import { signOut } from "@/lib/auth";
 export default function Entry() {
   async function redirectUser(uid: string) {
-    console.log("uid:", uid);
     if (uid == null) {
       console.log("No uid, redirecting to login page");
       router.navigate("/");
       return;
     }
 
-    const { data: user_roles } = await supabase
-      .from("user_roles")
+    const { data: profiles } = await supabase
+      .from("profiles")
       .select("*")
       .eq("user_id", uid);
 
-    if (!user_roles || user_roles.length == 0 || user_roles[0].role_id == 0) {
-      console.log("User is a consultant");
+    if (!profiles || profiles.length == 0 || profiles[0].role_id == 0) {
+      //console.log("User is a consultant");
       router.navigate("/user/(tabs)/");
       return;
     }
 
-    console.log("User is an ambassador");
+    //console.log("User is an ambassador");
     router.navigate("/ambassador/(tabs)/");
   }
 
