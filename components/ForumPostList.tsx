@@ -12,17 +12,19 @@ import { useCallback, useState } from "react";
 
 type ForumPostListProps = {
   posts: Post[];
+  refreshPosts: () => void;
 };
 
-const ForumPostList = ({ posts }: ForumPostListProps) => {
+const ForumPostList = ({ posts, refreshPosts }: ForumPostListProps) => {
   const colorScheme = useColorScheme();
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
+    refreshPosts();
     setTimeout(() => {
       setRefreshing(false);
-    }, 1000);
+    }, 500);
   }, []);
 
   const styles = StyleSheet.create({

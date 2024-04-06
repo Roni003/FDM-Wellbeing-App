@@ -45,6 +45,10 @@ export default function CreatePostForm() {
 
     label: {},
 
+    inputContainer: {
+      height: "auto",
+    },
+
     titleInput: {
       backgroundColor:
         colorScheme === "light"
@@ -74,7 +78,7 @@ export default function CreatePostForm() {
       borderRadius: 6,
       fontSize: 18,
       width: "95%",
-      height: "70%",
+      height: "60%",
     },
 
     title: {
@@ -162,7 +166,7 @@ export default function CreatePostForm() {
           }}
         >
           {(props) => (
-            <View>
+            <View style={styles.inputContainer}>
               <TextInput
                 placeholder="Title"
                 onChangeText={props.handleChange("title")}

@@ -14,26 +14,30 @@ export default function ForumPage() {
 
   const [posts, setPosts] = useState<Array<Post>>([]);
 
+  const fetchPosts = async (isActive: boolean) => {
+    try {
+      const { data } = await supabase
+        .from("forum_posts")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (isActive) {
+        setPosts(data || []);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const refreshPosts = () => {
+    fetchPosts(true);
+  };
+
   useFocusEffect(
     useCallback(() => {
       let isActive = true;
 
-      const fetchPosts = async () => {
-        try {
-          const { data } = await supabase
-            .from("forum_posts")
-            .select("*")
-            .order("created_at", { ascending: false });
-
-          if (isActive) {
-            setPosts(data || []);
-          }
-        } catch (err) {
-          console.log(err);
-        }
-      };
-
-      fetchPosts();
+      fetchPosts(isActive);
 
       return () => {
         isActive = false;
@@ -72,7 +76,7 @@ export default function ForumPage() {
   return (
     <View style={globalStyles.container}>
       <Text style={styles.header}>Forum Posts</Text>
-      <ForumPostList posts={posts} />
+      <ForumPostList posts={posts} refreshPosts={refreshPosts} />
       <Pressable
         style={({ pressed }) => [
           {
