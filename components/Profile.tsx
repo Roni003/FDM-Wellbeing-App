@@ -7,10 +7,10 @@ import { useCallback, useState } from "react";
 import { useFocusEffect } from "expo-router";
 
 export default function Profile() {
-  const [name, setName] = useState("John Doe");
+  const [name, setName] = useState("-");
   const [email, setEmail] = useState("Fetching...");
   const [id, setId] = useState("Fetching...");
-  const [postCount, setPostCount] = useState(-1);
+  const [postCount, setPostCount] = useState(0);
   const [errorText, setErrorText] = useState("");
 
   useFocusEffect(
@@ -21,7 +21,7 @@ export default function Profile() {
         try {
           const { data } = await supabase.from("forum_posts").select("*");
           if (isActive) {
-            setPostCount(data?.length || -1);
+            setPostCount(data?.length);
           }
         } catch (err) {
           console.log(err);
@@ -31,9 +31,11 @@ export default function Profile() {
       const fetchSession = async () => {
         try {
           const data = await supabase.auth.getSession();
+          console.log(data.data.session?.user);
           if (isActive) {
             setId(data.data.session?.user.id || "Failed to fetch user id");
             setEmail(data.data.session?.user.email || "Failed to fetch email");
+            setName(data.data.session?.user.user_metadata.full_name || "-");
             setErrorText("");
             if (data.data.session == null && data.error == null)
               setErrorText("Not logged in");

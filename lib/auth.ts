@@ -20,6 +20,14 @@ export function validateEmail(email: string): boolean {
   return true;
 }
 
+export function validateName(name: string) {
+  if (!name || name.length == 0) {
+    Alert.alert("Please enter a name.");
+    return false;
+  }
+  return true;
+}
+
 export function validateInputs(email: string, password: string): boolean {
   if (!validateEmail(email)) {
     Alert.alert("Please enter a valid email address");
