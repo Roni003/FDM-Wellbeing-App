@@ -161,13 +161,13 @@ const MeditationApp = () => {
             
             <View style={styles.addSetButtons}>
             <TouchableOpacity style={[styles.setGoalButton, { backgroundColor: themeColors.innerBackground }]} onPress={handleDailyGoalModalOpen}>
-                <Text style={[styles.addSetButtonsText, { color: themeColors.text }]}>Set Daily Goal</Text>
+                <Text style={[{ color: themeColors.text }]}>Set Daily Goal</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.setGoalButton, { backgroundColor: themeColors.innerBackground }]} onPress={handleAddMinutesModalOpen}>
-              <Text style={[styles.addSetButtonsText, { color: themeColors.text }]}>Add Minutes</Text>       
+              <Text style={[ { color: themeColors.text }]}>Add Minutes</Text>       
             </TouchableOpacity>
             <TouchableOpacity  style={[styles.setGoalButton, { backgroundColor: themeColors.innerBackground }]} onPress={toggleMeditationHistoryModal}>
-              <Text style={[styles.addSetButtonsText, { color: themeColors.text }]}>View History</Text>
+              <Text style={[ { color: themeColors.text }]}>View History</Text>
             </TouchableOpacity>
             </View>
 
@@ -193,6 +193,7 @@ const MeditationApp = () => {
                     <Text style={styles.meditateInfoText}>Duration: {session.duration / 60} mins</Text>
                   </View>
                 </TouchableOpacity>
+                
               ))}
             </View>
 
@@ -305,6 +306,7 @@ const MeditationApp = () => {
                         ))}
                       </View>
                     </ScrollView>
+                    
                     </View>
                   </>
                 )}
@@ -322,7 +324,8 @@ const MeditationApp = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={[styles.scrollViewContent, { backgroundColor: themeColors.background }]}>
+    <ScrollView contentContainerStyle={[styles.scrollViewContent, { backgroundColor: themeColors.background }]}
+    style={{ flex: 1 }}>
       <View style={styles.backButtonContainer}>
         <BackButton destination={"/user/(tabs)/"} name={"Dashboard"} />
       </View>
@@ -394,7 +397,6 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 4,
-    marginTop: 30,
   },
   //meditate section
   meditateButton: {
@@ -442,7 +444,7 @@ const styles = StyleSheet.create({
   //exercises section
   exercisesMainContainer: {
     alignItems: 'center',
-    height: 530,
+    height: 'auto',
     marginTop: 0,
   },
   exercisesContainer: {
