@@ -118,10 +118,15 @@ export default function SinglePost() {
       fontSize: 14,
       marginBottom: 10,
     },
+    from: {
+      fontSize: 15,
+      alignSelf: "flex-end",
+      paddingBottom: 8,
+      marginTop: "auto",
+    },
     date: {
       fontSize: 12,
       alignSelf: "flex-end",
-      marginTop: "auto",
     },
 
     repliesContainer: {
@@ -259,6 +264,7 @@ export default function SinglePost() {
             )}
           </View>
           <Text style={styles.content}>{post.content}</Text>
+          <Text style={styles.from}>from {post.full_name}</Text>
           <Text style={styles.date}>Posted at: {date}</Text>
         </View>
       ) : (

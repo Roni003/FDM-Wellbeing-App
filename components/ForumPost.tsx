@@ -16,7 +16,10 @@ const ForumPost = ({ post }: ForumPostProps) => {
     container: {
       margin: 7,
       borderRadius: 10,
-      borderColor: "rgba(250, 250, 250, 0.2)",
+      borderColor:
+        colorScheme === "light"
+          ? Colors.light.borderColor
+          : Colors.dark.borderColor,
       borderWidth: 0.5,
       padding: 10,
       backgroundColor:
@@ -32,6 +35,11 @@ const ForumPost = ({ post }: ForumPostProps) => {
     content: {
       fontSize: 14,
       marginBottom: 10,
+    },
+    from: {
+      fontSize: 15,
+      alignSelf: "flex-end",
+      paddingBottom: 8,
     },
     date: {
       fontSize: 12,
@@ -51,6 +59,7 @@ const ForumPost = ({ post }: ForumPostProps) => {
     >
       <Text style={styles.title}>{post.title}</Text>
       <Text style={styles.content}>{post.content}</Text>
+      <Text style={styles.from}>from {post.full_name}</Text>
       <Text style={styles.date}>Posted at: {date}</Text>
     </Pressable>
   );

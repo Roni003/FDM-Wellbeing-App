@@ -141,6 +141,10 @@ export default function CreatePostForm() {
             setBodyError(false);
 
             supabase.auth.getSession().then(async ({ data: { session } }) => {
+              const username = session?.user.user_metadata.full_name
+                ? session?.user.user_metadata.full_name
+                : session?.user.email;
+
               const { data, error } = await supabase
                 .from("forum_posts")
                 .insert([
@@ -148,6 +152,7 @@ export default function CreatePostForm() {
                     title: values.title,
                     content: values.body,
                     user_id: session?.user.id,
+                    full_name: username,
                   },
                 ])
                 .select();
