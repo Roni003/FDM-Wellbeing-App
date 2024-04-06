@@ -12,7 +12,7 @@ const VideoPlayer = ({ videoSource, style, onVideoEnd }) => {
   };
 
   return (
-    <View style={[styles.container, style]}>
+    //<View style={[styles.container, style]}>
       <Video
         ref={videoRef}
         source={videoSource}
@@ -20,21 +20,16 @@ const VideoPlayer = ({ videoSource, style, onVideoEnd }) => {
         volume={1.0}
         isMuted={false}
         useNativeControls
-        resizeMode="cover"
+        resizeMode="contain"
         shouldPlay
         style={styles.video}
         onPlaybackStatusUpdate={handlePlaybackStatusUpdate} // Add the event handler
       />
-    </View>
+    //</View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   video: {
     width: '60%',
     height: '100%',

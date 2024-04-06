@@ -4,11 +4,12 @@ import AudioPlayer from '@/components/audioPlayer'
 import VideoPlayer from '@/components/VideoPlayer';
 import DailyGoalModal from '@/components/DailyGoalModal';
 import AddMinutesModal from '@/components/AddMinutesModal';
+import MeditationHistoryModal from '@/components/MeditationHistoryModal';
 import { meditationSessions, intro, exercises, extras } from '@/data/index'
 import Options from '@/components/meditationOptions';
 import PastGoals from '@/components/pastGoalComponent';
-import Colors from "@/lib/Colors";
 import BackButton from '@/components/BackButton';
+import Colors from "@/lib/Colors";
 
 const MeditationApp = () => {
   const colorScheme = useColorScheme();
@@ -28,6 +29,7 @@ const MeditationApp = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [additionalMinutes, setAdditionalMinutes] = useState('');
   const [addMinutesModalVisible, setAddMinutesModalVisible] = useState(false);
+  const [showSessionHistoryModal, setShowSessionHistoryModal] = useState(false);
 
 
   const dailyGoal = userInputGoal !== '' ? parseInt(userInputGoal) : 10; // Use userInputGoal if available, otherwise default to 10
@@ -83,6 +85,15 @@ const MeditationApp = () => {
     setAddMinutesModalVisible(false);
   };
   
+  // Function to toggle session history modal visibility
+  const toggleMeditationHistoryModal = () => {
+    setShowSessionHistoryModal(!showSessionHistoryModal);
+  };
+
+  // Function to close session history modal
+  const closeSessionHistoryModal = () => {
+    setShowSessionHistoryModal(false);
+  };
 
   //function for the start session button
   const startTimer = (session) => {
@@ -123,54 +134,43 @@ const MeditationApp = () => {
       case 'Statistics':
         return (
           <View style={styles.statisticsContainer}>
-            <Text style={[styles.pastHeader, { color: 'white' }]}>Past progress</Text>
+            <Text style={[styles.pastHeader, { color: themeColors.text }]}>Past progress</Text>
             <View style={styles.past}>
               <PastGoals data={data} goal={dailyGoal} />
             </View>
             <View style={styles.statisticBoxContainer}>
-              <View style={styles.statisticBox}>
-                <Text style={styles.statisticLabel}>Sessions Completed</Text>
-                <Text style={styles.statisticValue}>{totalSessions}</Text>
+              <View style={[styles.statisticBox, { backgroundColor: themeColors.innerBackground }]}>
+                <Text style={[styles.statisticLabel, { color: themeColors.text }]}>Sessions Completed</Text>
+                <Text style={[styles.statisticValue, { color: themeColors.text }]}>{totalSessions}</Text>
               </View>
-              <View style={styles.statisticBox}>
-                <Text style={styles.statisticLabel}>Lessons{'\n'}Watched</Text>
-                <Text style={styles.statisticValue}>{lessonsWatched}</Text>
+              <View style={[styles.statisticBox, { backgroundColor: themeColors.innerBackground }]}>
+                <Text style={[styles.statisticLabel, { color: themeColors.text }]}>Lessons{'\n'}Watched</Text>
+                <Text style={[styles.statisticValue, { color: themeColors.text }]}>{lessonsWatched}</Text>
               </View>
             </View>
             <View style={styles.statisticBoxContainer}>
-              <View style={styles.statisticBox}>
-                <Text style={styles.statisticLabel}>Minutes Meditated</Text>
-                <Text style={styles.statisticValue}>{totalMinutes} mins</Text>
+              <View style={[styles.statisticBox, { backgroundColor: themeColors.innerBackground }]}>
+                <Text style={[styles.statisticLabel, { color: themeColors.text }]}>Minutes Meditated</Text>
+                <Text style={[styles.statisticValue, { color: themeColors.text }]}>{totalMinutes} mins</Text>
               </View>
-              <View style={[styles.statisticBox, { backgroundColor: dailyGoalBoxColor }]}>
-                <Text style={styles.statisticLabel}>Daily {'\n'}Goal:</Text>
-                <Text style={styles.statisticValue}>{dailyGoal} mins</Text>
+              <View style={[styles.statisticBox, { backgroundColor: dailyGoalAchieved ? 'green' : themeColors.innerBackground }]}>
+                <Text style={[styles.statisticLabel, { color: themeColors.text }]}>Daily {'\n'}Goal:</Text>
+                <Text style={[styles.statisticValue, { color: themeColors.text }]}>{dailyGoal} mins</Text>
               </View>
             </View>
             
             <View style={styles.addSetButtons}>
-            <TouchableOpacity style={styles.setGoalButton} onPress={handleDailyGoalModalOpen}>
-                <Text style={styles.addSetButtonsText}>Set Daily Goal</Text>
+            <TouchableOpacity style={[styles.setGoalButton, { backgroundColor: themeColors.innerBackground }]} onPress={handleDailyGoalModalOpen}>
+                <Text style={[styles.addSetButtonsText, { color: themeColors.text }]}>Set Daily Goal</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.setGoalButton} onPress={handleAddMinutesModalOpen}>
-              <Text style={styles.addSetButtonsText}>Add Minutes</Text>       
+            <TouchableOpacity style={[styles.setGoalButton, { backgroundColor: themeColors.innerBackground }]} onPress={handleAddMinutesModalOpen}>
+              <Text style={[styles.addSetButtonsText, { color: themeColors.text }]}>Add Minutes</Text>       
+            </TouchableOpacity>
+            <TouchableOpacity  style={[styles.setGoalButton, { backgroundColor: themeColors.innerBackground }]} onPress={toggleMeditationHistoryModal}>
+              <Text style={[styles.addSetButtonsText, { color: themeColors.text }]}>View History</Text>
             </TouchableOpacity>
             </View>
 
-            <Text style={styles.reviewHeader}>Session History</Text>
-            <View style={styles.reviewSection}>
-              <ScrollView horizontal>
-                <View style={styles.sessionHistoryContainer}>
-                  {previousSessions.map(item => (
-                    <View style={styles.sessionHistoryBox} key={item.id}>
-                      <Text style={styles.sessionHistoryText}>{item.completionDate.toLocaleString([], {dateStyle: 'short', timeStyle: 'short'})}</Text>
-                      <Text style={styles.sessionHistoryText}>{item.name}</Text>
-                      <Text style={styles.sessionHistoryText}>Duration: {item.duration / 60} mins</Text>
-                    </View>
-                  ))}
-                </View>
-              </ScrollView>
-            </View>
           </View>
         );
       case 'Meditate':
@@ -180,7 +180,7 @@ const MeditationApp = () => {
               {showSessionOptions && meditationSessions.map((session) => (
                 <TouchableOpacity
                   key={session.id}
-                  style={styles.meditateButton}
+                  style={[styles.meditateButton, { backgroundColor: themeColors.innerBackground }]}
                   onPress={() => setSelectedSession(session)}>
 
                   <Image
@@ -188,7 +188,7 @@ const MeditationApp = () => {
                     style={styles.sessionImage}
                   />
                   <View style={styles.meditateInfoContainer}>
-                    <Text style={styles.meditateInfoHead}>{session.name}</Text>
+                    <Text style={[styles.meditateInfoHead, {color: themeColors.text}]}>{session.name}</Text>
                     <Text style={styles.meditateInfoText}>Level: {session.level}</Text>
                     <Text style={styles.meditateInfoText}>Duration: {session.duration / 60} mins</Text>
                   </View>
@@ -199,7 +199,7 @@ const MeditationApp = () => {
             {selectedSession && !sessionStarted && (
               <View>
                 <>
-                  <Text style={styles.meditateSubHeader}>Selected Duration: {selectedSession.duration / 60} minutes</Text>
+                  <Text style={[styles.meditateSubHeader, { color: themeColors.text }]}>Selected Duration: {selectedSession.duration / 60} minutes</Text>
                   <TouchableOpacity style={styles.startButton} onPress={() => startTimer(selectedSession)}>
                     <Text>Start Session</Text>
                   </TouchableOpacity>
@@ -245,15 +245,15 @@ const MeditationApp = () => {
                   // Render only when no video is selected
                   <>
                 
-                    <View style={styles.exercisesIntroContainer}>
+                    <View style={styles.exercisesMainContainer}>
                       {showSessionOptions && intro.map((eSession) => (
                         <TouchableOpacity
                           key={eSession.id}
-                          style={styles.exerciseIntroButton}
+                          style={[styles.exerciseIntroButton, { backgroundColor: themeColors.innerBackground }]}       //CHANGE WIDTH OF THIS 
                           onPress={() => setSelectedVideo(eSession)}>
         
-                          <View style={styles.exerciseIntroInfoContainer}>
-                            <Text style={styles.exerciseIntroInfoHead}>{eSession.name}</Text>
+                          <View style={{ backgroundColor: themeColors.innerBackground }}>
+                            <Text style={[styles.exerciseIntroInfoHead, { color: themeColors.text }]}>{eSession.name}</Text>
                             <Text style={styles.exerciseIntroInfoText}>Techniques, Benfits{'\n'}and a Beginner's {'\n'}How-To</Text>
                           </View>
                           <Image
@@ -262,15 +262,14 @@ const MeditationApp = () => {
                           />
                         </TouchableOpacity>
                       ))}
-                    </View>
-                    <View style={styles.scrollContainer}>
-                    <Text style={styles.exerciseTitle}>Guided Breathwork</Text>
+                    
+                    <Text style={[styles.exerciseTitle, { color: themeColors.text }]}>Guided Breathwork</Text>
                     <ScrollView horizontal>
                       <View style={styles.exercisesContainer}>
                         {showSessionOptions && exercises.map((esession) => (
                           <TouchableOpacity
                             key={esession.id}
-                            style={styles.exerciseButton}
+                            style={[styles.exerciseButton, { backgroundColor: themeColors.innerBackground }]}
                             onPress={() => setSelectedVideo(esession)}>
         
                             <Image
@@ -278,20 +277,20 @@ const MeditationApp = () => {
                               style={styles.sessionImage}
                             />
                             <View style={styles.exerciseInfoContainer}>
-                              <Text style={styles.exerciseName}>{esession.name}</Text>
+                              <Text style={[styles.exerciseName, { color: themeColors.text }]}>{esession.name}</Text>
                               <Text style={styles.exerciseLevel}>Level: {esession.level}</Text>
                             </View>
                           </TouchableOpacity>
                         ))}
                       </View>
                     </ScrollView>
-                    <Text style={styles.exerciseTitle}>Deepen your practice</Text>
+                    <Text style={[styles.exerciseTitle, { color: themeColors.text }]}>Deepen your practice</Text>
                     <ScrollView horizontal>
                       <View style={styles.extrasContainer}>
                         {showSessionOptions && extras.map((esession) => (
                           <TouchableOpacity
                             key={esession.id}
-                            style={styles.exerciseButton}
+                            style={[styles.exerciseButton, { backgroundColor: themeColors.innerBackground }]}
                             onPress={() => setSelectedVideo(esession)}>
         
                             <Image
@@ -299,7 +298,7 @@ const MeditationApp = () => {
                               style={styles.sessionImage}
                             />
                             <View style={styles.exerciseInfoContainer}>
-                              <Text style={styles.exerciseName}>{esession.name}</Text>
+                              <Text style={[styles.exerciseName, { color: themeColors.text }]}>{esession.name}</Text>
                               <Text style={styles.exerciseLevel}>Level: {esession.level}</Text>
                             </View>
                           </TouchableOpacity>
@@ -323,10 +322,12 @@ const MeditationApp = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={[styles.scrollViewContent, { backgroundColor: 'black'}]}>
-      
-      <View style={styles.headerContainer}>
+    <ScrollView contentContainerStyle={[styles.scrollViewContent, { backgroundColor: themeColors.background }]}>
+      <View style={styles.backButtonContainer}>
         <BackButton destination={"/user/(tabs)/"} name={"Dashboard"} />
+      </View>
+      <View style={styles.headerContainer}>
+        
         {/* Conditionally render options based on sessionStarted */}
         {!sessionStarted && (
             <Options
@@ -357,6 +358,11 @@ const MeditationApp = () => {
         handleAddDailyMinutes={handleAddDailyMinutes}
         handleAddMinutesModalClose={handleAddMinutesModalClose}
       />
+      <MeditationHistoryModal
+        isVisible={showSessionHistoryModal}
+        sessions={previousSessions}
+        onClose={closeSessionHistoryModal}
+      />
     
     </ScrollView>
   );
@@ -365,13 +371,18 @@ const MeditationApp = () => {
 
 const styles = StyleSheet.create({
   //top navigate options
+  backButtonContainer: {
+    marginTop: 50,
+    position: 'absolute',
+    top: 0,
+    left: 20,
+  },
   headerContainer: {
     flexDirection: 'column',
     alignItems: 'center',
     gap: 5,
     flex: 0.2,
-    marginTop: 70, // Adjust the margin top as needed
-    backgroundColor: 'black',
+    marginTop: 100, // Adjust the margin top as needed
   },
   optionsContainer: {
     flexDirection: 'row',
@@ -394,17 +405,17 @@ const styles = StyleSheet.create({
     width: 350,
     alignItems: 'center',
     borderRadius: 10,
-    justifyContent: 'space-between',
   },
   meditateInfoContainer: {
-    marginRight: 100,
+    marginLeft: 10,
   },
   meditateInfoHead: {
     color: 'white',
     fontSize: 15,
+    fontWeight: 'bold',
   },
   meditateInfoText: {
-    color: '#d3d3d3',
+    color: '#808080',
     fontSize: 12,
   },
   meditateSubHeader: {
@@ -429,19 +440,17 @@ const styles = StyleSheet.create({
   },
 
   //exercises section
-  exercisesIntroContainer: {
-    height: 100,
+  exercisesMainContainer: {
     alignItems: 'center',
-  },
-  scrollContainer: {
-     marginLeft: 30,
-     height: 530,
-     marginTop: 20,
+    height: 530,
+    marginTop: 0,
   },
   exercisesContainer: {
     flex: 1,
     flexDirection: 'row',
     marginTop: 10,
+    marginLeft: 30,
+    height: 160,
   },
   exerciseInfoContainer: {
     alignItems: 'center',
@@ -454,7 +463,7 @@ const styles = StyleSheet.create({
   },
   exerciseLevel: {
     fontSize: 14,
-    color: '#d3d3d3',
+    color: '#808080',
   },
   exerciseButton: {
     flexDirection: 'column',
@@ -465,20 +474,20 @@ const styles = StyleSheet.create({
     marginRight: 20,
   },
   videoPlayerContainer: {
-    height: 500,
+    height: 250,
     width: 400,
     alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 100,
   },
   videoPlayer: {
     aspectRatio: 10 / 7,
-    marginBottom: 100,
   },
   goBackButton: {
     backgroundColor: '#333',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
-    marginBottom: 0,
     width: '50%',
   },
   goBackButtonText: {
@@ -486,7 +495,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   exerciseTitle: {
-    color: 'white',
     fontSize: 18,
     fontWeight: 'bold',
     marginLeft: 10,
@@ -505,19 +513,17 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 5,
-    color: 'white',
   },
   exerciseIntroInfoText: {
     fontSize: 14,
-    color: '#d3d3d3',
+    color: '#808080',
   },
   extrasContainer: {
-    height: 170,
-    marginBottom: 100,
+    height: 160,
     flexDirection: 'row',
     marginTop: 10,
+    marginLeft: 30,
   },
-
 
 //styles for the statistics part
   setGoalButton: {
@@ -534,49 +540,26 @@ const styles = StyleSheet.create({
     marginTop: 10, 
   },
   addMinutesButtonText: {
-    color: '#ffffff',
     fontSize: 16,
   },
   addSetButtons: {
     flexDirection: 'row',
     gap: 10,
   },
-  addSetButtonsText: {
-    color: 'white',
-  },
   past: {
     height: 100,
   },
   pastHeader: {
-    marginVertical: 15,
+    marginVertical: 0,
     fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'center',
-    color: 'white',
-  },
-  sessionHistoryContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    height: 150,
-  },
-  sessionHistoryText: {
-    color: 'black',
-    fontSize: 16,
-  },
-  sessionHistoryBox: {
-    backgroundColor: '#DDDD',
-    padding: 15,
-    borderRadius: 10,
-    marginBottom: 40,
-    marginRight: 10,
   },
    statisticsContainer: {
     alignItems: 'center',
     height: 600,
   },
   statisticsText: {
-    color: 'white',
     fontSize: 18,
     marginBottom: 10,
   },
@@ -589,18 +572,16 @@ const styles = StyleSheet.create({
   },
   statisticBox: {
     flex: 1,
-    backgroundColor: '#303030',
     padding: 20,
     borderRadius: 10,
     marginHorizontal: 5,
   },
   statisticLabel: {
-    color: 'white',
     fontSize: 16,
     marginBottom: 10,
+    fontWeight: 'bold',
   },
   statisticValue: {
-    color: 'white',
     fontSize: 18,
     fontWeight: 'bold',
   },
@@ -639,7 +620,7 @@ const styles = StyleSheet.create({
   eSessionImage: {
     resizeMode: 'cover',
     justifyContent: 'center',
-    width: 200,
+    width: 150,
     height: 80,
     borderRadius: 20,
   },

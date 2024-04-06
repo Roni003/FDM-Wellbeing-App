@@ -50,6 +50,7 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 10,
     width: '80%',
+    alignItems: 'center',
   },
   modalTitle: {
     fontSize: 20,
@@ -62,6 +63,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10,
     marginBottom: 10,
+    width: '100%',
   },
   modalButton: {
     backgroundColor: '#333333',
@@ -69,6 +71,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: 'center',
     marginTop: 10,
+    width: '100%',
   },
   modalButtonText: {
     color: '#ffffff',

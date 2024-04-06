@@ -1,19 +1,24 @@
 import React from 'react';
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, Text, StyleSheet, useColorScheme } from 'react-native';
+import Colors from "@/lib/Colors";
+
 
 const Options = ({ options, selectedOption, onSelectOption }) => {
+  const colorScheme = useColorScheme();
+  const themeColors = colorScheme === "light" ? Colors.light : Colors.dark;
   return (
-    <View style={styles.optionsContainer}>
+    <View style={[styles.optionsContainer]}>
       {options.map(option => (
         <TouchableOpacity
           key={option}
           style={[
             styles.option,
+            selectedOption === option && { borderColor: themeColors.text },
             selectedOption === option && styles.selectedOption
           ]}
           onPress={() => onSelectOption(option)}
         >
-          <Text style={styles.optionText}>{option}</Text>
+          <Text style={[styles.optionText, { color: themeColors.text }]}>{option}</Text>
         </TouchableOpacity>
       ))}
     </View>
@@ -31,12 +36,12 @@ const styles = StyleSheet.create({
     borderColor: 'transparent',
   },
   selectedOption: {
-    borderColor: 'white',
+    //borderColor: 'black',
     marginBottom: 10,
   },
   optionText: {
     fontSize: 15,
-    color: 'white',
+    fontWeight: 'bold',
   },
 });
 
