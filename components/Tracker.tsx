@@ -31,8 +31,8 @@ const Tracker = ({ head, counter, link }: TrackerProps) => {
           : Colors.dark.cardBackground,
       borderColor:
         colorScheme === "light"
-          ? Colors.light.borderColor
-          : Colors.dark.borderColor,
+          ? Colors.light.lowOpacityTint
+          : Colors.dark.tint,
       borderWidth: 0.5,
     },
 
@@ -60,9 +60,7 @@ const Tracker = ({ head, counter, link }: TrackerProps) => {
         onPress={() => router.navigate(link)}
         style={({ pressed }) => [
           {
-            backgroundColor: pressed
-              ? "rgba(100, 160, 255, 0.5)"
-              : "rgba(100, 160, 255, 0.1)",
+            opacity: pressed ? 0.7 : 1,
           },
           styles.pressable,
         ]}
