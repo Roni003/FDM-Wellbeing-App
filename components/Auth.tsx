@@ -147,7 +147,7 @@ export default function Auth() {
           leftIcon={{ type: "font-awesome", name: "envelope" }}
           onChangeText={(text) => setEmail(text)}
           value={email}
-          placeholder="email@address.com"
+          placeholder="john.doe@fdmgroup.com"
           autoCapitalize={"none"}
           style={{ color: textColor }}
         />
