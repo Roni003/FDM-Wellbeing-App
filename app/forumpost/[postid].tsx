@@ -154,6 +154,42 @@ export default function SinglePost() {
     return date.toDateString();
   };
 
+  const fetchReplies = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("post_replies")
+        .select("*")
+        .eq("post_id", postid);
+
+      if (error) {
+        console.log(error);
+        return;
+      }
+
+      if (data) {
+        setReplies(data);
+      }
+    } catch (err) {
+      console.error("Error fetching replies:", err);
+    }
+  };
+
+  const fetchPosts = async (isActive: boolean) => {
+    try {
+      const { data } = await supabase
+        .from("forum_posts")
+        .select("*")
+        .eq("post_id", postid);
+
+      if (isActive) {
+        setPost(data[0]);
+        setDate(new Date(data[0].created_at).toUTCString());
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   function deletePost(post_id) {
     Alert.alert("Delete Post", "Are you sure you want to DELETE this post?", [
       {
@@ -186,62 +222,20 @@ export default function SinglePost() {
 
   useFocusEffect(
     useCallback(() => {
-      const postReplies = async () => {
-        try {
-          const { data, error } = await supabase
-            .from("post_replies")
-            .select("*")
-            .eq("post_id", postid);
-
-          if (error) {
-            console.log(error);
-            return;
-          }
-
-          if (data) {
-            setReplies(data);
-          }
-        } catch (err) {
-          console.error("Error fetching replies:", err);
-        }
-      };
-
+      let isActive = true;
       const setId = async () => {
         const data = await supabase.auth.getSession();
         setUserId(data.data.session?.user.id || "");
       };
 
       setId();
-      postReplies();
-    }, [postid])
-  );
-
-  useFocusEffect(
-    useCallback(() => {
-      let isActive = true;
-
-      const fetchPosts = async () => {
-        try {
-          const { data } = await supabase
-            .from("forum_posts")
-            .select("*")
-            .eq("post_id", postid);
-
-          if (isActive) {
-            setPost(data[0]);
-            setDate(new Date(data[0].created_at).toUTCString());
-          }
-        } catch (err) {
-          console.log(err);
-        }
-      };
-
-      fetchPosts();
+      fetchReplies();
+      fetchPosts(isActive);
 
       return () => {
         isActive = false;
       };
-    }, [])
+    }, [postid])
   );
 
   return (
@@ -298,6 +292,8 @@ export default function SinglePost() {
                   console.log(error);
                 } else {
                   resetForm();
+                  Alert.alert("Replied to post!");
+                  fetchReplies();
                 }
               }
             });
