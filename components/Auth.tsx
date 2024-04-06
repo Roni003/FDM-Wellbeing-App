@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { supabase } from "@/lib/Supabase";
 import { Button, Input, colors } from "react-native-elements";
-import { validateInputs } from "@/lib/auth";
+import { validateInputs, validateName } from "@/lib/auth";
 import Colors from "@/lib/Colors";
 import { Text } from "./Themed";
 
@@ -47,6 +47,7 @@ export default function Auth() {
       return;
     }
     if (!validateInputs(email, password)) return;
+    if (!validateName(name)) return;
 
     setLoading(true);
     const {
@@ -55,9 +56,17 @@ export default function Auth() {
     } = await supabase.auth.signUp({
       email: email,
       password: password,
+      options: {
+        data: {
+          full_name: name,
+        },
+      },
     });
 
-    if (error) Alert.alert(error.message);
+    if (error) {
+      Alert.alert(error.message);
+      console.log(error);
+    }
     if (!session)
       Alert.alert("Please check your inbox for email verification!");
     setLoading(false);

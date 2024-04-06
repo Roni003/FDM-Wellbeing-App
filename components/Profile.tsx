@@ -31,9 +31,11 @@ export default function Profile() {
       const fetchSession = async () => {
         try {
           const data = await supabase.auth.getSession();
+          console.log(data.data.session?.user);
           if (isActive) {
             setId(data.data.session?.user.id || "Failed to fetch user id");
             setEmail(data.data.session?.user.email || "Failed to fetch email");
+            setName(data.data.session?.user.user_metadata.full_name || "-");
             setErrorText("");
             if (data.data.session == null && data.error == null)
               setErrorText("Not logged in");
@@ -44,30 +46,6 @@ export default function Profile() {
         }
       };
 
-      const fetchName = async () => {
-        try {
-          const sesh = await supabase.auth.getSession();
-          const id = sesh.data.session?.user.id;
-          if (!id) return;
-
-          if (isActive) {
-            const { data, error } = await supabase
-              .from("profiles")
-              .select("*")
-              .eq("id", id);
-
-            if (error) {
-              console.log(error);
-            } else {
-              if (data.length > 0) setName(data[0].full_name);
-            }
-          }
-        } catch (error) {
-          console.log(error);
-        }
-      };
-
-      fetchName();
       fetchPosts();
       fetchSession();
 
