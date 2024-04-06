@@ -29,7 +29,10 @@ const Tracker = ({ head, counter, link }: TrackerProps) => {
         colorScheme === "light"
           ? Colors.light.cardBackground
           : Colors.dark.cardBackground,
-      borderColor: "rgba(250, 250, 250, 0.2)",
+      borderColor:
+        colorScheme === "light"
+          ? Colors.light.borderColor
+          : Colors.dark.borderColor,
       borderWidth: 0.5,
     },
 

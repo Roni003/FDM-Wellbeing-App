@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
@@ -6,21 +6,33 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { StyleSheet } from "react-native";
 import { useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/lib/Colors";
+import { color } from "react-native-elements/dist/helpers";
 
 export default function TabLayout() {
+  const [render, setRender] = useState(0);
   const colorScheme = useColorScheme();
 
+  useEffect(() => {
+    setRender((val) => val);
+  }, [colorScheme]);
+  //
   return (
     // Tab bar color does not refresh when changing color modes. (bug?, probably bcs it doesnt re-render)
     <Tabs
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
+          borderTopColor: "transparent",
           backgroundColor:
             colorScheme === "light"
               ? Colors.light.tabBarBackground
               : Colors.dark.tabBarBackground,
         },
+
+        tabBarActiveTintColor:
+          colorScheme === "light"
+            ? Colors.light.tabIconSelected
+            : Colors.dark.tabIconSelected,
       }}
     >
       <Tabs.Screen

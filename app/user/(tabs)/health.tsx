@@ -21,12 +21,12 @@ export default function health() {
 
   const styles = StyleSheet.create({
     header: {
-      flexDirection: 'row',
+      flexDirection: "row",
       justifyContent: "space-between",
     },
     headerText: {
       ...globalStyles.header2,
-      padding: 8
+      padding: 8,
     },
     inputs: {
       paddingTop: 8,
@@ -85,11 +85,14 @@ export default function health() {
       color: textColor,
     },
     selectedOption: {
-      backgroundColor: "rgba(100, 160, 255, 0.4)",
+      backgroundColor:
+        colorScheme === "light"
+          ? Colors.light.lowOpacityTint
+          : Colors.dark.lowOpacityTint,
     },
     clearButton: {
-      color: colorScheme === "light" ? Colors.light.text : Colors.dark.text,
-      opacity: 0.7,
+      color: colorScheme === "light" ? Colors.light.tint : Colors.dark.tint,
+      opacity: 0.9,
       alignSelf: "center",
       padding: 5,
       marginBottom: 10,
@@ -187,11 +190,11 @@ export default function health() {
         <View style={styles.header}>
           <Text style={styles.headerText}>Health Data</Text>
           <FontAwesome
-                  name="eraser"
-                  size={28}
-                  style={[styles.clearButton, { transform: [{ rotate: '180deg' }] }]}
-                  onPress={handleReset}
-                />
+            name="eraser"
+            size={28}
+            style={[styles.clearButton, { transform: [{ rotate: "180deg" }] }]}
+            onPress={handleReset}
+          />
         </View>
         <View style={{ height: 10 }} />
         <View style={styles.buttonSelector}>

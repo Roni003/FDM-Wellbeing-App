@@ -67,7 +67,9 @@ const PostReplies = ({ replies }) => {
           </View>
         ))
       ) : (
-        <Text>No replies available.</Text>
+        <Text style={{ alignSelf: "center", paddingTop: 20, fontSize: 18 }}>
+          No replies available.
+        </Text>
       )}
     </ScrollView>
   );

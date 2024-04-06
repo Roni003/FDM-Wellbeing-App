@@ -1,4 +1,4 @@
-import { StyleSheet, Pressable } from "react-native";
+import { StyleSheet, Pressable, useColorScheme } from "react-native";
 import { supabase } from "@/lib/Supabase";
 import React, { useCallback, useState } from "react";
 
@@ -7,8 +7,11 @@ import { Text, View } from "@/components/Themed";
 import { Link, useFocusEffect, router } from "expo-router";
 import { globalStyles } from "@/lib/Styles";
 import ForumPostList from "@/components/ForumPostList";
+import Colors from "@/lib/Colors";
 
 export default function TabThreeScreen() {
+  const colorScheme = useColorScheme();
+
   const [posts, setPosts] = useState<Array<Post>>([]);
 
   useFocusEffect(
@@ -49,7 +52,11 @@ export default function TabThreeScreen() {
       marginTop: 12,
       fontSize: 24,
     },
-    pressable: {
+    addPostButton: {
+      backgroundColor:
+        colorScheme === "light"
+          ? Colors.light.cardBackground
+          : Colors.dark.cardBackground,
       padding: 10,
       borderRadius: 10,
       marginTop: 10,
@@ -69,11 +76,9 @@ export default function TabThreeScreen() {
       <Pressable
         style={({ pressed }) => [
           {
-            backgroundColor: pressed
-              ? "rgba(100, 160, 255, 0.5)"
-              : "rgba(100, 160, 255, 0.1)",
+            opacity: pressed ? 0.6 : 1,
           },
-          styles.pressable,
+          styles.addPostButton,
         ]}
         onPress={() => router.navigate("/forumpost/createPost")}
       >

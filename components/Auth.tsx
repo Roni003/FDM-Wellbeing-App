@@ -96,7 +96,8 @@ export default function Auth() {
         colorScheme === "light"
           ? Colors.light.cardBackground
           : Colors.dark.cardBackground,
-      borderColor: colorScheme === "light" ? Colors.light.text : "#3ECF8E",
+      borderColor:
+        colorScheme === "light" ? Colors.light.text : Colors.dark.tint,
       borderRadius: 5,
       alignItems: "center",
       marginBottom: 8,
@@ -111,7 +112,8 @@ export default function Auth() {
         colorScheme === "light"
           ? Colors.light.cardBackground
           : Colors.dark.cardBackground,
-      borderColor: colorScheme === "light" ? Colors.light.text : "#3ECF8E",
+      borderColor:
+        colorScheme === "light" ? Colors.light.text : Colors.dark.tint,
       borderRadius: 5,
       alignItems: "center",
       marginBottom: 8,
