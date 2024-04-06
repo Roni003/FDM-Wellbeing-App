@@ -26,9 +26,15 @@ export default function Profile() {
     useCallback(() => {
       let isActive = true;
 
-      const fetchPosts = async () => {
+      const fetchPosts = async (id: string) => {
+        if (!id) return;
+
         try {
-          const { data } = await supabase.from("forum_posts").select("*");
+          const { data } = await supabase
+            .from("forum_posts")
+            .select("*")
+            .eq("user_id", id);
+
           if (isActive) {
             setPostCount(data?.length);
           }
@@ -40,6 +46,7 @@ export default function Profile() {
       const fetchSession = async () => {
         try {
           const data = await supabase.auth.getSession();
+          fetchPosts(data.data.session?.user.id);
           console.log(data.data.session?.user);
           if (isActive) {
             setId(data.data.session?.user.id || "Failed to fetch user id");
@@ -55,7 +62,6 @@ export default function Profile() {
         }
       };
 
-      fetchPosts();
       fetchSession();
 
       return () => {
@@ -163,7 +169,7 @@ export default function Profile() {
         </View>
 
         <View style={styles.info}>
-          <Text style={styles.info_text}>Active Forum Posts</Text>
+          <Text style={styles.info_text}>My Active Forum Posts</Text>
           <Text style={styles.info_value}>{postCount}</Text>
         </View>
       </View>
