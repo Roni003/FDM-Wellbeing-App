@@ -4,4 +4,5 @@ export interface Reply {
   post_id: string;
   content: string;
   created_at: string;
+  full_name: string;
 }

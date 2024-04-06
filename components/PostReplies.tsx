@@ -4,7 +4,7 @@ import { Text, View } from "@/components/Themed";
 import React from "react";
 import { Reply } from "@/lib/Reply";
 
-const PostReplies = ({ replies }) => {
+const PostReplies = ({ replies }: { replies: Reply[] }) => {
   const colorScheme = useColorScheme();
 
   const formatDate = (timestamp: string | number | Date) => {
@@ -36,13 +36,15 @@ const PostReplies = ({ replies }) => {
       marginBottom: 8,
     },
     content: {
-      fontSize: 14,
+      fontSize: 15,
       marginBottom: 10,
     },
+    from: { fontSize: 14, alignSelf: "flex-end", paddingBottom: 8 },
     date: {
       fontSize: 12,
       alignSelf: "flex-end",
       marginTop: "auto",
+      color: colorScheme === "light" ? Colors.light.tint : Colors.dark.tint,
     },
 
     repliesContainer: {
@@ -61,8 +63,9 @@ const PostReplies = ({ replies }) => {
         replies.map((reply, index) => (
           <View key={index} style={[styles.replyMessage]}>
             <Text style={styles.content}>{reply.content}</Text>
+            <Text style={styles.from}>from {reply.full_name}</Text>
             <Text style={styles.date}>
-              Posted at: {formatDate(reply.created_at)}
+              Posted on: {formatDate(reply.created_at)}
             </Text>
           </View>
         ))

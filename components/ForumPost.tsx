@@ -42,6 +42,10 @@ const ForumPost = ({ post }: ForumPostProps) => {
       paddingBottom: 8,
     },
     date: {
+      color:
+        colorScheme === "light"
+          ? Colors.light.lowOpacityTint
+          : Colors.dark.tint,
       fontSize: 12,
       alignSelf: "flex-end",
     },

@@ -24,7 +24,6 @@ import { Reply } from "@/lib/Reply";
 import BackButton from "@/components/BackButton";
 import Colors from "@/lib/Colors";
 import { EvilIcons, FontAwesome } from "@expo/vector-icons";
-import { err } from "react-native-svg";
 import PostReplies from "@/components/PostReplies";
 
 export default function SinglePost() {
@@ -115,7 +114,7 @@ export default function SinglePost() {
       marginBottom: 8,
     },
     content: {
-      fontSize: 14,
+      fontSize: 15,
       marginBottom: 10,
     },
     from: {
@@ -127,6 +126,10 @@ export default function SinglePost() {
     date: {
       fontSize: 12,
       alignSelf: "flex-end",
+      color:
+        colorScheme === "light"
+          ? Colors.light.lowOpacityTint
+          : Colors.dark.tint,
     },
 
     repliesContainer: {
@@ -282,6 +285,10 @@ export default function SinglePost() {
           initialValues={{ replyMessage: "" }}
           onSubmit={async (values, { resetForm }) => {
             supabase.auth.getSession().then(async ({ data: { session } }) => {
+              const username = session?.user.user_metadata.full_name // Get email if no username exists
+                ? session?.user.user_metadata.full_name
+                : session?.user.email;
+
               if (!values.replyMessage) {
                 Alert.alert("Cannot reply with an empty message");
               } else {
@@ -292,6 +299,7 @@ export default function SinglePost() {
                       user_id: session?.user.id,
                       post_id: postid,
                       content: values.replyMessage,
+                      full_name: username,
                     },
                   ]);
                 if (error) {
