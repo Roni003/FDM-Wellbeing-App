@@ -24,7 +24,6 @@ import { Reply } from "@/lib/Reply";
 import BackButton from "@/components/BackButton";
 import Colors from "@/lib/Colors";
 import { EvilIcons, FontAwesome } from "@expo/vector-icons";
-import { err } from "react-native-svg";
 import PostReplies from "@/components/PostReplies";
 
 export default function SinglePost() {
@@ -115,13 +114,22 @@ export default function SinglePost() {
       marginBottom: 8,
     },
     content: {
-      fontSize: 14,
+      fontSize: 15,
       marginBottom: 10,
+    },
+    from: {
+      fontSize: 15,
+      alignSelf: "flex-end",
+      paddingBottom: 8,
+      marginTop: "auto",
     },
     date: {
       fontSize: 12,
       alignSelf: "flex-end",
-      marginTop: "auto",
+      color:
+        colorScheme === "light"
+          ? Colors.light.lowOpacityTint
+          : Colors.dark.tint,
     },
 
     repliesContainer: {
@@ -152,6 +160,42 @@ export default function SinglePost() {
   const formatDate = (timestamp: string | number | Date) => {
     const date = new Date(timestamp);
     return date.toDateString();
+  };
+
+  const fetchReplies = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("post_replies")
+        .select("*")
+        .eq("post_id", postid);
+
+      if (error) {
+        console.log(error);
+        return;
+      }
+
+      if (data) {
+        setReplies(data);
+      }
+    } catch (err) {
+      console.error("Error fetching replies:", err);
+    }
+  };
+
+  const fetchPosts = async (isActive: boolean) => {
+    try {
+      const { data } = await supabase
+        .from("forum_posts")
+        .select("*")
+        .eq("post_id", postid);
+
+      if (isActive) {
+        setPost(data[0]);
+        setDate(new Date(data[0].created_at).toUTCString());
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   function deletePost(post_id) {
@@ -186,62 +230,20 @@ export default function SinglePost() {
 
   useFocusEffect(
     useCallback(() => {
-      const postReplies = async () => {
-        try {
-          const { data, error } = await supabase
-            .from("post_replies")
-            .select("*")
-            .eq("post_id", postid);
-
-          if (error) {
-            console.log(error);
-            return;
-          }
-
-          if (data) {
-            setReplies(data);
-          }
-        } catch (err) {
-          console.error("Error fetching replies:", err);
-        }
-      };
-
+      let isActive = true;
       const setId = async () => {
         const data = await supabase.auth.getSession();
         setUserId(data.data.session?.user.id || "");
       };
 
       setId();
-      postReplies();
-    }, [postid])
-  );
-
-  useFocusEffect(
-    useCallback(() => {
-      let isActive = true;
-
-      const fetchPosts = async () => {
-        try {
-          const { data } = await supabase
-            .from("forum_posts")
-            .select("*")
-            .eq("post_id", postid);
-
-          if (isActive) {
-            setPost(data[0]);
-            setDate(new Date(data[0].created_at).toUTCString());
-          }
-        } catch (err) {
-          console.log(err);
-        }
-      };
-
-      fetchPosts();
+      fetchReplies();
+      fetchPosts(isActive);
 
       return () => {
         isActive = false;
       };
-    }, [])
+    }, [postid])
   );
 
   return (
@@ -265,6 +267,7 @@ export default function SinglePost() {
             )}
           </View>
           <Text style={styles.content}>{post.content}</Text>
+          <Text style={styles.from}>from {post.full_name}</Text>
           <Text style={styles.date}>Posted at: {date}</Text>
         </View>
       ) : (
@@ -282,6 +285,10 @@ export default function SinglePost() {
           initialValues={{ replyMessage: "" }}
           onSubmit={async (values, { resetForm }) => {
             supabase.auth.getSession().then(async ({ data: { session } }) => {
+              const username = session?.user.user_metadata.full_name // Get email if no username exists
+                ? session?.user.user_metadata.full_name
+                : session?.user.email;
+
               if (!values.replyMessage) {
                 Alert.alert("Cannot reply with an empty message");
               } else {
@@ -292,12 +299,15 @@ export default function SinglePost() {
                       user_id: session?.user.id,
                       post_id: postid,
                       content: values.replyMessage,
+                      full_name: username,
                     },
                   ]);
                 if (error) {
                   console.log(error);
                 } else {
                   resetForm();
+                  Alert.alert("Replied to post!");
+                  fetchReplies();
                 }
               }
             });

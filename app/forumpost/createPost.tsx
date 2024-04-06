@@ -45,6 +45,10 @@ export default function CreatePostForm() {
 
     label: {},
 
+    inputContainer: {
+      height: "auto",
+    },
+
     titleInput: {
       backgroundColor:
         colorScheme === "light"
@@ -74,7 +78,7 @@ export default function CreatePostForm() {
       borderRadius: 6,
       fontSize: 18,
       width: "95%",
-      height: "70%",
+      height: "60%",
     },
 
     title: {
@@ -137,6 +141,10 @@ export default function CreatePostForm() {
             setBodyError(false);
 
             supabase.auth.getSession().then(async ({ data: { session } }) => {
+              const username = session?.user.user_metadata.full_name
+                ? session?.user.user_metadata.full_name
+                : session?.user.email;
+
               const { data, error } = await supabase
                 .from("forum_posts")
                 .insert([
@@ -144,6 +152,7 @@ export default function CreatePostForm() {
                     title: values.title,
                     content: values.body,
                     user_id: session?.user.id,
+                    full_name: username,
                   },
                 ])
                 .select();
@@ -162,7 +171,7 @@ export default function CreatePostForm() {
           }}
         >
           {(props) => (
-            <View>
+            <View style={styles.inputContainer}>
               <TextInput
                 placeholder="Title"
                 onChangeText={props.handleChange("title")}
