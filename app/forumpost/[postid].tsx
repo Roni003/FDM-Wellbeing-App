@@ -67,9 +67,12 @@ export default function SinglePost() {
         colorScheme === "light"
           ? Colors.light.cardBackground
           : Colors.dark.cardBackground,
-      color: "white",
+      color: colorScheme === "light" ? Colors.light.text : Colors.dark.text,
       borderWidth: 1,
-      borderColor: "rgba(250, 250, 250, 0.2)",
+      borderColor:
+        colorScheme === "light"
+          ? Colors.light.borderColor
+          : Colors.dark.borderColor,
       padding: 10,
       borderRadius: 6,
       fontSize: 18,
