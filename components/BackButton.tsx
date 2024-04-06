@@ -1,6 +1,13 @@
-import { Text, View, StyleSheet, Pressable } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  Pressable,
+  useColorScheme,
+} from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { router } from "expo-router";
+import Colors from "@/lib/Colors";
 
 type BackButtonProps = {
   destination: string;
@@ -8,32 +15,38 @@ type BackButtonProps = {
 };
 
 const BackButton = ({ destination, name }: BackButtonProps) => {
+  const colorScheme = useColorScheme();
+
+  const styles = StyleSheet.create({
+    container: {
+      flexDirection: "row",
+      alignItems: "center",
+    },
+    pressable: {
+      flexDirection: "row",
+      alignItems: "center",
+    },
+    text: {
+      fontSize: 16,
+      color: colorScheme === "light" ? "rgb(10,132,255)" : Colors.dark.tint,
+    },
+  });
+
   return (
     <View style={styles.container}>
       <Pressable
         onPress={() => router.push(destination)}
         style={styles.pressable}
       >
-        <Ionicons name="chevron-back" size={24} color="rgb(10,132,255)" />
+        <Ionicons
+          name="chevron-back"
+          size={24}
+          color={colorScheme === "light" ? "rgb(10,132,255)" : Colors.dark.tint}
+        />
         <Text style={styles.text}>{name}</Text>
       </Pressable>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  pressable: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  text: {
-    fontSize: 16,
-    color: "rgb(10, 132, 255)",
-  },
-});
 
 export default BackButton;

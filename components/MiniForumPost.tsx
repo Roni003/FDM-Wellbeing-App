@@ -18,7 +18,10 @@ const MiniForumPost = ({ post }: MiniForumPostProps) => {
     notif_container: {
       margin: 7,
       borderRadius: 10,
-      borderColor: "rgba(250, 250, 250, 0.2)",
+      borderColor:
+        colorScheme === "light"
+          ? Colors.light.borderColor
+          : Colors.dark.borderColor,
       borderWidth: 0.5,
       padding: 7,
       backgroundColor:

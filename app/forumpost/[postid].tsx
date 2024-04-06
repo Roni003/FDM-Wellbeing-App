@@ -31,14 +31,19 @@ export default function SinglePost() {
   const colorScheme = useColorScheme();
 
   const styles = StyleSheet.create({
+    container: {
+      ...globalStyles.container,
+      paddingBottom: "8%",
+    },
+
     inputContainer: {
       flexDirection: "row",
       alignItems: "center",
     },
 
     submitButton: {
-      color: colorScheme === "light" ? Colors.light.text : Colors.dark.text,
-      opacity: 0.6,
+      color: colorScheme === "light" ? Colors.light.tint : Colors.dark.tint,
+      opacity: 0.8,
       alignSelf: "center",
       padding: 5,
       marginBottom: 10,
@@ -90,7 +95,10 @@ export default function SinglePost() {
       margin: 6,
       marginTop: 12,
       borderRadius: 10,
-      borderColor: "rgba(250, 250, 250, 0.2)",
+      borderColor:
+        colorScheme === "light"
+          ? Colors.light.borderColor
+          : Colors.dark.borderColor,
       borderWidth: 0.5,
       padding: 10,
       backgroundColor:
@@ -234,7 +242,7 @@ export default function SinglePost() {
   );
 
   return (
-    <View style={globalStyles.container}>
+    <View style={styles.container}>
       {/* need to make the button redirect to the right page, check if user or ambassador etc */}
       <BackButton name="Login page" destination="/" />
       {post ? (
