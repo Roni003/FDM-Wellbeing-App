@@ -5,7 +5,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import BackButton from "@/components/BackButton";
 import Timer from "@/components/TimerComponent";
 import Goal from "@/components/GoalComponent";
-import PastGoals from "@/components/pastGoalComponent"
+import PastGoals from "@/components/pastGoalComponentFitness"
 import Colors from "@/lib/Colors";
 import { supabase } from "@/lib/Supabase";
 
@@ -49,6 +49,27 @@ export default function FitnessPage() {
   
     fetchUserData();
   }, [userId]);
+
+  useEffect(() => {
+    const fetchDailyGoal = async() => {
+      try {
+        const { data: fitness_goals, error } = await supabase
+        .from('fitness_goals')
+        .select('*')
+        .eq('user_id',userId);
+        if (fitness_goals != null) {
+          setGoal(fitness_goals[0].daily_goal)
+          console.log('goallslll',fitness_goals[0].daily_goal)
+        console.log("FETCHED FROM HERE")
+
+          }
+      }
+      catch (error){
+
+      }
+    }
+    fetchDailyGoal();
+  },[userId,totalFitnessHours,fitnessId])
 
 
   useEffect(() => {
@@ -178,6 +199,7 @@ export default function FitnessPage() {
     }
   };
 
+
   const handleGoalHours = async() => {
     const inputHours = parseFloat(goalField);
 
@@ -186,6 +208,49 @@ export default function FitnessPage() {
       setGoalField('');
       setShowSetGoal(false);
       setEditButtonText("Edit");
+
+      if (goal>0){
+        // update data if goal > 0
+        console.log("updating goal data...", goal)
+        try{
+          const { data, error } = await supabase
+          .from('fitness_goals')
+          .update({ daily_goal: inputHours })
+          .eq('user_id', userId)
+          .select()
+          if (data){
+            console.log(data)
+          }
+          if (error){
+            console.log(error)
+          }
+        }
+        catch(error){
+          console.log(error)
+        }
+
+
+      }
+      else{
+        // insert data if goal = 0
+        try{
+          console.log("inserting goal data..", inputHours)
+          const { data, error } = await supabase
+          .from('fitness_goals')
+          .insert([
+            {daily_goal: inputHours, user_id: userId },
+          ])
+          .select()
+          setGoal(goal)
+    
+        }
+        catch(error){
+            console.log("error",error)
+        }
+      }
+    
+   
+    
     } else {
       alert('Your goal must be an integer between 0 and 1440 minutes (24 hours).');
     }
