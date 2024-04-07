@@ -9,10 +9,10 @@ const pastGoalComponent = ({data, goal}) => {
 
   return (
     <ScrollView style={styles.scroll} horizontal={true} showsHorizontalScrollIndicator={false} contentOffset={{x:70*data.length}}>
-      {data.map((progress, index) => (
+      {data.map((item, index) => (
         <View key={index} style={styles.slide}>
-          <Text style={styles.text}>DD/M</Text>
-          <Goal radius={30} progress={progress} goal={goal} />
+          <Text style={styles.text}>{item.created_at.split('T')[0].split('-').slice(1).join('-')}</Text>
+          <Goal radius={30} progress= {item.fitness_time} goal={goal} />
         </View>
       ))}
     </ScrollView>
