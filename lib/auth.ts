@@ -1,6 +1,8 @@
 import { Alert } from "react-native";
 import { supabase } from "./Supabase";
 
+let role_id: number;
+
 export function validatePassword(val: string): boolean {
   if (val == null || val.length < 5) return false;
   return true;
@@ -43,4 +45,20 @@ export function validateInputs(email: string, password: string): boolean {
 
 export async function signOut() {
   await supabase.auth.signOut();
+}
+
+export async function updateClientRoleId() {
+  const id = (await supabase.auth.getUser()).data.user?.id;
+  if (id == undefined) return;
+  const { data } = await supabase
+    .from("profiles")
+    .select("role_id")
+    .eq("id", id);
+  if (!data || data?.length == 0) return;
+
+  role_id = data[0].role_id;
+}
+
+export function getClientRoleId(): number {
+  return role_id;
 }

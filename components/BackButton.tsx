@@ -8,6 +8,9 @@ import {
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { router } from "expo-router";
 import Colors from "@/lib/Colors";
+import { supabase } from "@/lib/Supabase";
+import { getClientRoleId } from "@/lib/auth";
+import { redirectUser } from "@/lib/redirect";
 
 type BackButtonProps = {
   destination: string;
@@ -35,7 +38,7 @@ const BackButton = ({ destination, name }: BackButtonProps) => {
   return (
     <View style={styles.container}>
       <Pressable
-        onPress={() => router.push(destination)}
+        onPress={() => redirectUser(destination)}
         style={styles.pressable}
       >
         <Ionicons
