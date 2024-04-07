@@ -113,7 +113,13 @@ export default function ForumPage() {
           </Text>
         </Pressable>
       </View>
-      <ForumPostList posts={posts} refreshPosts={() => fetchPosts(true)} />
+      <ForumPostList
+        posts={posts}
+        refreshPosts={() => {
+          setPostsAscending(false);
+          fetchPosts(true);
+        }}
+      />
       <Pressable
         style={({ pressed }) => [
           {
