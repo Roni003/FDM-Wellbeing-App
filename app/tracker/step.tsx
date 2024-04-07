@@ -6,7 +6,7 @@ import BackButton from "@/components/BackButton";
 export default function StepScreen() {
   return (
     <View style={styles.container}>
-      <BackButton name="Dashboard" destination="/user/(tabs)/"></BackButton>
+      <BackButton name="Dashboard" destination="/"></BackButton>
       <Text>Step tracker screen</Text>
     </View>
   );

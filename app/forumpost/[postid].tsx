@@ -249,7 +249,7 @@ export default function SinglePost() {
   return (
     <View style={styles.container}>
       {/* need to make the button redirect to the right page, check if user or ambassador etc */}
-      <BackButton name="Login page" destination="/" />
+      <BackButton name="Dashboard" destination="/" />
       {post ? (
         <View style={styles.postContainer}>
           <View style={styles.postHeader}>
@@ -306,7 +306,6 @@ export default function SinglePost() {
                   console.log(error);
                 } else {
                   resetForm();
-                  Alert.alert("Replied to post!");
                   fetchReplies();
                 }
               }

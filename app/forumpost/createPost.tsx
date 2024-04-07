@@ -18,6 +18,7 @@ import BackButton from "@/components/BackButton";
 import { err } from "react-native-svg";
 import Colors from "@/lib/Colors";
 import { globalStyles } from "@/lib/Styles";
+import { redirectUser } from "@/lib/redirect";
 
 export default function CreatePostForm() {
   const [titleError, setTitleError] = useState(false);
@@ -121,7 +122,7 @@ export default function CreatePostForm() {
   return (
     <View style={globalStyles.container}>
       <Pressable onPress={() => Keyboard.dismiss()}>
-        <BackButton destination={"/"} name={"home page"} />
+        <BackButton destination={"/"} name={"Dashboard"} />
         <Text style={styles.header}>Create a new post</Text>
         <Formik
           initialValues={{ title: "", body: "" }}
@@ -165,7 +166,7 @@ export default function CreatePostForm() {
               if (data) {
                 setErrorText("");
                 console.log("Inserted new post: ", data);
-                router.navigate("/");
+                redirectUser("/");
               }
             });
           }}

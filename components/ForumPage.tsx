@@ -1,6 +1,6 @@
 import { StyleSheet, Pressable, useColorScheme } from "react-native";
 import { supabase } from "@/lib/Supabase";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { Post } from "@/lib/Post";
 import { Text, View } from "@/components/Themed";
@@ -12,14 +12,17 @@ import Colors from "@/lib/Colors";
 export default function ForumPage() {
   const colorScheme = useColorScheme();
 
+  const [postsAscending, setPostsAscending] = useState(false); // newest on top
   const [posts, setPosts] = useState<Array<Post>>([]);
 
   const fetchPosts = async (isActive: boolean) => {
+    console.log("fetching");
+
     try {
       const { data } = await supabase
         .from("forum_posts")
         .select("*")
-        .order("created_at", { ascending: false });
+        .order("created_at", { ascending: postsAscending });
 
       if (isActive) {
         setPosts(data || []);
@@ -29,9 +32,13 @@ export default function ForumPage() {
     }
   };
 
-  const refreshPosts = () => {
+  useEffect(() => {
     fetchPosts(true);
-  };
+  }, [postsAscending]);
+
+  function handleOrderPress() {
+    setPostsAscending((val) => !val);
+  }
 
   useFocusEffect(
     useCallback(() => {
@@ -46,10 +53,33 @@ export default function ForumPage() {
   );
 
   const styles = StyleSheet.create({
-    header: {
-      ...globalStyles.header2,
+    headerContainer: {
+      flexDirection: "row",
+      alignContent: "center",
+      justifyContent: "space-between",
       marginLeft: "1.5%",
-      marginBottom: 6,
+      marginBottom: 10,
+    },
+    filterContainer: {
+      marginRight: 6,
+      borderRadius: 8,
+      alignContent: "center",
+      justifyContent: "center",
+      paddingVertical: 10,
+      paddingHorizontal: 14,
+      backgroundColor:
+        colorScheme === "light"
+          ? //Light
+            postsAscending
+            ? Colors.light.innerBackground
+            : Colors.light.lowOpacityTint
+          : //Dark
+          postsAscending
+          ? Colors.dark.innerBackground
+          : Colors.dark.lowOpacityTint,
+    },
+    filterText: {
+      fontWeight: "500",
     },
     noPostsText: {
       alignSelf: "center",
@@ -75,8 +105,21 @@ export default function ForumPage() {
 
   return (
     <View style={globalStyles.container}>
-      <Text style={styles.header}>Forum Posts</Text>
-      <ForumPostList posts={posts} refreshPosts={refreshPosts} />
+      <View style={styles.headerContainer}>
+        <Text style={globalStyles.header2}>Forum Posts</Text>
+        <Pressable style={styles.filterContainer} onPress={handleOrderPress}>
+          <Text style={styles.filterText}>
+            {postsAscending ? "Oldest" : "Newest"} first
+          </Text>
+        </Pressable>
+      </View>
+      <ForumPostList
+        posts={posts}
+        refreshPosts={() => {
+          setPostsAscending(false);
+          fetchPosts(true);
+        }}
+      />
       <Pressable
         style={({ pressed }) => [
           {
