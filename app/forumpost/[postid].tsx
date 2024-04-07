@@ -306,7 +306,6 @@ export default function SinglePost() {
                   console.log(error);
                 } else {
                   resetForm();
-                  Alert.alert("Replied to post!");
                   fetchReplies();
                 }
               }
