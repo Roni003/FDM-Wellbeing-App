@@ -31,13 +31,6 @@ export default function Entry() {
       >
         <Text style={styles.welcomeText}>Welcome to Fit Mind</Text>
         <Auth />
-
-        <Link replace href="/user/(tabs)">
-          <Text>Link to user home page</Text>
-        </Link>
-        <Link replace href="/ambassador/(tabs)">
-          <Text>Link to ambassador home page</Text>
-        </Link>
       </Pressable>
     </View>
   );
