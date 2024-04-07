@@ -241,7 +241,6 @@ export default function FitnessPage() {
             {daily_goal: inputHours, user_id: userId },
           ])
           .select()
-          setGoal(goal)
     
         }
         catch(error){
@@ -249,11 +248,12 @@ export default function FitnessPage() {
         }
       }
     
-   
+      
     
     } else {
       alert('Your goal must be an integer between 0 and 1440 minutes (24 hours).');
     }
+    
   }
 
   useEffect(() => {
