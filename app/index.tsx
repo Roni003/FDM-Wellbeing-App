@@ -4,35 +4,12 @@ import { Text, View } from "@/components/Themed";
 import { Link, router } from "expo-router";
 import Auth from "@/components/Auth";
 import { supabase } from "@/lib/Supabase";
-import { signOut } from "@/lib/auth";
+import { redirectAfterLogin } from "@/lib/redirect";
+import { updateClientRoleId } from "@/lib/auth";
 export default function Entry() {
-  async function redirectUser(uid: string) {
-    if (uid == null) {
-      console.log("No uid, redirecting to login page");
-      router.navigate("/");
-      return;
-    }
-
-    const { data: profiles } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("id", uid);
-
-    if (!profiles || profiles.length == 0 || profiles[0].role_id == 0) {
-      //console.log("User is a consultant");
-      router.navigate("/user/(tabs)/");
-      return;
-    }
-
-    //console.log("User is an ambassador");
-    router.navigate("/ambassador/(tabs)/");
-  }
-
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      //console.log("Supabase session user:", session?.user.email);
-      //setSession(session);
-      redirectUser(session?.user.id);
+      redirectAfterLogin(session?.user.id);
     });
 
     supabase.auth.onAuthStateChange((_event, session) => {
@@ -40,8 +17,9 @@ export default function Entry() {
         "Auth state changed, session user set to:",
         session?.user.email
       );
-      //setSession(session);
-      redirectUser(session?.user.id);
+
+      updateClientRoleId(); // Stores the role of the user on the client to use later
+      redirectAfterLogin(session?.user.id); // Redirect to home page
     });
   }, []);
 

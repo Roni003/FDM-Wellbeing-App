@@ -47,7 +47,6 @@ export default function Profile() {
         try {
           const data = await supabase.auth.getSession();
           fetchPosts(data.data.session?.user.id);
-          console.log(data.data.session?.user);
           if (isActive) {
             setId(data.data.session?.user.id || "Failed to fetch user id");
             setEmail(data.data.session?.user.email || "Failed to fetch email");

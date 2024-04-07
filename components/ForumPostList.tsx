@@ -34,10 +34,6 @@ const ForumPostList = ({ posts, refreshPosts }: ForumPostListProps) => {
       borderWidth: 0,
       borderColor: "white",
       padding: 5,
-      backgroundColor:
-        colorScheme === "light"
-          ? Colors.light.innerBackground
-          : Colors.dark.innerBackground,
     },
     noPostsText: {
       alignSelf: "center",
