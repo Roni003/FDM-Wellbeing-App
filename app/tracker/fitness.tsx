@@ -16,7 +16,8 @@ export default function FitnessPage() {
   const [userId, setUserId] =  useState('');
   const [fitnessHours, setFitnessHours] = useState('');
   const [totalFitnessHours, setTotalFitnessHours] = useState(0);
-  const data = [20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160];
+  const data = [30, 40];
+  const dates = ['2024','2023'];
   const [goalField, setGoalField] = useState('');
   const [goal, setGoal] = useState(0);
   const [isTrackerVisible, setIsTrackerVisible] = useState(false);
@@ -25,7 +26,7 @@ export default function FitnessPage() {
 
   const [fitnessId,setFitnessId] = useState(-1)
   const [fitnessTime,setFitnessTime] = useState(0)
-  const[render,setRender] = useState(false)
+  const[pastData,setPastData] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -190,6 +191,25 @@ export default function FitnessPage() {
     }
   }
 
+  useEffect(() => {
+    const fetchPastData = async() => {
+
+      const currentDate = new Date().toISOString().split('T')[0];
+
+      const { data, error } = await supabase
+      .from('fitness_details')
+      .select('*')
+      .eq('user_id', userId)
+      .lt('created_at', `${currentDate} 00:00:00`);
+      if (data){
+        setPastData(data)
+        console.log(pastData) 
+      }
+      
+    }
+    fetchPastData();
+  },[userId,totalFitnessHours,fitnessId]);
+
 
   return (
     <ScrollView contentContainerStyle={[styles.scrollViewContent, { backgroundColor: themeColors.background }]}>
@@ -198,10 +218,10 @@ export default function FitnessPage() {
         keyboardVerticalOffset={Platform.OS === "ios" ? 0 : -500} // Adjust this value as needed
       >
         <View style={styles.fitnessPage}>
-          <BackButton destination={"/user/(tabs)/"} name={"Dashboard"} />
-          <Text style={[styles.pastHeader, { color: themeColors.text }]}>Past progress</Text>
+            <BackButton destination={"/user/(tabs)/"} name={"Dashboard"} />
+            <Text style={[styles.pastHeader, { color: themeColors.text }]}>Past progress</Text>
           <View style={styles.past}>
-            <PastGoals data={data} goal={goal} />
+            <PastGoals data={pastData} goal={goal}/>
           </View>
           <View style={styles.goal}>
             <View style={[styles.dailyGoal, { backgroundColor: themeColors.innerBackground }]}>
