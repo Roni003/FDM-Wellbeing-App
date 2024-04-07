@@ -51,6 +51,10 @@ const ForumPost = ({ post }: ForumPostProps) => {
     },
   });
 
+  let content = post.content;
+  content = content.substring(0, Math.min(250, content.length));
+  if (post.content.length > 250) content += "...";
+
   return (
     <Pressable
       style={styles.container}
@@ -62,7 +66,7 @@ const ForumPost = ({ post }: ForumPostProps) => {
       }}
     >
       <Text style={styles.title}>{post.title}</Text>
-      <Text style={styles.content}>{post.content}</Text>
+      <Text style={styles.content}>{content}</Text>
       <Text style={styles.from}>from {post.full_name}</Text>
       <Text style={styles.date}>Posted at: {date}</Text>
     </Pressable>
