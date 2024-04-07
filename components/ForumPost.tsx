@@ -14,7 +14,7 @@ const ForumPost = ({ post }: ForumPostProps) => {
 
   const styles = StyleSheet.create({
     container: {
-      margin: 7,
+      marginVertical: 7,
       borderRadius: 10,
       borderColor:
         colorScheme === "light"

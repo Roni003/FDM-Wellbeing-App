@@ -11,6 +11,7 @@ import { Button, Input, colors } from "react-native-elements";
 import { validateInputs, validateName } from "@/lib/auth";
 import Colors from "@/lib/Colors";
 import { Text } from "./Themed";
+import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 
 export default function Auth() {
   const [pageState, setPageState] = useState("login"); // "login" or "signup"
@@ -88,6 +89,11 @@ export default function Auth() {
     mt15: {
       marginTop: 15,
     },
+    iconStyles: {
+      color: colorScheme === "light" ? Colors.light.text : Colors.dark.text,
+      fontSize: 24,
+      paddingRight: 5,
+    },
     loginButton: {
       paddingTop: 4,
       paddingBottom: 4,
@@ -132,7 +138,7 @@ export default function Auth() {
         {pageState === "signup" ? (
           <Input
             label="Full name"
-            leftIcon={{ type: "font-awesome", name: "user" }}
+            leftIcon={<FontAwesome name="user" style={styles.iconStyles} />}
             onChangeText={(text) => setName(text)}
             value={name}
             placeholder="John Doe"
@@ -144,7 +150,7 @@ export default function Auth() {
         )}
         <Input
           label="Email"
-          leftIcon={{ type: "font-awesome", name: "envelope" }}
+          leftIcon={<FontAwesome name="envelope" style={styles.iconStyles} />}
           onChangeText={(text) => setEmail(text)}
           value={email}
           placeholder="john.doe@fdmgroup.com"
@@ -155,7 +161,7 @@ export default function Auth() {
       <View style={styles.verticallySpaced}>
         <Input
           label="Password"
-          leftIcon={{ type: "font-awesome", name: "lock" }}
+          leftIcon={<FontAwesome name="lock" style={styles.iconStyles} />}
           onChangeText={(text) => setPassword(text)}
           value={password}
           secureTextEntry={true}
