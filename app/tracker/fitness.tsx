@@ -1,7 +1,7 @@
 import { StyleSheet, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, SafeAreaView, StatusBar, useColorScheme } from "react-native";
 import { Text, View } from "@/components/Themed";
-import { Link } from "expo-router";
-import React, { useEffect, useState } from 'react';
+import { Link, useFocusEffect } from "expo-router";
+import React, { useCallback, useEffect, useState } from 'react';
 import BackButton from "@/components/BackButton";
 import Timer from "@/components/TimerComponent";
 import Goal from "@/components/GoalComponent";
@@ -22,7 +22,68 @@ export default function FitnessPage() {
   const [isTrackerVisible, setIsTrackerVisible] = useState(false);
   const [showSetGoal, setShowSetGoal] = useState(false);
   const [editButtonText, setEditButtonText] = useState("Edit");
-  const [fitnessId,setFitnessId] = useState('')
+
+  const [fitnessId,setFitnessId] = useState(-1)
+  const [fitnessTime,setFitnessTime] = useState(0)
+  const[render,setRender] = useState(false)
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const { data, error } = await supabase.auth.getSession();
+  
+      if (error) {
+        console.error('Error fetching user:', error);
+        return;
+      }
+  
+      if (data) {
+        const user = data.session.user;
+        setUserId(user.id);
+        console.log("this should run first",userId)
+        
+      } else {
+        console.log("cannot find user")
+      }
+    };
+  
+    fetchUserData();
+  }, [userId]);
+
+
+  useEffect(() => {
+    const currentDate = new Date().toISOString().split('T')[0];
+  
+    const fetchFitnessId = async () => {
+      try {
+        console.log("second run: ",userId)
+        const { data } = await supabase
+          .from('fitness_details') 
+          .select('*')
+          .eq('user_id', userId)
+          .gte('created_at', `${currentDate} 00:00:00`)
+          .lt('created_at', `${currentDate} 23:59:59`);
+  
+        if (data !== null && data.length > 0) { 
+          
+          const parsedFitnessTime = parseInt(data[0].fitness_time, 10);
+          const parsedFitnessId = parseInt(data[0].fitness_id, 10);
+          setFitnessId(parsedFitnessId);
+          setFitnessTime(parsedFitnessTime );
+          setTotalFitnessHours(parsedFitnessTime);
+          console.log(data)
+          console.log("fitnessID : ", fitnessId) 
+          console.log("fitnessTime : ", fitnessTime) 
+          
+        } else {
+          console.log("no fitness data .");
+        }
+      } catch (err) {
+        console.error('error fetching fitness data:', err);
+      }
+    };
+  
+    fetchFitnessId();
+  }, [userId,totalFitnessHours,fitnessId]);
 
 
   const toggleSetGoal = () => {
@@ -34,6 +95,9 @@ export default function FitnessPage() {
     setIsTrackerVisible(!isTrackerVisible);
   };
 
+  
+
+  
   const handleAddFitnessHours = async () => {
     const inputHours = parseFloat(fitnessHours);
     const newTotalHours = totalFitnessHours + inputHours;
@@ -43,31 +107,47 @@ export default function FitnessPage() {
     if (newTotalHours >= 0 && newTotalHours <= 1440 && Number.isInteger(inputHours)) {
       setTotalFitnessHours(newTotalHours);
       setFitnessHours('');
+    
+      console.log("fitnessID:", fitnessId)
 
-      try{
-        // checks to see if currentDate exists
-        console.log("checking to see if currentdate exists")
-        const { data, error } = await supabase
+      if (fitnessId == -1){    
 
-        .from('fitness_details')
-        .select('fitness_id')
-        .eq('user_id', userId)
-        .gte('created_at', `${currentDate} 00:00:00`)
-        .lt('created_at', `${currentDate} 23:59:59`);
+        // if needs inserting
+        console.log(fitnessId, "needs inserting...")
+        try {
+          console.log(totalFitnessHours)
+          const { data, error } = await supabase
 
-        if (data !== null && data.length > 0){
-          setFitnessId(data[0].fitness_id)
-
+            .from('fitness_details')
+            .insert([
+              { user_id: userId, fitness_time: newTotalHours},
+            ])
+            .select();
+    
+          if (data) {
+            console.log(data);
+            setFitnessId(data[0].fitness_id)
+          }
+          if (error) {
+            console.log(error);
+          }
+        } catch (error) {
+          console.error('Error saving fitness details:', error);
         }
 
-        if (data !== null && data.length > 0){
+        
+      }
 
-          //if needs updating
-          console.log("needs updating")
-  
+      else{
+
+
+        //if needs updating
+        console.log(fitnessId, "needs updating")
+        console.log("totalFitnessHours : ", newTotalHours )
+        try{
           const { data, error } = await supabase
           .from('fitness_details')
-          .update({ 'fitness_time': newTotalHours })
+          .update({ 'fitness_time':  newTotalHours})
           .eq('fitness_id', fitnessId);
   
           if (error){
@@ -76,49 +156,28 @@ export default function FitnessPage() {
           if (data){
             console.log(data)
           }
-          console.log("done")
-  
-  
+
         }
-  
-        else{
-          // if needs inserting
-          console.log("needs inserting...")
-          try {
-            const { data, error } = await supabase
-  
-              .from('fitness_details')
-              .insert([
-                { user_id: userId, fitness_time: newTotalHours},
-              ])
-              .select();
-      
-            if (data) {
-              console.log(data);
-            }
-            if (error) {
-              console.log(error);
-            }
-          } catch (error) {
-            console.error('Error saving fitness details:', error);
-          }
-  
+        catch(error){
+          console.log(error)
         }
 
-        
+
+        console.log("done")
 
       }
-      catch(error){
-        console.log(error)
+      
+
+
+
       }
       
-      
-    } else {
+     else {
       alert('Your input must be an integer, and the total fitness hours must be between 0 and 1,440 minutes (24 hours).');
     }
   };
 
-  const handleGoalHours = () => {
+  const handleGoalHours = async() => {
     const inputHours = parseFloat(goalField);
 
     if (inputHours >= 0 && inputHours <= 1440 && Number.isInteger(inputHours)) {
@@ -131,26 +190,6 @@ export default function FitnessPage() {
     }
   }
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const { data, error } = await supabase.auth.getSession();
-  
-      if (error) {
-        console.error('Error fetching user:', error);
-        return;
-      }
-  
-      if (data && data.session && data.session.user) {
-        const user = data.session.user;
-        setUserId(user.id);
-        console.log(user.id)
-      } else {
-        setUserId(null);
-      }
-    };
-  
-    fetchUserData();
-  }, []);
 
   return (
     <ScrollView contentContainerStyle={[styles.scrollViewContent, { backgroundColor: themeColors.background }]}>
@@ -217,7 +256,9 @@ export default function FitnessPage() {
                       onChangeText={text => setFitnessHours(text)}
                     />
                   </View>
-                  <Text style={[styles.totalFitnessHours, { color: themeColors.text }]}>Tracked Fitness Duration: {totalFitnessHours || '0'} Mins</Text>
+   
+
+                  <Text style={[styles.totalFitnessHours, { color: themeColors.text }]}>Tracked Fitness Duration: {fitnessTime || 0} Mins</Text>
                   <TouchableOpacity style={[styles.button, { backgroundColor: themeColors.tint }]} onPress={handleAddFitnessHours}>
                     <Text style={[styles.buttonText, { color: themeColors.text }]}>Track Fitness</Text>
                   </TouchableOpacity>
