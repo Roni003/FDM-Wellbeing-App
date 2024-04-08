@@ -14,6 +14,7 @@ import Goal from "@/components/GoalComponent";
 import PastGoals from "@/components/pastGoalComponentSleep";
 import Colors from "@/lib/Colors";
 import { supabase } from "@/lib/Supabase";
+import { globalStyles } from "@/lib/Styles";
 
 export default function SleepScreen() {
   const colorScheme = useColorScheme();
@@ -366,16 +367,14 @@ export default function SleepScreen() {
 const styles = StyleSheet.create({
   scrollViewContent: {
     flexGrow: 1,
+    ...globalStyles.container,
   },
-  backButton: {
-    paddingTop: '15%',
-    paddingLeft: 10,
-  },
+  backButton: {},
   past: {
     height: 100,
   },
   pastHeader: {
-    marginVertical: '5%',
+    marginVertical: "5%",
     fontSize: 20,
     fontWeight: "bold",
     textAlign: "center",
@@ -390,7 +389,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   goal: {
-    marginTop: '4%',
+    marginTop: "4%",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -402,7 +401,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   sleepPage: {
-    paddingTop: '3%',
+    paddingTop: "3%",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -410,7 +409,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginTop: '5%',
+    marginTop: "5%",
   },
   title: {
     fontSize: 18,

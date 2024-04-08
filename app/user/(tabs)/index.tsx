@@ -72,7 +72,7 @@ export default function TabOneScreen() {
         <Text style={styles.header}>Recent Forum Posts</Text>
         <ScrollView
           style={{
-            maxHeight: 140,
+            maxHeight: 160,
             borderRadius: 10,
             borderWidth: 0,
             borderColor: "white",
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
   },
   forum: {
     flex: 1,
-    maxHeight: screenHeight * 0.28,
+    maxHeight: screenHeight * 0.27,
   },
 
   tracker_grid: {

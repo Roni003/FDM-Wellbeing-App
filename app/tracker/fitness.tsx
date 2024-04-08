@@ -18,6 +18,7 @@ import Goal from "@/components/GoalComponent";
 import PastGoals from "@/components/pastGoalComponentFitness";
 import Colors from "@/lib/Colors";
 import { supabase } from "@/lib/Supabase";
+import { globalStyles } from "@/lib/Styles";
 
 export default function FitnessPage() {
   const colorScheme = useColorScheme();
@@ -418,11 +419,9 @@ export default function FitnessPage() {
 const styles = StyleSheet.create({
   scrollViewContent: {
     flexGrow: 1,
+    ...globalStyles.container,
   },
-  backButton: {
-    paddingTop: '15%',
-    paddingLeft: 10,
-  },
+  backButton: {},
   past: {
     height: 100,
   },
@@ -430,7 +429,7 @@ const styles = StyleSheet.create({
     height: 100,
   },
   pastHeader: {
-    marginVertical: '5%',
+    marginVertical: 15,
     fontSize: 20,
     fontWeight: "bold",
     textAlign: "center",
@@ -445,7 +444,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   goal: {
-    marginTop: '4%',
+    marginTop: 10,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -457,7 +456,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   fitnessPage: {
-    paddingTop: '3%',
+    paddingTop: 10,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -465,7 +464,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginTop: '5%',
+    marginTop: 20,
   },
   title: {
     fontSize: 18,
