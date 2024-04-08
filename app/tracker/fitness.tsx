@@ -64,11 +64,11 @@ export default function FitnessPage() {
     const fetchDailyGoal = async() => {
       try {
         const { data: fitness_goals, error } = await supabase
-        .from('fitness_goals')
+        .from('personal_goals')
         .select('*')
         .eq('user_id',userId);
         if (fitness_goals != null) {
-          setGoal(fitness_goals[0].daily_goal)
+          setGoal(fitness_goals[0].daily_fitness_goal)
 
           }
       }
@@ -225,8 +225,8 @@ export default function FitnessPage() {
         console.log("updating goal data...")
         try{
           const { data, error } = await supabase
-          .from('fitness_goals')
-          .update({ daily_goal: inputHours })
+          .from('personal_goals')
+          .update({ daily_fitness_goal: inputHours })
           .eq('user_id', userId)
           .select()
           if (data){
@@ -247,9 +247,9 @@ export default function FitnessPage() {
         try{
           console.log("inserting goal data..", inputHours)
           const { data, error } = await supabase
-          .from('fitness_goals')
+          .from('personal_goals')
           .insert([
-            {daily_goal: inputHours, user_id: userId },
+            {daily_fitness_goal: inputHours, user_id: userId },
           ])
           .select()
     
