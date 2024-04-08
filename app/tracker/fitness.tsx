@@ -11,11 +11,11 @@ import {
 } from "react-native";
 import { Text, View } from "@/components/Themed";
 import { Link, useFocusEffect } from "expo-router";
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from "react";
 import BackButton from "@/components/BackButton";
 import Timer from "@/components/TimerComponent";
 import Goal from "@/components/GoalComponent";
-import PastGoals from "@/components/pastGoalComponentFitness"
+import PastGoals from "@/components/pastGoalComponentFitness";
 import Colors from "@/lib/Colors";
 import { supabase } from "@/lib/Supabase";
 
@@ -23,8 +23,8 @@ export default function FitnessPage() {
   const colorScheme = useColorScheme();
   const themeColors = colorScheme === "light" ? Colors.light : Colors.dark;
 
-  const [userId, setUserId] =  useState('');
-  const [fitnessHours, setFitnessHours] = useState('');
+  const [userId, setUserId] = useState("");
+  const [fitnessHours, setFitnessHours] = useState("");
   const [totalFitnessHours, setTotalFitnessHours] = useState(0);
   const data = [
     20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160,
@@ -35,85 +35,76 @@ export default function FitnessPage() {
   const [showSetGoal, setShowSetGoal] = useState(false);
   const [editButtonText, setEditButtonText] = useState("Edit");
 
-  const [fitnessId,setFitnessId] = useState(-1)
-  const [fitnessTime,setFitnessTime] = useState(0)
-  const[pastData,setPastData] = useState<string[]>([]);
+  const [fitnessId, setFitnessId] = useState(-1);
+  const [fitnessTime, setFitnessTime] = useState(0);
+  const [pastData, setPastData] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchUserData = async () => {
       const { data, error } = await supabase.auth.getSession();
-  
+
       if (error) {
-        console.error('Error fetching user:', error);
+        console.error("Error fetching user:", error);
         return;
       }
-  
+
       if (data) {
         const user = data.session.user;
         setUserId(user.id);
-        
       } else {
-        console.log("cannot find user")
+        console.log("cannot find user");
       }
     };
-  
+
     fetchUserData();
   }, [userId]);
 
   useEffect(() => {
-    const fetchDailyGoal = async() => {
+    const fetchDailyGoal = async () => {
       try {
         const { data: fitness_goals, error } = await supabase
-        .from('personal_goals')
-        .select('*')
-        .eq('user_id',userId);
+          .from("personal_goals")
+          .select("*")
+          .eq("user_id", userId);
         if (fitness_goals != null) {
-          setGoal(fitness_goals[0].daily_fitness_goal)
-
-          }
-      }
-      catch (error){
-
-      }
-    }
+          setGoal(fitness_goals[0].daily_fitness_goal);
+        }
+      } catch (error) {}
+    };
     fetchDailyGoal();
-  },[userId,totalFitnessHours,fitnessId])
-
+  }, [userId, totalFitnessHours, fitnessId]);
 
   useEffect(() => {
-    const currentDate = new Date().toISOString().split('T')[0];
-  
+    const currentDate = new Date().toISOString().split("T")[0];
+
     const fetchFitnessId = async () => {
       try {
         const { data } = await supabase
-          .from('fitness_details') 
-          .select('*')
-          .eq('user_id', userId)
-          .gte('created_at', `${currentDate} 00:00:00`)
-          .lt('created_at', `${currentDate} 23:59:59`);
-  
-        if (data !== null && data.length > 0) { 
-          
+          .from("fitness_details")
+          .select("*")
+          .eq("user_id", userId)
+          .gte("created_at", `${currentDate} 00:00:00`)
+          .lt("created_at", `${currentDate} 23:59:59`);
+
+        if (data !== null && data.length > 0) {
           const parsedFitnessTime = parseInt(data[0].fitness_time, 10);
           const parsedFitnessId = parseInt(data[0].fitness_id, 10);
           setFitnessId(parsedFitnessId);
-          setFitnessTime(parsedFitnessTime );
+          setFitnessTime(parsedFitnessTime);
           setTotalFitnessHours(parsedFitnessTime);
-          console.log(data)
-          console.log("fitnessID : ", fitnessId) 
-          console.log("fitnessTime : ", fitnessTime) 
-          
+          console.log(data);
+          console.log("fitnessID : ", fitnessId);
+          console.log("fitnessTime : ", fitnessTime);
         } else {
           console.log("no fitness data .");
         }
       } catch (err) {
-        console.error('error fetching fitness data:', err);
+        console.error("error fetching fitness data:", err);
       }
     };
-  
-    fetchFitnessId();
-  }, [userId,totalFitnessHours,fitnessId]);
 
+    fetchFitnessId();
+  }, [userId, totalFitnessHours, fitnessId]);
 
   const toggleSetGoal = () => {
     setShowSetGoal(!showSetGoal);
@@ -124,14 +115,11 @@ export default function FitnessPage() {
     setIsTrackerVisible(!isTrackerVisible);
   };
 
-  
-
-  
   const handleAddFitnessHours = async () => {
     const inputHours = parseFloat(fitnessHours);
     const newTotalHours = totalFitnessHours + inputHours;
-    const currentDate = new Date().toISOString().split('T')[0];
-  
+    const currentDate = new Date().toISOString().split("T")[0];
+
     // Check if the new total is within the range of 0 to 24 hours
     if (
       newTotalHours >= 0 &&
@@ -139,79 +127,61 @@ export default function FitnessPage() {
       Number.isInteger(inputHours)
     ) {
       setTotalFitnessHours(newTotalHours);
-      setFitnessHours('');
-    
-      console.log("fitnessID:", fitnessId)
+      setFitnessHours("");
 
-      if (fitnessId == -1){    
+      console.log("fitnessID:", fitnessId);
 
+      if (fitnessId == -1) {
         // if needs inserting
-        console.log("needs inserting...")
+        console.log("needs inserting...");
         try {
-          console.log(totalFitnessHours)
+          console.log(totalFitnessHours);
           const { data, error } = await supabase
 
-            .from('fitness_details')
-            .insert([
-              { user_id: userId, fitness_time: newTotalHours},
-            ])
+            .from("fitness_details")
+            .insert([{ user_id: userId, fitness_time: newTotalHours }])
             .select();
-    
+
           if (data) {
             console.log(data);
-            setFitnessId(data[0].fitness_id)
+            setFitnessId(data[0].fitness_id);
           }
           if (error) {
             console.log(error);
           }
         } catch (error) {
-          console.error('Error saving fitness details:', error);
+          console.error("Error saving fitness details:", error);
         }
-
-        
-      }
-
-      else{
-
-
+      } else {
         //if needs updating
-        console.log("needs updating")
-        console.log("totalFitnessHours : ", newTotalHours )
-        try{
+        console.log("needs updating");
+        console.log("totalFitnessHours : ", newTotalHours);
+        try {
           const { data, error } = await supabase
-          .from('fitness_details')
-          .update({ 'fitness_time':  newTotalHours})
-          .eq('fitness_id', fitnessId);
-  
-          if (error){
-            console.log(error)
-          }
-          if (data){
-            console.log(data)
-          }
+            .from("fitness_details")
+            .update({ fitness_time: newTotalHours })
+            .eq("fitness_id", fitnessId);
 
-        }
-        catch(error){
-          console.log(error)
+          if (error) {
+            console.log(error);
+          }
+          if (data) {
+            console.log(data);
+          }
+        } catch (error) {
+          console.log(error);
         }
 
-
-        console.log("done")
-
+        console.log("done");
       }
-      
-
-
-
-      }
-      
-     else {
-      alert('Your input must be an integer, and the total fitness hours must be between 0 and 1,440 minutes (24 hours).');
+    } else {
+      alert(
+        "Your input must be an integer, and the total fitness hours must be between 0 and 1,440 minutes (24 hours)."
+      );
     }
   };
 
-
-  const handleGoalHours = async() => {
+  const handleGoalHours = async () => {
     const inputHours = parseFloat(goalField);
 
     if (inputHours >= 0 && inputHours <= 1440 && Number.isInteger(inputHours)) {
@@ -220,74 +190,59 @@ export default function FitnessPage() {
       setShowSetGoal(false);
       setEditButtonText("Edit");
 
-      if (goal>0){
+      if (goal > 0) {
         // update data if goal > 0
-        console.log("updating goal data...")
-        try{
+        console.log("updating goal data...");
+        try {
           const { data, error } = await supabase
-          .from('personal_goals')
-          .update({ daily_fitness_goal: inputHours })
-          .eq('user_id', userId)
-          .select()
-          if (data){
-            console.log(data)
+            .from("personal_goals")
+            .update({ daily_fitness_goal: inputHours })
+            .eq("user_id", userId)
+            .select();
+          if (data) {
+            console.log(data);
           }
-          if (error){
-            console.log(error)
+          if (error) {
+            console.log(error);
           }
+        } catch (error) {
+          console.log(error);
         }
-        catch(error){
-          console.log(error)
-        }
-
-
-      }
-      else{
+      } else {
         // insert data if goal = 0
-        try{
-          console.log("inserting goal data..", inputHours)
+        try {
+          console.log("inserting goal data..", inputHours);
           const { data, error } = await supabase
-          .from('personal_goals')
-          .insert([
-            {daily_fitness_goal: inputHours, user_id: userId },
-          ])
-          .select()
-    
-        }
-        catch(error){
-            console.log("error",error)
+            .from("personal_goals")
+            .insert([{ daily_fitness_goal: inputHours, user_id: userId }])
+            .select();
+        } catch (error) {
+          console.log("error", error);
         }
       }
-    
-      
-    
     } else {
       alert(
         "Your goal must be an integer between 0 and 1440 minutes (24 hours)."
       );
     }
-    
-  }
+  };
 
   useEffect(() => {
-    const fetchPastData = async() => {
-
-      const currentDate = new Date().toISOString().split('T')[0];
+    const fetchPastData = async () => {
+      const currentDate = new Date().toISOString().split("T")[0];
 
       const { data, error } = await supabase
-      .from('fitness_details')
-      .select('*')
-      .eq('user_id', userId)
-      .lt('created_at', `${currentDate} 00:00:00`);
-      if (data){
-        setPastData(data)
-        console.log(pastData) 
+        .from("fitness_details")
+        .select("*")
+        .eq("user_id", userId)
+        .lt("created_at", `${currentDate} 00:00:00`);
+      if (data) {
+        setPastData(data);
+        console.log(pastData);
       }
-      
-    }
+    };
     fetchPastData();
-  },[userId,totalFitnessHours,fitnessId]);
-
+  }, [userId, totalFitnessHours, fitnessId]);
 
   return (
     <ScrollView
@@ -308,7 +263,7 @@ export default function FitnessPage() {
             Past progress
           </Text>
           <View style={styles.past}>
-            <PastGoals data={pastData} goal={goal}/>
+            <PastGoals data={pastData} goal={goal} />
           </View>
           <View style={styles.goal}>
             <View
@@ -323,7 +278,10 @@ export default function FitnessPage() {
               <Goal radius={50} progress={totalFitnessHours} goal={goal} />
               <TouchableOpacity onPress={toggleSetGoal}>
                 <TouchableOpacity
-                  style={[styles.button, { backgroundColor: themeColors.tint }]}
+                  style={[
+                    styles.button,
+                    { backgroundColor: themeColors.lowOpacityTint },
+                  ]}
                   onPress={toggleSetGoal}
                 >
                   <Text
@@ -380,7 +338,7 @@ export default function FitnessPage() {
                   <TouchableOpacity
                     style={[
                       styles.button,
-                      { backgroundColor: themeColors.tint },
+                      { backgroundColor: themeColors.lowOpacityTint },
                     ]}
                     onPress={toggleTracker}
                   >
@@ -422,7 +380,7 @@ export default function FitnessPage() {
                   <TouchableOpacity
                     style={[
                       styles.button,
-                      { backgroundColor: themeColors.tint },
+                      { backgroundColor: themeColors.lowOpacityTint },
                     ]}
                     onPress={handleAddFitnessHours}
                   >
@@ -437,7 +395,7 @@ export default function FitnessPage() {
                   <TouchableOpacity
                     style={[
                       styles.button,
-                      { backgroundColor: themeColors.tint },
+                      { backgroundColor: themeColors.lowOpacityTint },
                     ]}
                     onPress={toggleTracker}
                   >
