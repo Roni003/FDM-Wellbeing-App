@@ -285,8 +285,10 @@ export default function SleepScreen() {
         style={styles.container}
         keyboardVerticalOffset={Platform.OS === "ios" ? 0 : -500} // Adjust this value as needed
       >
-        <View style={styles.sleepPage}>
+        <View style={styles.backButton}>
           <BackButton destination={"/"} name={"Dashboard"} />
+        </View>
+        <View style={styles.sleepPage}>
           <Text style={[styles.pastHeader, { color: themeColors.text }]}>
             Past progress
           </Text>
@@ -394,6 +396,10 @@ const styles = StyleSheet.create({
   scrollViewContent: {
     flexGrow: 1,
   },
+  backButton: {
+    paddingTop: 45,
+    paddingLeft: 10,
+  },
   past: {
     height: 100,
   },
@@ -425,7 +431,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   sleepPage: {
-    paddingTop: 50,
+    paddingTop: 10,
     alignItems: "center",
     justifyContent: "center",
   },
