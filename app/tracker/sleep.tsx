@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   TextInput,
@@ -11,47 +11,194 @@ import {
 import { Text, View } from "@/components/Themed";
 import BackButton from "@/components/BackButton";
 import Goal from "@/components/GoalComponent";
-import PastGoals from "@/components/pastGoalComponent";
+import PastGoals from "@/components/pastGoalComponentSleep";
 import Colors from "@/lib/Colors";
+import { supabase } from "@/lib/Supabase";
 
 export default function SleepScreen() {
   const colorScheme = useColorScheme();
   const themeColors = colorScheme === "light" ? Colors.light : Colors.dark;
 
-  const [sleepHours, setSleepHours] = useState("");
-  const [totalSleepHours, setTotalSleepHours] = useState(0);
   const data = [
     20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160,
   ];
   const [goalField, setGoalField] = useState("");
-  const [goal, setGoal] = useState(0);
+  const [goal, setGoal] = useState(-1);
   const [showSetGoal, setShowSetGoal] = useState(false);
   const [editButtonText, setEditButtonText] = useState("Edit");
+
+
+  const [sleepId,setSleepId] = useState(-1)
+  const [sleepTime,setSleepTime] = useState(0)
+  const [userId, setUserId] =  useState('');
+  const [sleepHours, setSleepHours] = useState('');
+  const [totalSleepHours, setTotalSleepHours] = useState(0);
+  const[pastData,setPastData] = useState<string[]>([]);
+
+
+
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const { data, error } = await supabase.auth.getSession();
+  
+      if (error) {
+        console.error('Error fetching user:', error);
+        return;
+      }
+  
+      if (data) {
+        const user = data.session.user;
+        setUserId(user.id);
+        
+      } else {
+        console.log("cannot find user")
+      }
+    };
+
+  
+    fetchUserData();
+  }, [userId]);
+
+  useEffect(() => {
+    const fetchDailyGoal = async() => {
+      try {
+        const { data: fitness_goals, error } = await supabase
+        .from('personal_goals')
+        .select('*')
+        .eq('user_id',userId);
+        if (fitness_goals != null) {
+          setGoal(fitness_goals[0].daily_sleep_goal)
+
+          }
+      }
+      catch (error){
+
+      }
+    }
+    fetchDailyGoal();
+  },[userId,totalSleepHours,sleepId])
+
+
+  useEffect(() => {
+    const currentDate = new Date().toISOString().split('T')[0];
+  
+    const fetchFitnessId = async () => {
+      try {
+        const { data } = await supabase
+          .from('sleep_details') 
+          .select('*')
+          .eq('user_id', userId)
+          .gte('created_at', `${currentDate} 00:00:00`)
+          .lt('created_at', `${currentDate} 23:59:59`);
+  
+        if (data !== null && data.length > 0) { 
+          
+          const parsedSleepTime = parseInt(data[0].sleep_time, 10);
+          const parsedSleepId = parseInt(data[0].sleep_id, 10);
+          setSleepId(parsedSleepId);
+          setSleepTime(parsedSleepTime);
+          setTotalSleepHours(parsedSleepTime);
+          console.log(data)
+          console.log("sleepID : ", sleepId) 
+          console.log("sleepTime : ", sleepTime) 
+          
+        } else {
+          console.log("no fitness data .");
+        }
+      } catch (err) {
+        console.error('error fetching fitness data:', err);
+      }
+    };
+  
+    fetchFitnessId();
+  }, [userId,totalSleepHours,sleepId]);
+
 
   const toggleSetGoal = () => {
     setShowSetGoal(!showSetGoal);
     setEditButtonText(showSetGoal ? "Edit" : "Close");
   };
 
-  const handleAddSleepHours = () => {
+  const handleAddSleepHours = async () => {
     const inputHours = parseFloat(sleepHours);
     const newTotalHours = totalSleepHours + inputHours;
-
+    const currentDate = new Date().toISOString().split('T')[0];
+  
+    // Check if the new total is within the range of 0 to 24 hours
     if (
       newTotalHours >= 0 &&
       newTotalHours <= 1440 &&
       Number.isInteger(inputHours)
     ) {
       setTotalSleepHours(newTotalHours);
-      setSleepHours("");
-    } else {
-      alert(
-        "Your input must be an integer, and the total amount of sleep must be between 0 and 1,440 minutes (24 hours)."
-      );
+      setSleepHours('');
+    
+      console.log("sleep ID:", sleepId)
+
+      if (sleepId == -1){    
+
+        // if needs inserting
+        console.log("needs inserting...")
+        try {
+          console.log(sleepHours)
+          const { data, error } = await supabase
+
+            .from('sleep_details')
+            .insert([
+              { user_id: userId, sleep_time: newTotalHours},
+            ])
+            .select();
+    
+          if (data) {
+            console.log(data);
+            setSleepId(data[0].sleep_id)
+          }
+          if (error) {
+            console.log(error);
+          }
+        } catch (error) {
+          console.error('Error saving fitness details:', error);
+        }
+
+        
+      }
+
+      else{
+
+        //if needs updating
+        console.log("needs updating")
+        console.log("totalFitnessHours : ", newTotalHours )
+        try{
+          const { data, error } = await supabase
+          .from('sleep_details')
+          .update({ 'sleep_time':  newTotalHours})
+          .eq('sleep_id', sleepId);
+  
+          if (error){
+            console.log(error)
+          }
+          if (data){
+            console.log(data)
+          }
+
+        }
+        catch(error){
+          console.log(error)
+        }
+        console.log("done")
+
+      }
+
+      }
+      
+     else {
+      alert('Your input must be an integer, and the total fitness hours must be between 0 and 1,440 minutes (24 hours).');
     }
   };
 
-  const handleGoalHours = () => {
+
+  const handleGoalHours = async() => {
     const inputHours = parseFloat(goalField);
 
     if (inputHours >= 0 && inputHours <= 1440 && Number.isInteger(inputHours)) {
@@ -59,12 +206,73 @@ export default function SleepScreen() {
       setGoalField("");
       setShowSetGoal(false);
       setEditButtonText("Edit");
+
+      if (goal>-1){
+        // update data if goal > -1
+        console.log("updating goal data...")
+        try{
+          const { data, error } = await supabase
+          .from('personal_goals')
+          .update({ daily_sleep_goal: inputHours })
+          .eq('user_id', userId)
+          .select()
+          if (data){
+            console.log(data)
+          }
+          if (error){
+            console.log(error)
+          }
+        }
+        catch(error){
+          console.log(error)
+        }
+
+      }
+      else{
+        // insert data if goal = -1 
+        try{
+          console.log("inserting goal data..", inputHours)
+          const { data, error } = await supabase
+          .from('personal_goals')
+          .insert([
+            {daily_sleep_goal: inputHours, user_id: userId },
+          ])
+          .select()
+        }
+
+        catch(error){
+            console.log("error",error)
+        }
+      }
+    
     } else {
       alert(
         "Your goal must be an integer between 0 and 1440 minutes (24 hours)."
       );
     }
-  };
+    
+  }
+
+  useEffect(() => {
+    const fetchPastData = async() => {
+
+      const currentDate = new Date().toISOString().split('T')[0];
+
+      const { data, error } = await supabase
+
+      .from('sleep_details')
+      .select('*')
+      .eq('user_id', userId)
+      .lt('created_at', `${currentDate} 00:00:00`);
+
+      if (data){
+        setPastData(data)
+        console.log(pastData) 
+      }
+      
+    }
+    fetchPastData();
+  },[userId,totalSleepHours,sleepId]);
 
   return (
     <ScrollView
@@ -83,7 +291,7 @@ export default function SleepScreen() {
             Past progress
           </Text>
           <View style={styles.past}>
-            <PastGoals data={data} goal={goal} />
+            <PastGoals data={pastData} goal={goal} />
           </View>
           <View style={styles.goal}>
             <View
