@@ -327,7 +327,7 @@ const MeditationApp = () => {
     <ScrollView contentContainerStyle={[styles.scrollViewContent, { backgroundColor: themeColors.background }]}
     style={{ flex: 1 }}>
       <View style={styles.backButtonContainer}>
-        <BackButton destination={"/user/(tabs)/"} name={"Dashboard"} />
+        <BackButton destination={"/"} name={"Dashboard"} />
       </View>
       <View style={styles.headerContainer}>
         
