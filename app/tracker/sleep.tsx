@@ -368,14 +368,14 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   backButton: {
-    paddingTop: 45,
+    paddingTop: '15%',
     paddingLeft: 10,
   },
   past: {
     height: 100,
   },
   pastHeader: {
-    marginVertical: 15,
+    marginVertical: '5%',
     fontSize: 20,
     fontWeight: "bold",
     textAlign: "center",
@@ -390,7 +390,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   goal: {
-    marginTop: 10,
+    marginTop: '4%',
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -402,7 +402,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   sleepPage: {
-    paddingTop: 10,
+    paddingTop: '3%',
     alignItems: "center",
     justifyContent: "center",
   },
@@ -410,7 +410,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginTop: 20,
+    marginTop: '5%',
   },
   title: {
     fontSize: 18,
