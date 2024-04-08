@@ -40,7 +40,6 @@ export default function FitnessPage() {
       if (data) {
         const user = data.session.user;
         setUserId(user.id);
-        console.log("this should run first",userId)
         
       } else {
         console.log("cannot find user")
@@ -59,8 +58,6 @@ export default function FitnessPage() {
         .eq('user_id',userId);
         if (fitness_goals != null) {
           setGoal(fitness_goals[0].daily_goal)
-          console.log('goallslll',fitness_goals[0].daily_goal)
-        console.log("FETCHED FROM HERE")
 
           }
       }
@@ -77,7 +74,6 @@ export default function FitnessPage() {
   
     const fetchFitnessId = async () => {
       try {
-        console.log("second run: ",userId)
         const { data } = await supabase
           .from('fitness_details') 
           .select('*')
@@ -135,7 +131,7 @@ export default function FitnessPage() {
       if (fitnessId == -1){    
 
         // if needs inserting
-        console.log(fitnessId, "needs inserting...")
+        console.log("needs inserting...")
         try {
           console.log(totalFitnessHours)
           const { data, error } = await supabase
@@ -164,7 +160,7 @@ export default function FitnessPage() {
 
 
         //if needs updating
-        console.log(fitnessId, "needs updating")
+        console.log("needs updating")
         console.log("totalFitnessHours : ", newTotalHours )
         try{
           const { data, error } = await supabase
@@ -211,7 +207,7 @@ export default function FitnessPage() {
 
       if (goal>0){
         // update data if goal > 0
-        console.log("updating goal data...", goal)
+        console.log("updating goal data...")
         try{
           const { data, error } = await supabase
           .from('fitness_goals')
