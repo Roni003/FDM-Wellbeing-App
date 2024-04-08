@@ -47,9 +47,9 @@ export default function TabOneScreen() {
         <View style={styles.tracker_grid}>
           <View style={styles.tracker_row}>
             <Tracker
-              head="Todays steps"
-              counter="0 steps"
-              link="/tracker/step"
+              head="Last night's sleep"
+              counter="0 hours 0 minutes"
+              link="/tracker/sleep"
             />
             <Tracker
               head="Exercise today"
@@ -57,19 +57,14 @@ export default function TabOneScreen() {
               link="/tracker/fitness"
             />
           </View>
-
-          <View style={styles.tracker_row}>
-            <Tracker
-              head="Meditation time"
-              counter="0 minutes"
-              link="/tracker/meditation"
-            />
-            <Tracker
-              head="Last night's sleep"
-              counter="0 hours 0 minutes"
-              link="/tracker/sleep"
-            />
-          </View>
+        </View>
+        <Text style={styles.header}>Mental Wellbeing</Text>
+        <View style={styles.tracker_row}>
+          <Tracker
+            head="Meditation & Mental Health"
+            counter="0 sessions today"
+            link="/tracker/meditation"
+          />
         </View>
       </View>
 
@@ -111,13 +106,14 @@ const styles = StyleSheet.create({
   },
   forum: {
     flex: 1,
-    maxHeight: screenHeight * 0.3,
+    maxHeight: screenHeight * 0.28,
   },
 
   tracker_grid: {
     flex: 1,
     flexDirection: "column",
     height: screenHeight * 0.5,
+    marginBottom: 6,
   },
 
   tracker_row: {
