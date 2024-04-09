@@ -25,6 +25,21 @@ export default function FitnessPage() {
   const colorScheme = useColorScheme();
   const themeColors = colorScheme === "light" ? Colors.light : Colors.dark;
 
+  const [userId, setUserId] = useState("");
+  const [fitnessHours, setFitnessHours] = useState("");
+  const [totalFitnessHours, setTotalFitnessHours] = useState(0);
+  const data = [
+    20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160,
+  ];
+  const [goalField, setGoalField] = useState("");
+  const [goal, setGoal] = useState(0);
+  const [isTrackerVisible, setIsTrackerVisible] = useState(false);
+  const [showSetGoal, setShowSetGoal] = useState(false);
+  const [editButtonText, setEditButtonText] = useState("Edit");
+
+  const [fitnessId, setFitnessId] = useState(-1);
+  const [fitnessTime, setFitnessTime] = useState(0);
+  const [pastData, setPastData] = useState<string[]>([]);
   const styles = StyleSheet.create({
     scrollViewContent: {
       flexGrow: 1,
@@ -125,26 +140,10 @@ export default function FitnessPage() {
       paddingHorizontal: 30,
       borderRadius: 20,
       alignItems: "center",
-      color: colorScheme === "light" ? Colors.light.text : Colors.dark.text,
+      color: isTrackerVisible ? themeColors.tint : themeColors.text,
     },
     timer: {},
   });
-
-  const [userId, setUserId] = useState("");
-  const [fitnessHours, setFitnessHours] = useState("");
-  const [totalFitnessHours, setTotalFitnessHours] = useState(0);
-  const data = [
-    20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160,
-  ];
-  const [goalField, setGoalField] = useState("");
-  const [goal, setGoal] = useState(0);
-  const [isTrackerVisible, setIsTrackerVisible] = useState(false);
-  const [showSetGoal, setShowSetGoal] = useState(false);
-  const [editButtonText, setEditButtonText] = useState("Edit");
-
-  const [fitnessId, setFitnessId] = useState(-1);
-  const [fitnessTime, setFitnessTime] = useState(0);
-  const [pastData, setPastData] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchUserData = async () => {
