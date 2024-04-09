@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Image, useColorScheme } from 'react-native';
 import AudioPlayer from '@/components/audioPlayer'
 import VideoPlayer from '@/components/VideoPlayer';
@@ -7,9 +7,10 @@ import AddMinutesModal from '@/components/AddMinutesModal';
 import MeditationHistoryModal from '@/components/MeditationHistoryModal';
 import { meditationSessions, intro, exercises, extras } from '@/data/index'
 import Options from '@/components/meditationOptions';
-import PastGoals from '@/components/pastGoalComponent';
+import PastGoals from '@/components/pastGoalComponentMeditation';
 import BackButton from '@/components/BackButton';
 import Colors from "@/lib/Colors";
+import { supabase } from '@/lib/Supabase';
 
 const MeditationApp = () => {
   const colorScheme = useColorScheme();
@@ -20,11 +21,10 @@ const MeditationApp = () => {
   const [selectedSession, setSelectedSession] = useState(null);
   const [showSessionOptions, setShowSessionOptions] = useState(true);
   const [sessionStarted, setSessionStarted] = useState(false);
-  const [totalSessions, setTotalSessions] = useState(0);
   const [totalMinutes, setTotalMinutes] = useState(0);
   const [previousSessions, setPreviousSessions] = useState([]);
   const [selectedVideo, setSelectedVideo] = useState(null);
-  const [lessonsWatched, setLessonsWatched] = useState(0);
+  //const [lessonsWatched, setLessonsWatched] = useState(0);
   const [userInputGoal, setUserInputGoal] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [additionalMinutes, setAdditionalMinutes] = useState('');
@@ -36,6 +36,114 @@ const MeditationApp = () => {
   const dailyGoalAchieved = totalMinutes >= dailyGoal;
   const dailyGoalBoxColor = dailyGoalAchieved ? 'green' : '#333333';
 
+  const [userId, setUserId] = useState("");
+  const [goal, setGoal] = useState(0);
+  const [meditationID, setMeditationID] = useState(-1);
+  const [meditationTime, setMeditationTime] = useState(0);
+  const [lessonsWatched, setLessonsWatched] = useState(0);
+  const [totalSessions, setTotalSessions] = useState(0);
+  const [pastData, setPastData] = useState<string[]>([]);
+
+
+
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const { data, error } = await supabase.auth.getSession();
+
+      if (error) {
+        console.error("Error fetching user:", error);
+        return;
+      }
+
+      if (data) {
+        const user = data.session.user;
+        setUserId(user.id);
+      } else {
+        console.log("cannot find user");
+      }
+    };
+
+    fetchUserData();
+  }, [userId]);
+
+
+  useEffect(() => {
+    const fetchDailyGoal = async () => {
+      try {
+        const { data: meditation_goals, error } = await supabase
+          .from("personal_goals")
+          .select("*")
+          .eq("user_id", userId);
+        if (meditation_goals != null) {
+          setGoal(meditation_goals[0].daily_meditation_goal);
+          console.log("goallll: " , goal)
+        }
+      } catch (error) {}
+    };
+    fetchDailyGoal();
+  }, [userId, meditationID,goal,totalSessions,lessonsWatched]);
+
+
+  useEffect(() => {
+    const currentDate = new Date().toISOString().split("T")[0];
+
+    const fetchMeditationId = async () => {
+      try {
+        const { data } = await supabase
+          .from("meditation_details")
+          .select("*")
+          .eq("user_id", userId)
+          .gte("created_at", `${currentDate} 00:00:00`)
+          .lt("created_at", `${currentDate} 23:59:59`);
+
+        if (data !== null && data.length > 0) {
+          const parsedMeditationTime = parseInt(data[0].meditation_time, 10);
+          const parsedMeditationID = parseInt(data[0].meditation_id, 10);
+          const parsedLessonsWatched = parseInt(data[0].lessons_watched, 10);
+          const parsedSessionsCompleted = parseInt(data[0].sessions_completed,10);
+          
+          setMeditationID(parsedMeditationID);
+          setMeditationTime(parsedMeditationTime);
+          setTotalMinutes(parsedMeditationTime);
+          setLessonsWatched(parsedLessonsWatched);
+          setTotalSessions(parsedSessionsCompleted);
+          console.log(data);
+          console.log("meditationID : ", meditationID);
+          console.log("minutesMeditated : ", meditationTime);
+          console.log("LessonsWatched : ", lessonsWatched);
+          console.log("CompletedSessions : ", totalSessions);
+
+        } else {
+          console.log("no meditation data .");
+        }
+      } catch (err) {
+        console.error("error fetching meditation data:", err);
+      }
+    };
+
+    fetchMeditationId();
+  }, [userId, totalMinutes, meditationID,totalSessions,lessonsWatched]);
+
+  useEffect(() => {
+    const fetchPastData = async () => {
+      const currentDate = new Date().toISOString().split("T")[0];
+
+      const { data, error } = await supabase
+        .from("meditation_details")
+        .select("*")
+        .eq("user_id", userId)
+        .lt("created_at", `${currentDate} 00:00:00`);
+      if (data) {
+        setPastData(data);
+        console.log(pastData);
+      }
+    };
+    fetchPastData();
+  }, [userId, totalMinutes, meditationID,totalSessions,lessonsWatched]);
+
+
+
   //functions below for setting daily goal
   const handleDailyGoalInputChange = (text) => {
     setUserInputGoal(text);
@@ -45,12 +153,46 @@ const MeditationApp = () => {
     setModalVisible(true);
   };
 
-  const handleSetDailyGoal = () => {
-    const goal = parseInt(userInputGoal);
+  const handleSetDailyGoal = async () => {
+    const userGoal = parseInt(userInputGoal);
     // Check if input is a number and greater than 0
-    if (!isNaN(goal) && goal > 0) {
+    if (!isNaN(goal) && userGoal > 0) {
       setTotalMinutes(0);
       setModalVisible(false);
+
+      if (goal > -1) {
+        // update data if goal > -1
+        console.log("updating goal data...");
+        try {
+          const { data, error } = await supabase
+            .from("personal_goals")
+            .update({ daily_meditation_goal: userGoal })
+            .eq("user_id", userId)
+            .select();
+          if (data) {
+            console.log(data);
+          }
+          if (error) {
+            console.log(error);
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      } else {
+        // insert data if goal = -1
+        try {
+          console.log("inserting goal data..", userGoal);
+          const { data, error } = await supabase
+            .from("personal_goals")
+            .insert([{ daily_meditation_goal: userGoal, user_id: userId }])
+            .select();
+        } catch (error) {
+          console.log("error", error);
+        }
+      }
+      setGoal(userGoal)
+
+
     } else {
       // If userInputGoal is not a valid number, show an error message or handle it appropriately
       alert('Please enter a valid positive number for the daily goal.');
@@ -59,13 +201,61 @@ const MeditationApp = () => {
   };
 
   //functions below for adding meditation minutes completed outside of the app
-  const handleAddDailyMinutes = () => {
+  const handleAddDailyMinutes = async () => {
     const minutesToAdd = parseInt(additionalMinutes);
     // Check if input is a number and greater than 0
     if (!isNaN(minutesToAdd) && minutesToAdd > 0) {
-      setTotalMinutes(totalMinutes + minutesToAdd);
       setAdditionalMinutes('');
       setAddMinutesModalVisible(false);
+
+      if (meditationID == -1) {
+        // if needs inserting
+        console.log("needs inserting...");
+        try {
+          console.log(totalMinutes);
+          const { data, error } = await supabase
+
+            .from("meditation_details")
+            .insert([{ user_id: userId, meditation_time: totalMinutes + minutesToAdd }])
+            .select();
+
+          if (data) {
+            console.log(data);
+            setMeditationID(data[0].meditation_id);
+          }
+          if (error) {
+            console.log(error);
+          }
+        } catch (error) {
+          console.error("Error saving meditation details:", error);
+        }
+      } else {
+        //if needs updating
+        console.log("needs updating");
+        console.log("totalMeditationMins : ", totalMinutes);
+        try {
+          const { data, error } = await supabase
+            .from("meditation_details")
+            .update({ meditation_time: totalMinutes + minutesToAdd })
+            .eq("meditation_id", meditationID);
+
+          if (error) {
+            console.log(error);
+          }
+          if (data) {
+            console.log(data);
+          }
+        } catch (error) {
+          console.log(error);
+        }
+
+        console.log("done");
+
+    }
+    setTotalMinutes(totalMinutes + minutesToAdd);
+
+
+      
     } else {
       // If userInputGoal is not a valid number, show an error message or handle it appropriately
       alert('Please enter a valid positive number of minutes.');
@@ -121,11 +311,101 @@ const MeditationApp = () => {
   };
 
   // Increment lessonsWatched by 1 only when the video ends
-  const handleVideoEnd = () => {
+  const handleVideoEnd = async () => {
+
+    if (meditationID == -1) {
+      // if needs inserting
+      console.log("needs inserting...");
+      try {
+        console.log(totalMinutes);
+        const { data, error } = await supabase
+
+          .from("meditation_details")
+          .insert([{ user_id: userId, lessons_watched : lessonsWatched + 1 }])
+          .select();
+
+        if (data) {
+          console.log(data);
+          setMeditationID(data[0].meditation_id);
+        }
+        if (error) {
+          console.log(error);
+        }
+      } catch (error) {
+        console.error("Error saving meditation details:", error);
+      }
+    } else {
+      //if needs updating
+      console.log("needs updating");
+      console.log("totalMeditationMins : ", totalMinutes);
+      try {
+        const { data, error } = await supabase
+          .from("meditation_details")
+          .update({ lessons_watched : lessonsWatched + 1  })
+          .eq("meditation_id", meditationID);
+
+        if (error) {
+          console.log(error);
+        }
+        if (data) {
+          console.log(data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+
+      console.log("done");
+
+  }
+
     setLessonsWatched(lessonsWatched + 1); 
   };
   // Increment totalSessions by 1 only when the audio ends
-  const incrementTotalSessions = () => {
+  const incrementTotalSessions = async () => {
+    if (meditationID == -1) {
+      // if needs inserting
+      console.log("needs inserting...");
+      try {
+        console.log(totalMinutes);
+        const { data, error } = await supabase
+
+          .from("meditation_details")
+          .insert([{ user_id: userId, sessions_completed: totalSessions + 1 }])
+          .select();
+
+        if (data) {
+          console.log(data);
+          setMeditationID(data[0].meditation_id);
+        }
+        if (error) {
+          console.log(error);
+        }
+      } catch (error) {
+        console.error("Error saving meditation details:", error);
+      }
+    } else {
+      //if needs updating
+      console.log("needs updating");
+      console.log("totalMeditationMins : ", totalMinutes);
+      try {
+        const { data, error } = await supabase
+          .from("meditation_details")
+          .update({ sessions_completed: totalSessions + 1 })
+          .eq("meditation_id", meditationID);
+
+        if (error) {
+          console.log(error);
+        }
+        if (data) {
+          console.log(data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+
+      console.log("done");
+
+  }
     setTotalSessions(totalSessions + 1);
   };
  
@@ -136,7 +416,7 @@ const MeditationApp = () => {
           <View style={styles.statisticsContainer}>
             <Text style={[styles.pastHeader, { color: themeColors.text }]}>Past progress</Text>
             <View style={styles.past}>
-              <PastGoals data={data} goal={dailyGoal} />
+              <PastGoals data={pastData} goal={dailyGoal} />
             </View>
             <View style={styles.statisticBoxContainer}>
               <View style={[styles.statisticBox, { backgroundColor: themeColors.innerBackground }]}>
@@ -155,7 +435,7 @@ const MeditationApp = () => {
               </View>
               <View style={[styles.statisticBox, { backgroundColor: dailyGoalAchieved ? 'green' : themeColors.innerBackground }]}>
                 <Text style={[styles.statisticLabel, { color: themeColors.text }]}>Daily {'\n'}Goal:</Text>
-                <Text style={[styles.statisticValue, { color: themeColors.text }]}>{dailyGoal} mins</Text>
+                <Text style={[styles.statisticValue, { color: themeColors.text }]}>{goal} mins</Text>
               </View>
             </View>
             
