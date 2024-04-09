@@ -256,7 +256,13 @@ export default function SleepScreen() {
             Past progress
           </Text>
           <View style={styles.past}>
-            <PastGoals data={pastData} goal={goal} />
+            {pastData.length > 0 ? (
+              <PastGoals data={pastData} goal={goal} />
+            ) : (
+              <Text style={{ fontWeight: "500", fontSize: 16, paddingTop: 16 }}>
+                No past data available
+              </Text>
+            )}
           </View>
           <View style={styles.goal}>
             <View

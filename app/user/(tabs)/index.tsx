@@ -75,7 +75,7 @@ export default function TabOneScreen() {
           if (!data || data.length == 0) return;
           setTrackerData((oldVal) => {
             return {
-              // Update only sleep time
+              // Update only fitness time
               sleepTime: oldVal.sleepTime,
               fitnessTime: parseInt(data[0].fitness_time),
               meditationTime: oldVal.meditationTime,
