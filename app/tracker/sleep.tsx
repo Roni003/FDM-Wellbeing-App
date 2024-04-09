@@ -178,6 +178,7 @@ export default function SleepScreen() {
     const inputHours = parseFloat(goalField);
 
     if (inputHours >= 0 && inputHours <= 1440 && Number.isInteger(inputHours)) {
+
       setGoal(inputHours);
       setGoalField("");
       setShowSetGoal(false);
@@ -278,13 +279,8 @@ export default function SleepScreen() {
               </Text>
               <Goal radius={50} progress={parseFloat(totalSleepHours/60).toFixed(2)} goal={goal} />
               <TouchableOpacity onPress={toggleSetGoal}>
-              <Text
-                  style={[
-                    styles.buttonText,
-                    { color: themeColors.text },
-                  ]}
-                >
-                  {showSetGoal ? 'Cancel' : 'Edit Goal'}
+                <Text style={[styles.buttonText, { color: themeColors.text }]}>
+                  {showSetGoal ? "Cancel" : "Edit Goal"}
                 </Text>
               </TouchableOpacity>
             </View>

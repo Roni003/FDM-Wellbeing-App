@@ -22,10 +22,24 @@ import { globalStyles } from "@/lib/Styles";
 import { FontAwesome } from "@expo/vector-icons";
 
 export default function FitnessPage() {
-
   const colorScheme = useColorScheme();
   const themeColors = colorScheme === "light" ? Colors.light : Colors.dark;
 
+  const [userId, setUserId] = useState("");
+  const [fitnessHours, setFitnessHours] = useState("");
+  const [totalFitnessHours, setTotalFitnessHours] = useState(0);
+  const data = [
+    20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160,
+  ];
+  const [goalField, setGoalField] = useState("");
+  const [goal, setGoal] = useState(0);
+  const [isTrackerVisible, setIsTrackerVisible] = useState(false);
+  const [showSetGoal, setShowSetGoal] = useState(false);
+  const [editButtonText, setEditButtonText] = useState("Edit");
+
+  const [fitnessId, setFitnessId] = useState(-1);
+  const [fitnessTime, setFitnessTime] = useState(0);
+  const [pastData, setPastData] = useState<string[]>([]);
   const styles = StyleSheet.create({
     scrollViewContent: {
       flexGrow: 1,
@@ -42,7 +56,7 @@ export default function FitnessPage() {
       height: 100,
     },
     pastHeader: {
-      marginVertical: '5%',
+      marginVertical: "5%",
       fontSize: 20,
       fontWeight: "bold",
       textAlign: "center",
@@ -67,7 +81,7 @@ export default function FitnessPage() {
       padding: 20,
       borderRadius: 10,
       marginRight: 5,
-      alignItems: 'center',
+      alignItems: "center",
       marginBottom: 20,
     },
     fitnessPage: {
@@ -124,31 +138,13 @@ export default function FitnessPage() {
     },
     timerButton: {
       paddingHorizontal: 30,
-      paddingVertical: 10,
       borderRadius: 20,
       alignItems: "center",
-      margin: 10,
-      color: colorScheme === "light" ? Colors.light.text : Colors.dark.text,
+      color: isTrackerVisible ? themeColors.tint : themeColors.text,
     },
     timer: {},
   });
 
-  const [userId, setUserId] = useState("");
-  const [fitnessHours, setFitnessHours] = useState("");
-  const [totalFitnessHours, setTotalFitnessHours] = useState(0);
-  const data = [
-    20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160,
-  ];
-  const [goalField, setGoalField] = useState("");
-  const [goal, setGoal] = useState(0);
-  const [isTrackerVisible, setIsTrackerVisible] = useState(false);
-  const [showSetGoal, setShowSetGoal] = useState(false);
-  const [editButtonText, setEditButtonText] = useState("Edit");
-
-  const [fitnessId, setFitnessId] = useState(-1);
-  const [fitnessTime, setFitnessTime] = useState(0);
-  const [pastData, setPastData] = useState<string[]>([]);
-  
   useEffect(() => {
     const fetchUserData = async () => {
       const { data, error } = await supabase.auth.getSession();
@@ -400,13 +396,8 @@ export default function FitnessPage() {
               </Text>
               <Goal radius={50} progress={totalFitnessHours} goal={goal} />
               <TouchableOpacity onPress={toggleSetGoal}>
-                <Text
-                  style={[
-                    styles.buttonText,
-                    { color: themeColors.text },
-                  ]}
-                >
-                  {showSetGoal ? 'Cancel' : 'Edit Goal'}
+                <Text style={[styles.buttonText, { color: themeColors.text }]}>
+                  {showSetGoal ? "Cancel" : "Edit Goal"}
                 </Text>
               </TouchableOpacity>
             </View>
