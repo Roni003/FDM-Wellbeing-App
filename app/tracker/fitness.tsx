@@ -42,7 +42,7 @@ export default function FitnessPage() {
       height: 100,
     },
     pastHeader: {
-      marginVertical: 15,
+      marginVertical: '5%',
       fontSize: 20,
       fontWeight: "bold",
       textAlign: "center",
