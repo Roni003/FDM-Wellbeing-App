@@ -116,7 +116,7 @@ export default function SleepScreen() {
     if (
       newTotalHours >= 0 &&
       newTotalHours <= 24 &&
-      Number.isInteger(inputHours*2)
+      Number.isInteger(inputHours * 2)
     ) {
       setTotalSleepHours(newTotalHours);
       setSleepHours("");
@@ -175,7 +175,11 @@ export default function SleepScreen() {
   const handleGoalHours = async () => {
     const inputHours = parseFloat(goalField);
 
-    if (inputHours >= 0 && inputHours <= 24 && Number.isInteger(inputHours*2)) {
+    if (
+      inputHours >= 0 &&
+      inputHours <= 24 &&
+      Number.isInteger(inputHours * 2)
+    ) {
       setGoal(inputHours);
       setGoalField("");
       setShowSetGoal(false);
@@ -212,9 +216,7 @@ export default function SleepScreen() {
         }
       }
     } else {
-      alert(
-        "Your goal must be an interval of 0.5 between 0 and 24 hours."
-      );
+      alert("Your goal must be an interval of 0.5 between 0 and 24 hours.");
     }
   };
 
@@ -274,15 +276,14 @@ export default function SleepScreen() {
               <Text style={[styles.goalHeader, { color: themeColors.text }]}>
                 Daily Goal: {goal}
               </Text>
-              <Goal radius={50} progress={Math.round(totalSleepHours/60)} goal={goal} />
+              <Goal
+                radius={50}
+                progress={Math.round(totalSleepHours / 60)}
+                goal={goal}
+              />
               <TouchableOpacity onPress={toggleSetGoal}>
-              <Text
-                  style={[
-                    styles.buttonText,
-                    { color: themeColors.text },
-                  ]}
-                >
-                  {showSetGoal ? 'Cancel' : 'Edit Goal'}
+                <Text style={[styles.buttonText, { color: themeColors.text }]}>
+                  {showSetGoal ? "Cancel" : "Edit Goal"}
                 </Text>
               </TouchableOpacity>
             </View>
