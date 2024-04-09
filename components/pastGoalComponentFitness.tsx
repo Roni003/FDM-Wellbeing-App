@@ -1,11 +1,31 @@
-import { View, StyleSheet, ScrollView, Text } from 'react-native';
+import {  StyleSheet, ScrollView, useColorScheme} from 'react-native';
+import { Text, View } from "@/components/Themed";
 import React from 'react';
 import Goal from "./GoalComponent";
-
+import Colors from '@/lib/Colors';
 
 const pastGoalComponent = ({data, goal}) => { 
   //in your page, put the call inside a view tag and set the height to ~100
   //data array should be oldest date's stat to newest
+  const colorScheme = useColorScheme();
+  const textColor =
+    colorScheme === "light" ? Colors.light.text : Colors.dark.text;
+
+  const styles = StyleSheet.create({
+    scroll: {
+    },
+    slide: {
+      flex: 1,
+      width: 70,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    text: {
+      color: textColor,
+      fontWeight: 'bold',
+      marginBottom: 10,
+    },
+  })
 
   return (
     <ScrollView style={styles.scroll} horizontal={true} showsHorizontalScrollIndicator={false} contentOffset={{x:70*data.length}}>
@@ -18,25 +38,5 @@ const pastGoalComponent = ({data, goal}) => {
     </ScrollView>
   )
 }
-
-
-
-
-const styles = StyleSheet.create({
-  scroll: {
-  },
-  slide: {
-    flex: 1,
-    width: 70,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  text: {
-    color: 'white',
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-})
-
 
 export default pastGoalComponent;

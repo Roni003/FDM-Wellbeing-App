@@ -1,15 +1,24 @@
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, useColorScheme } from 'react-native';
 import React from 'react';
 import SVG, {Circle, Text} from 'react-native-svg';
-
+import Colors from '@/lib/Colors';
+import { colors } from 'react-native-elements';
 
 const GoalComponent = ({radius, progress, goal}) => { 
     //changing radius argument will change the size of the component on the page
+  const colorScheme = useColorScheme();
+  const textColor =
+    colorScheme === "light" ? Colors.light.text : Colors.dark.text;
+  const strokebackgroundColour = 
+    colorScheme === "light" ? Colors.light.lowOpacityTint : "white"
+
+  const strokeC = 
+    colorScheme === "light" ? Colors.light.lowOpacityTint : "white"
   const stroke = radius / 3.2;
   const innerRad = radius - stroke / 2;
   const circ = 2 * Math.PI * innerRad;
   const percentage = progress / goal
-  let strokeColor = 'white';
+  let strokeColor = strokeC;
   if (percentage >= 1) { // circle will turn green when goal is met
     strokeColor = 'green';
   }
@@ -23,7 +32,7 @@ const GoalComponent = ({radius, progress, goal}) => {
           r={innerRad}
           cx={radius} cy={radius}
           strokeWidth={stroke}
-          stroke="white"
+          stroke={strokebackgroundColour}
           opacity={0.2}
           />
         <Circle //foreground circle (complete portion)
@@ -41,7 +50,7 @@ const GoalComponent = ({radius, progress, goal}) => {
           textAnchor="middle"
           fontSize={stroke*1.2}
           fontWeight="bold"
-          fill={strokeColor}
+          fill={textColor}
         >
           {progress}
         </Text>

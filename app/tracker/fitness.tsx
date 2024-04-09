@@ -19,10 +19,119 @@ import PastGoals from "@/components/pastGoalComponentFitness";
 import Colors from "@/lib/Colors";
 import { supabase } from "@/lib/Supabase";
 import { globalStyles } from "@/lib/Styles";
+import { FontAwesome } from "@expo/vector-icons";
 
 export default function FitnessPage() {
+
   const colorScheme = useColorScheme();
   const themeColors = colorScheme === "light" ? Colors.light : Colors.dark;
+
+  const styles = StyleSheet.create({
+    scrollViewContent: {
+      flexGrow: 1,
+      ...globalStyles.container,
+    },
+    backButton: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+    },
+    past: {
+      height: 100,
+    },
+    pastGoals: {
+      height: 100,
+    },
+    pastHeader: {
+      marginVertical: 15,
+      fontSize: 20,
+      fontWeight: "bold",
+      textAlign: "center",
+    },
+    container: {
+      flex: 1,
+    },
+    goalHeader: {
+      textAlign: "center",
+      fontSize: 18,
+      fontWeight: "bold",
+      marginBottom: 15,
+    },
+    goal: {
+      marginTop: 10,
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      paddingHorizontal: 15,
+    },
+    dailyGoal: {
+      padding: 20,
+      borderRadius: 10,
+      marginRight: 5,
+      alignItems: 'center',
+      marginBottom: 20,
+    },
+    fitnessPage: {
+      paddingTop: 10,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    row: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginTop: 20,
+      paddingHorizontal: 20,
+    },
+    title: {
+      fontSize: 18,
+      fontWeight: "bold",
+      marginBottom: 15,
+      textAlign: "center",
+    },
+    fitnessContainer: {
+      padding: 15,
+      borderRadius: 10,
+      marginLeft: 5,
+      marginBottom: "10%",
+      alignItems: "center",
+    },
+    fitnessInput: {
+      flexDirection: "row",
+      marginBottom: 10,
+      backgroundColor: "white",
+      borderRadius: 10,
+    },
+    input: {
+      fontSize: 12,
+      paddingVertical: 10,
+      paddingHorizontal: 15,
+      width: 150,
+      color: "#333",
+    },
+    button: {
+      paddingHorizontal: 30,
+      paddingVertical: 10,
+      borderRadius: 20,
+      alignItems: "center",
+      margin: 10,
+    },
+    buttonText: {
+      fontSize: 12,
+    },
+    totalFitnessHours: {
+      fontSize: 12,
+      color: "white",
+    },
+    timerButton: {
+      paddingHorizontal: 30,
+      paddingVertical: 10,
+      borderRadius: 20,
+      alignItems: "center",
+      margin: 10,
+      color: colorScheme === "light" ? Colors.light.text : Colors.dark.text,
+    },
+    timer: {},
+  });
 
   const [userId, setUserId] = useState("");
   const [fitnessHours, setFitnessHours] = useState("");
@@ -39,7 +148,7 @@ export default function FitnessPage() {
   const [fitnessId, setFitnessId] = useState(-1);
   const [fitnessTime, setFitnessTime] = useState(0);
   const [pastData, setPastData] = useState<string[]>([]);
-
+  
   useEffect(() => {
     const fetchUserData = async () => {
       const { data, error } = await supabase.auth.getSession();
@@ -258,6 +367,13 @@ export default function FitnessPage() {
       >
         <View style={styles.backButton}>
           <BackButton destination={"/"} name={"Dashboard"} />
+          {/* Switch to Timer button */}
+          <FontAwesome
+            name="hourglass"
+            size={24}
+            style={styles.timerButton}
+            onPress={toggleTracker}
+          />
         </View>
         <View style={styles.fitnessPage}>
           <Text style={[styles.pastHeader, { color: themeColors.text }]}>
@@ -284,19 +400,14 @@ export default function FitnessPage() {
               </Text>
               <Goal radius={50} progress={totalFitnessHours} goal={goal} />
               <TouchableOpacity onPress={toggleSetGoal}>
-                <TouchableOpacity
+                <Text
                   style={[
-                    styles.button,
-                    { backgroundColor: themeColors.lowOpacityTint },
+                    styles.buttonText,
+                    { color: themeColors.text },
                   ]}
-                  onPress={toggleSetGoal}
                 >
-                  <Text
-                    style={[styles.buttonText, { color: themeColors.text }]}
-                  >
-                    {editButtonText}
-                  </Text>
-                </TouchableOpacity>
+                  {showSetGoal ? 'Cancel' : 'Edit Goal'}
+                </Text>
               </TouchableOpacity>
             </View>
             {showSetGoal && (
@@ -397,21 +508,6 @@ export default function FitnessPage() {
                       Track Fitness
                     </Text>
                   </TouchableOpacity>
-
-                  {/* Switch to Timer button */}
-                  <TouchableOpacity
-                    style={[
-                      styles.button,
-                      { backgroundColor: themeColors.lowOpacityTint },
-                    ]}
-                    onPress={toggleTracker}
-                  >
-                    <Text
-                      style={[styles.buttonText, { color: themeColors.text }]}
-                    >
-                      Timer
-                    </Text>
-                  </TouchableOpacity>
                 </View>
               )}
             </View>
@@ -421,96 +517,3 @@ export default function FitnessPage() {
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  scrollViewContent: {
-    flexGrow: 1,
-    ...globalStyles.container,
-  },
-  backButton: {},
-  past: {
-    height: 100,
-  },
-  pastGoals: {
-    height: 100,
-  },
-  pastHeader: {
-    marginVertical: 15,
-    fontSize: 20,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  container: {
-    flex: 1,
-  },
-  goalHeader: {
-    textAlign: "center",
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 15,
-  },
-  goal: {
-    marginTop: 10,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  dailyGoal: {
-    marginHorizontal: 10,
-    padding: 10,
-    borderRadius: 10,
-    alignItems: "center",
-  },
-  fitnessPage: {
-    paddingTop: 10,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  row: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginTop: 20,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 15,
-    textAlign: "center",
-  },
-  fitnessContainer: {
-    padding: 10,
-    paddingVertical: 12,
-    borderRadius: 10,
-    marginBottom: "10%",
-    alignItems: "center",
-  },
-  fitnessInput: {
-    flexDirection: "row",
-    marginBottom: 10,
-    backgroundColor: "white",
-    borderRadius: 10,
-  },
-  input: {
-    fontSize: 12,
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    width: 150,
-    color: "#333",
-  },
-  button: {
-    paddingHorizontal: 30,
-    paddingVertical: 10,
-    borderRadius: 20,
-    alignItems: "center",
-    margin: 10,
-  },
-  buttonText: {
-    fontSize: 12,
-  },
-  totalFitnessHours: {
-    fontSize: 12,
-    color: "white",
-  },
-  timer: {},
-});

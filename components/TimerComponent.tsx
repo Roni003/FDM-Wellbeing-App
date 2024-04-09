@@ -59,20 +59,20 @@ const TimerComponent = () => {
       </View>
       <View style={styles.buttonContainer}>
         {!isActive && !isPaused ? (
-          <TouchableOpacity style={[styles.button, { backgroundColor: themeColors.tint }]} onPress={startHandler}>
+          <TouchableOpacity style={[styles.button, { backgroundColor: themeColors.lowOpacityTint }]} onPress={startHandler}>
             <Text style={[styles.buttonText, { color: themeColors.text }]}>Start</Text>
           </TouchableOpacity>
         ) : (
           <>
-            <TouchableOpacity style={[styles.button, { backgroundColor: themeColors.tint }]} onPress={resetHandler}>
+            <TouchableOpacity style={[styles.button, { backgroundColor: themeColors.lowOpacityTint }]} onPress={resetHandler}>
               <Text style={[styles.buttonText, { color: themeColors.text }]}>Reset</Text>
             </TouchableOpacity>
             {!isPaused ? (
-              <TouchableOpacity style={[styles.button, { backgroundColor: themeColors.tint }]} onPress={pauseHandler}>
+              <TouchableOpacity style={[styles.button, { backgroundColor: themeColors.lowOpacityTint }]} onPress={pauseHandler}>
                 <Text style={[styles.buttonText, { color: themeColors.text }]}>Pause</Text>
               </TouchableOpacity>
             ) : (
-              <TouchableOpacity style={[styles.button, { backgroundColor: themeColors.tint }]} onPress={continueHandler}>
+              <TouchableOpacity style={[styles.button, { backgroundColor: themeColors.lowOpacityTint }]} onPress={continueHandler}>
                 <Text style={[styles.buttonText, { color: themeColors.text }]}>Continue</Text>
               </TouchableOpacity>
             )}
