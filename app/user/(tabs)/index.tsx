@@ -109,10 +109,7 @@ export default function TabOneScreen() {
           <View style={styles.tracker_row}>
             <Tracker
               head="Last night's sleep"
-              counter={`${Math.floor(trackerData.sleepTime / 60)} hours ${
-                trackerData.sleepTime -
-                Math.floor(trackerData.sleepTime / 60) * 60
-              } minutes`}
+              counter={`${Math.floor(trackerData.sleepTime)} hours`}
               link="/tracker/sleep"
             />
             <Tracker
