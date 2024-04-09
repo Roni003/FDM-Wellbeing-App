@@ -115,8 +115,8 @@ export default function SleepScreen() {
     // Check if the new total is within the range of 0 to 24 hours
     if (
       newTotalHours >= 0 &&
-      newTotalHours <= 1440 &&
-      Number.isInteger(inputHours)
+      newTotalHours <= 24 &&
+      Number.isInteger(inputHours*2)
     ) {
       setTotalSleepHours(newTotalHours);
       setSleepHours("");
@@ -167,7 +167,7 @@ export default function SleepScreen() {
       }
     } else {
       alert(
-        "Your input must be an integer, and the total sleep hours must be between 0 and 1,440 minutes (24 hours)."
+        "Your input must be an interval of 0.5, and the total sleep hours must be between 0 and 24 hours."
       );
     }
   };
@@ -175,7 +175,7 @@ export default function SleepScreen() {
   const handleGoalHours = async () => {
     const inputHours = parseFloat(goalField);
 
-    if (inputHours >= 0 && inputHours <= 1440 && Number.isInteger(inputHours)) {
+    if (inputHours >= 0 && inputHours <= 24 && Number.isInteger(inputHours*2)) {
       setGoal(inputHours);
       setGoalField("");
       setShowSetGoal(false);
@@ -213,7 +213,7 @@ export default function SleepScreen() {
       }
     } else {
       alert(
-        "Your goal must be an integer between 0 and 1440 minutes (24 hours)."
+        "Your goal must be an interval of 0.5 between 0 and 24 hours."
       );
     }
   };
@@ -274,7 +274,7 @@ export default function SleepScreen() {
               <Text style={[styles.goalHeader, { color: themeColors.text }]}>
                 Daily Goal: {goal}
               </Text>
-              <Goal radius={50} progress={totalSleepHours/60} goal={goal} />
+              <Goal radius={50} progress={Math.round(totalSleepHours/60)} goal={goal} />
               <TouchableOpacity onPress={toggleSetGoal}>
               <Text
                   style={[
@@ -328,18 +328,13 @@ export default function SleepScreen() {
               <View style={styles.sleepInput}>
                 <TextInput
                   style={styles.input}
-                  placeholder="Enter sleep duration (minutes)"
+                  placeholder="Enter sleep duration (hours)"
                   placeholderTextColor={themeColors.textSecondary}
                   keyboardType="numeric"
                   value={sleepHours}
                   onChangeText={(text) => setSleepHours(text)}
                 />
               </View>
-              <Text
-                style={[styles.totalSleepHours, { color: themeColors.text }]}
-              >
-                Tracked Sleep Duration: {totalSleepHours/60 || "0"} Hours
-              </Text>
               <TouchableOpacity
                 style={[
                   styles.button,
