@@ -330,7 +330,7 @@ export default function SleepScreen() {
               <View style={styles.sleepInput}>
                 <TextInput
                   style={styles.input}
-                  placeholder="Enter sleep duration in hours"
+                  placeholder="Enter hours slept"
                   placeholderTextColor={themeColors.textSecondary}
                   keyboardType="numeric"
                   value={sleepHours}
@@ -340,7 +340,7 @@ export default function SleepScreen() {
               <View style={styles.sleepInput}>
                 <TextInput
                   style={styles.input}
-                  placeholder="Enter sleep duration in minutes"
+                  placeholder="Enter minutes slept"
                   placeholderTextColor={themeColors.textSecondary}
                   keyboardType="numeric"
                   value={sleepMinutes}
