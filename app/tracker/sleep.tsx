@@ -276,19 +276,14 @@ export default function SleepScreen() {
               </Text>
               <Goal radius={50} progress={totalSleepHours} goal={goal} />
               <TouchableOpacity onPress={toggleSetGoal}>
-                <TouchableOpacity
+              <Text
                   style={[
-                    styles.button,
-                    { backgroundColor: themeColors.lowOpacityTint },
+                    styles.buttonText,
+                    { color: themeColors.text },
                   ]}
-                  onPress={toggleSetGoal}
                 >
-                  <Text
-                    style={[styles.buttonText, { color: themeColors.text }]}
-                  >
-                    {editButtonText}
-                  </Text>
-                </TouchableOpacity>
+                  {showSetGoal ? 'Cancel' : 'Edit Goal'}
+                </Text>
               </TouchableOpacity>
             </View>
             {showSetGoal && (
@@ -312,17 +307,10 @@ export default function SleepScreen() {
                   />
                 </View>
                 <TouchableOpacity
-                  style={[
-                    styles.button,
-                    { backgroundColor: themeColors.lowOpacityTint },
-                  ]}
+                  style={styles.button}
                   onPress={handleGoalHours}
                 >
-                  <Text
-                    style={[styles.buttonText, { color: themeColors.text }]}
-                  >
-                    Set Goal
-                  </Text>
+                  <Text style={styles.buttonText}>Set Goal</Text>
                 </TouchableOpacity>
               </View>
             )}
@@ -399,10 +387,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    paddingHorizontal: 15,
   },
   dailyGoal: {
-    marginHorizontal: 10,
-    padding: 10,
+    marginRight: 5,
+    marginBottom: 10,
+    padding: 20,
     borderRadius: 10,
     alignItems: "center",
   },
@@ -425,8 +415,8 @@ const styles = StyleSheet.create({
   },
   sleepContainer: {
     padding: 10,
-    paddingVertical: 12,
-    borderRadius: 10,
+    borderRadius: 12,
+    marginLeft: 5,
     marginBottom: "10%",
     alignItems: "center",
   },
@@ -438,8 +428,8 @@ const styles = StyleSheet.create({
   },
   input: {
     fontSize: 12,
-    paddingVertical: 5,
-    paddingHorizontal: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
     width: 150,
     color: "#333",
   },
