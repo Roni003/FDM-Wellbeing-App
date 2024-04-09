@@ -95,7 +95,7 @@ export default function SleepScreen() {
           console.log("no fitness data .");
         }
       } catch (err) {
-        console.error("error fetching fitness data:", err);
+        console.error("error fetching sleep data:", err);
       }
     };
 
@@ -142,7 +142,7 @@ export default function SleepScreen() {
             console.log(error);
           }
         } catch (error) {
-          console.error("Error saving fitness details:", error);
+          console.error("Error saving sleep details:", error);
         }
       } else {
         //if needs updating
@@ -167,7 +167,7 @@ export default function SleepScreen() {
       }
     } else {
       alert(
-        "Your input must be an integer, and the total fitness hours must be between 0 and 1,440 minutes (24 hours)."
+        "Your input must be an integer, and the total sleep hours must be between 0 and 1,440 minutes (24 hours)."
       );
     }
   };
@@ -274,7 +274,7 @@ export default function SleepScreen() {
               <Text style={[styles.goalHeader, { color: themeColors.text }]}>
                 Daily Goal: {goal}
               </Text>
-              <Goal radius={50} progress={totalSleepHours} goal={goal} />
+              <Goal radius={50} progress={totalSleepHours/60} goal={goal} />
               <TouchableOpacity onPress={toggleSetGoal}>
               <Text
                   style={[
@@ -328,7 +328,7 @@ export default function SleepScreen() {
               <View style={styles.sleepInput}>
                 <TextInput
                   style={styles.input}
-                  placeholder="Enter sleep duration (hours)"
+                  placeholder="Enter sleep duration (minutes)"
                   placeholderTextColor={themeColors.textSecondary}
                   keyboardType="numeric"
                   value={sleepHours}
@@ -338,7 +338,7 @@ export default function SleepScreen() {
               <Text
                 style={[styles.totalSleepHours, { color: themeColors.text }]}
               >
-                Tracked Sleep Duration: {totalSleepHours || "0"} Hours
+                Tracked Sleep Duration: {totalSleepHours/60 || "0"} Hours
               </Text>
               <TouchableOpacity
                 style={[
