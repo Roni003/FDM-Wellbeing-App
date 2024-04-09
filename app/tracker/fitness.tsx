@@ -487,14 +487,6 @@ export default function FitnessPage() {
                       onChangeText={(text) => setFitnessHours(text)}
                     />
                   </View>
-                  <Text
-                    style={[
-                      styles.totalFitnessHours,
-                      { color: themeColors.text },
-                    ]}
-                  >
-                    Tracked Fitness Duration: {fitnessTime || "0"} Mins
-                  </Text>
                   <TouchableOpacity
                     style={[
                       styles.button,
