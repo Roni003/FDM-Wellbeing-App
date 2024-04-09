@@ -9,8 +9,19 @@ import { Post } from "@/lib/Post";
 import MiniForumPost from "@/components/MiniForumPost";
 import { globalStyles } from "@/lib/Styles";
 
+type TrackerData = {
+  sleepTime: number;
+  fitnessTime: number;
+  meditationTime: number;
+};
+
 export default function TabOneScreen() {
   const [posts, setPosts] = useState<Array<Post>>([]);
+  const [trackerData, setTrackerData] = useState<TrackerData>({
+    sleepTime: 0,
+    fitnessTime: 0,
+    meditationTime: 0,
+  });
 
   useFocusEffect(
     useCallback(() => {
@@ -31,7 +42,57 @@ export default function TabOneScreen() {
         }
       };
 
+      const fetchTrackerData = async () => {
+        const fetchsleepTime = async (userId: string, currentDate: string) => {
+          const { data } = await supabase
+            .from("sleep_details")
+            .select("*")
+            .eq("user_id", userId)
+            .gte("created_at", `${currentDate} 00:00:00`)
+            .lt("created_at", `${currentDate} 23:59:59`);
+          console.log("sleep:", data);
+          if (!data || data.length == 0) return;
+          setTrackerData((oldVal) => {
+            return {
+              // Update only sleep time
+              sleepTime: parseInt(data[0].sleep_time),
+              fitnessTime: oldVal.fitnessTime,
+              meditationTime: oldVal.meditationTime,
+            };
+          });
+        };
+        const fetchfitnessTime = async (
+          userId: string,
+          currentDate: string
+        ) => {
+          const { data } = await supabase
+            .from("fitness_details")
+            .select("*")
+            .eq("user_id", userId)
+            .gte("created_at", `${currentDate} 00:00:00`)
+            .lt("created_at", `${currentDate} 23:59:59`);
+          console.log("fitness:", data);
+          if (!data || data.length == 0) return;
+          setTrackerData((oldVal) => {
+            return {
+              // Update only sleep time
+              sleepTime: oldVal.sleepTime,
+              fitnessTime: parseInt(data[0].fitness_time),
+              meditationTime: oldVal.meditationTime,
+            };
+          });
+        };
+        const userData = await supabase.auth.getUser();
+        const userId = userData.data.user.id;
+        if (userId == null) return;
+
+        const currentDate = new Date().toISOString().split("T")[0];
+        fetchsleepTime(userId, currentDate);
+        fetchfitnessTime(userId, currentDate);
+      };
+
       fetchPosts();
+      fetchTrackerData();
 
       return () => {
         isActive = false;
@@ -48,12 +109,15 @@ export default function TabOneScreen() {
           <View style={styles.tracker_row}>
             <Tracker
               head="Last night's sleep"
-              counter="0 hours 0 minutes"
+              counter={`${Math.floor(trackerData.sleepTime / 60)} hours ${
+                trackerData.sleepTime -
+                Math.floor(trackerData.sleepTime / 60) * 60
+              } minutes`}
               link="/tracker/sleep"
             />
             <Tracker
               head="Exercise today"
-              counter="0 minutes"
+              counter={`${trackerData.fitnessTime} minutes`}
               link="/tracker/fitness"
             />
           </View>
