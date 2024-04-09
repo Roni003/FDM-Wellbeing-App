@@ -61,6 +61,30 @@ export default function TabOneScreen() {
             };
           });
         };
+
+        const fetchSessionsCompleted = async (
+          userId: string,
+          currentDate: string
+        ) => {
+          const { data } = await supabase
+            .from("meditation_details")
+            .select("*")
+            .eq("user_id", userId)
+            .gte("created_at", `${currentDate} 00:00:00`)
+            .lt("created_at", `${currentDate} 23:59:59`);
+          console.log("meditation details:", data);
+          if (!data || data.length == 0) return;
+          setTrackerData((oldVal) => {
+            return {
+              // Update only fitness time
+              sleepTime: oldVal.sleepTime,
+              fitnessTime: oldVal.fitnessTime,
+              meditationTime: parseInt(data[0].sessions_completed),
+            };
+          });
+        };
+
+
         const fetchfitnessTime = async (
           userId: string,
           currentDate: string
@@ -82,6 +106,7 @@ export default function TabOneScreen() {
             };
           });
         };
+
         const userData = await supabase.auth.getUser();
         const userId = userData.data.user.id;
         if (userId == null) return;
@@ -89,6 +114,9 @@ export default function TabOneScreen() {
         const currentDate = new Date().toISOString().split("T")[0];
         fetchsleepTime(userId, currentDate);
         fetchfitnessTime(userId, currentDate);
+        fetchSessionsCompleted(userId,currentDate);
+
+
       };
 
       fetchPosts();
@@ -126,7 +154,7 @@ export default function TabOneScreen() {
         <View style={styles.tracker_row}>
           <Tracker
             head="Meditation & Mental Health"
-            counter="0 sessions today"
+            counter={`${trackerData.meditationTime} sessions today`}
             link="/tracker/meditation"
           />
         </View>
@@ -191,3 +219,5 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
 });
+
+
