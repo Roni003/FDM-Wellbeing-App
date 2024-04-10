@@ -46,7 +46,7 @@ const MeditationApp = () => {
   const dailyGoalBoxColor = dailyGoalAchieved ? "green" : "#333333";
 
   const [userId, setUserId] = useState("");
-  const [goal, setGoal] = useState(0);
+  const [goal, setGoal] = useState(-1);
   const [meditationID, setMeditationID] = useState(-1);
   const [meditationTime, setMeditationTime] = useState(0);
   const [lessonsWatched, setLessonsWatched] = useState(0);
@@ -506,7 +506,7 @@ const MeditationApp = () => {
                 <Text
                   style={[styles.statisticValue, { color: themeColors.text }]}
                 >
-                  {goal} mins
+                  {goal === -1 ? "0 mins" : `${goal} mins`}
                 </Text>
               </View>
             </View>

@@ -24,7 +24,7 @@ export default function SleepScreen() {
     20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160,
   ];
   const [goalField, setGoalField] = useState("");
-  const [goal, setGoal] = useState(8);
+  const [goal, setGoal] = useState(-1);
   const [showSetGoal, setShowSetGoal] = useState(false);
   const [editButtonText, setEditButtonText] = useState("Edit");
 
@@ -273,7 +273,7 @@ export default function SleepScreen() {
               ]}
             >
               <Text style={[styles.goalHeader, { color: themeColors.text }]}>
-                Daily Goal: {`${goal} hours`}
+                {goal === -1 ? "Daily Goal: 0 hours" : `Daily Goal: ${goal} hours`}
               </Text>
               <Goal radius={50} progress={parseFloat(totalSleepHours)} goal={goal*60} />
               <TouchableOpacity onPress={toggleSetGoal}>
