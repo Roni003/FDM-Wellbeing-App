@@ -275,7 +275,7 @@ export default function SleepScreen() {
               ]}
             >
               <Text style={[styles.goalHeader, { color: themeColors.text }]}>
-                Daily Goal: {goal}
+                Daily Goal: {`${goal} hours`}
               </Text>
               <Goal radius={50} progress={parseFloat(totalSleepHours/60).toFixed(2)} goal={goal} />
               <TouchableOpacity onPress={toggleSetGoal}>
