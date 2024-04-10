@@ -18,7 +18,7 @@ const GoalComponent = ({radius, progress, goal}) => {
   const innerRad = radius - stroke / 2;
   const circ = 2 * Math.PI * innerRad;
   const percentage = progress / goal
-  const progressMinutes = Math.floor(progress) + "h " + (progress - Math.floor(progress)) + "m"
+  const progressMinutes = Math.floor(progress / 60) + "h " + (progress - Math.floor(progress / 60) * 60) + "m"
   let strokeColor = strokeC;
   if (percentage >= 1) { // circle will turn green when goal is met
     strokeColor = 'green';
