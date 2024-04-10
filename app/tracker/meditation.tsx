@@ -149,8 +149,8 @@ if (user) {
     fetchPastData();
   }, [userId, totalMinutes, meditationID, totalSessions, lessonsWatched]);
 //video player active 
-  const updateVideoPlayerActive = (isActive) => {
-    setVideoPlayerActive(isActive);
+  const updateVideoPlayerActive = () => {
+    setVideoPlayerActive(true);
   };
 
   //functions below for setting daily goal
@@ -621,7 +621,7 @@ if (user) {
                     videoSource={selectedVideo.videoSource}
                     style={styles.videoPlayer}
                     onVideoEnd={handleVideoEnd}
-                    updateVideoPlayerActive={updateVideoPlayerActive}
+                    
                   />
                   <TouchableOpacity
                     style={styles.goBackButton}
@@ -648,7 +648,10 @@ if (user) {
                             styles.exerciseIntroButton,
                             { backgroundColor: themeColors.innerBackground },
                           ]} //CHANGE WIDTH OF THIS
-                          onPress={() => setSelectedVideo(eSession)}
+                          onPress={() => {
+                            setSelectedVideo(eSession);
+                            setVideoPlayerActive(true);
+                          }}
                         >
                           <View
                             style={{

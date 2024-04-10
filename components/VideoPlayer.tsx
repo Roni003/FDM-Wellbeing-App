@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
 import { Video } from 'expo-av';
 
-const VideoPlayer = ({ videoSource, style, onVideoEnd, updateVideoPlayerActive }) => {
+const VideoPlayer = ({ videoSource, style, onVideoEnd}) => {
   const videoRef = useRef(null);
   const [videoPlayerActive, setVideoPlayerActive] = useState(true);
 
@@ -12,7 +12,7 @@ const VideoPlayer = ({ videoSource, style, onVideoEnd, updateVideoPlayerActive }
     }
   };
 
-  updateVideoPlayerActive(true);
+  
   return (
     //<View style={[styles.container, style]}>
       <Video
