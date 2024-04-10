@@ -392,7 +392,7 @@ export default function FitnessPage() {
               ]}
             >
               <Text style={[styles.goalHeader, { color: themeColors.text }]}>
-                {goal === -1 ? "Daily Goal: 0 hours" : `Daily Goal: ${goal} mins`}
+                {goal === -1 ? "Daily Goal: 0 mins" : `Daily Goal: ${goal} mins`}
               </Text>
               <Goal radius={50} progress={totalFitnessHours} goal={goal} />
               <TouchableOpacity onPress={toggleSetGoal}>
