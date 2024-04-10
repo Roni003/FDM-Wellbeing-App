@@ -22,7 +22,7 @@ import { supabase } from "@/lib/Supabase";
 
 const MeditationApp = () => {
   const colorScheme = useColorScheme();
-  const themeColors = colorScheme === "dark" ? Colors.light : Colors.dark;
+  const themeColors = colorScheme === "light" ? Colors.light : Colors.dark;
 
   const data = [
     20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160,
@@ -34,6 +34,7 @@ const MeditationApp = () => {
   const [totalMinutes, setTotalMinutes] = useState(0);
   const [previousSessions, setPreviousSessions] = useState([]);
   const [selectedVideo, setSelectedVideo] = useState(null);
+  const [videoPlayerActive, setVideoPlayerActive] = useState(false);
   //const [lessonsWatched, setLessonsWatched] = useState(0);
   const [userInputGoal, setUserInputGoal] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
@@ -147,6 +148,10 @@ if (user) {
     };
     fetchPastData();
   }, [userId, totalMinutes, meditationID, totalSessions, lessonsWatched]);
+//video player active 
+  const updateVideoPlayerActive = (isActive) => {
+    setVideoPlayerActive(isActive);
+  };
 
   //functions below for setting daily goal
   const handleDailyGoalInputChange = (text) => {
@@ -625,11 +630,13 @@ if (user) {
                     videoSource={selectedVideo.videoSource}
                     style={styles.videoPlayer}
                     onVideoEnd={handleVideoEnd}
+                    updateVideoPlayerActive={updateVideoPlayerActive}
                   />
                   <TouchableOpacity
                     style={styles.goBackButton}
                     onPress={() => {
                       setSelectedVideo(null);
+                      setVideoPlayerActive(false);
                       //handleVideoWatched(selectedVideo); // Call another function here if needed
                     }}
                   >
@@ -788,7 +795,7 @@ if (user) {
       style={{ flex: 1 }}
     >
       {/* hide dashboard button when on audio page */}
-          {!sessionStarted && (
+          {!sessionStarted && !videoPlayerActive && (
         <View style={styles.backButtonContainer}>
           <BackButton destination={"/"} name={"Dashboard"} />     
         </View>
