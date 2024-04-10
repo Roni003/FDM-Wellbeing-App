@@ -22,7 +22,7 @@ import { supabase } from "@/lib/Supabase";
 
 const MeditationApp = () => {
   const colorScheme = useColorScheme();
-  const themeColors = colorScheme === "light" ? Colors.light : Colors.dark;
+  const themeColors = colorScheme === "dark" ? Colors.light : Colors.dark;
 
   const data = [
     20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160,
@@ -62,12 +62,12 @@ const MeditationApp = () => {
         return;
       }
 
-      if (data) {
-        const user = data.session.user;
-        setUserId(user.id);
-      } else {
-        console.log("cannot find user");
-      }
+      const user = data?.session?.user;
+if (user) {
+  setUserId(user.id);
+} else {
+  console.log("cannot find user");
+}
     };
 
     fetchUserData();
@@ -787,9 +787,12 @@ const MeditationApp = () => {
       ]}
       style={{ flex: 1 }}
     >
-      <View style={styles.backButtonContainer}>
-        <BackButton destination={"/"} name={"Dashboard"} />
-      </View>
+      {/* hide dashboard button when on audio page */}
+          {!sessionStarted && (
+        <View style={styles.backButtonContainer}>
+          <BackButton destination={"/"} name={"Dashboard"} />     
+        </View>
+      )}
       <View style={styles.headerContainer}>
         {/* Conditionally render options based on sessionStarted */}
         {!sessionStarted && (
