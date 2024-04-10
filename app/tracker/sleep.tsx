@@ -31,7 +31,7 @@ export default function SleepScreen() {
   const [sleepId, setSleepId] = useState(-1);
   const [sleepTime, setSleepTime] = useState(0);
   const [userId, setUserId] = useState("");
-  const [sleepHours, setSleepHours] = useState(0);
+  const [sleepHours, setSleepHours] = useState("");
   const [totalSleepHours, setTotalSleepHours] = useState(0);
   const [pastData, setPastData] = useState<string[]>([]);
 
@@ -328,7 +328,7 @@ export default function SleepScreen() {
                   placeholderTextColor={themeColors.textSecondary}
                   keyboardType="numeric"
                   value={sleepHours}
-                  onChangeText={(text) => setSleepHours(parseInt(text))}
+                  onChangeText={(text) => setSleepHours(text)}
                 />
               </View>
               <TouchableOpacity
