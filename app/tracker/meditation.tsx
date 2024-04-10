@@ -532,15 +532,6 @@ const MeditationApp = () => {
               >
                 <Text style={[{ color: themeColors.text }]}>Add Minutes</Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                style={[
-                  styles.setGoalButton,
-                  { backgroundColor: themeColors.innerBackground },
-                ]}
-                onPress={toggleMeditationHistoryModal}
-              >
-                <Text style={[{ color: themeColors.text }]}>View History</Text>
-              </TouchableOpacity>
             </View>
           </View>
         );
