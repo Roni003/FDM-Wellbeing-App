@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { Text, View } from "@/components/Themed";
 import BackButton from "@/components/BackButton";
-import Goal from "@/components/GoalComponent";
+import Goal from "@/components/GoalComponentSleep";
 import PastGoals from "@/components/pastGoalComponentSleep";
 import Colors from "@/lib/Colors";
 import { supabase } from "@/lib/Supabase";
