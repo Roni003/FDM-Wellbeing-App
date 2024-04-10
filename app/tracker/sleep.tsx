@@ -31,8 +31,8 @@ export default function SleepScreen() {
   const [sleepId, setSleepId] = useState(-1);
   const [sleepTime, setSleepTime] = useState(0);
   const [userId, setUserId] = useState("");
-  const [sleepHours, setSleepHours] = useState("");
-  const [sleepMinutes, setSleepMinutes] = useState("");
+  const [sleepHours, setSleepHours] = useState(0);
+  const [sleepMinutes, setSleepMinutes] = useState(0);
   const [totalSleepHours, setTotalSleepHours] = useState(0);
   const [pastData, setPastData] = useState<string[]>([]);
 
