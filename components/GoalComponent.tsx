@@ -18,6 +18,7 @@ const GoalComponent = ({radius, progress, goal}) => {
   const innerRad = radius - stroke / 2;
   const circ = 2 * Math.PI * innerRad;
   const percentage = progress / goal
+  const progressMinutes = progress + "m";
   let strokeColor = strokeC;
   if (percentage >= 1) { // circle will turn green when goal is met
     strokeColor = 'green';
@@ -52,7 +53,7 @@ const GoalComponent = ({radius, progress, goal}) => {
           fontWeight="bold"
           fill={textColor}
         >
-          {progress}
+          {progressMinutes}
         </Text>
       </SVG>
     </View>
