@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { Text, View } from "@/components/Themed";
 import BackButton from "@/components/BackButton";
-import Goal from "@/components/GoalComponent";
+import Goal from "@/components/GoalComponentSleep";
 import PastGoals from "@/components/pastGoalComponentSleep";
 import Colors from "@/lib/Colors";
 import { supabase } from "@/lib/Supabase";
@@ -273,7 +273,7 @@ export default function SleepScreen() {
               ]}
             >
               <Text style={[styles.goalHeader, { color: themeColors.text }]}>
-                Daily Goal: {`${goal} hours`}
+                {goal === -1 ? "Daily Goal: 0 hours" : `Daily Goal: ${goal} hours`}
               </Text>
               <Goal radius={50} progress={parseFloat(totalSleepHours)} goal={goal*60} />
               <TouchableOpacity onPress={toggleSetGoal}>

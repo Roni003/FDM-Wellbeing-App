@@ -1,7 +1,7 @@
 import {  StyleSheet, ScrollView, useColorScheme} from 'react-native';
 import { Text, View } from "@/components/Themed";
 import React from 'react';
-import Goal from "./GoalComponent";
+import Goal from "./GoalComponentSleep";
 import Colors from '@/lib/Colors';
 
 

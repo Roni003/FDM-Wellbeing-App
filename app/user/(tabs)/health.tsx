@@ -130,33 +130,33 @@ export default function health() {
     if (sex == "male") {
       const bmr = 66.47 + 13.75 * weight + 5.003 * height - 6.755 * age;
       if (weightState == "lose") {
-        const CaloriesSentence = `Your calories is: ${(bmr * 1.2 - 200).toFixed(
+        const CaloriesSentence = `Eat at/under: ${(bmr * 1.2 - 200).toFixed(
           0
-        )}`;
+        )} kcal`;
         setCalories(CaloriesSentence);
       } else if (weightState == "maintain") {
-        const CaloriesSentence = `Your calories is: ${(bmr * 1.2).toFixed(0)}`;
+        const CaloriesSentence = `Eat at: ${(bmr * 1.2).toFixed(0)} kcal`;
         setCalories(CaloriesSentence);
       } else if (weightState == "gain") {
-        const CaloriesSentence = `Your calories is: ${(bmr * 1.2 + 200).toFixed(
+        const CaloriesSentence = `Eat at/more: ${(bmr * 1.2 + 200).toFixed(
           0
-        )}`;
+        )} kcal`;
         setCalories(CaloriesSentence);
       }
     } else if (sex == "female") {
       const bmr = 655.1 + 9.563 * weight + 1.85 * height - 4.676 * age;
       if (weightState == "lose") {
-        const CaloriesSentence = `Your calories is: ${(bmr * 1.2 - 150).toFixed(
+        const CaloriesSentence = `Eat at/under: ${(bmr * 1.2 - 150).toFixed(
           0
-        )}`;
+        )} kcal`;
         setCalories(CaloriesSentence);
       } else if (weightState == "maintain") {
-        const CaloriesSentence = `Your calories is: ${(bmr * 1.2).toFixed(0)}`;
+        const CaloriesSentence = `Eat at: ${(bmr * 1.2).toFixed(0)} kcal`;
         setCalories(CaloriesSentence);
       } else if (weightState == "gain") {
-        const CaloriesSentence = `Your calories is: ${(bmr * 1.2 + 150).toFixed(
+        const CaloriesSentence = `Eat at/more ${(bmr * 1.2 + 150).toFixed(
           0
-        )}`;
+        )} kcal`;
         setCalories(CaloriesSentence);
       }
     }

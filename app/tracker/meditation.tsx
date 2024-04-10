@@ -47,7 +47,7 @@ const MeditationApp = () => {
   const dailyGoalBoxColor = dailyGoalAchieved ? "green" : "#333333";
 
   const [userId, setUserId] = useState("");
-  const [goal, setGoal] = useState(0);
+  const [goal, setGoal] = useState(-1);
   const [meditationID, setMeditationID] = useState(-1);
   const [meditationTime, setMeditationTime] = useState(0);
   const [lessonsWatched, setLessonsWatched] = useState(0);
@@ -511,7 +511,7 @@ if (user) {
                 <Text
                   style={[styles.statisticValue, { color: themeColors.text }]}
                 >
-                  {goal} mins
+                  {goal === -1 ? "0 mins" : `${goal} mins`}
                 </Text>
               </View>
             </View>
@@ -536,15 +536,6 @@ if (user) {
                 onPress={handleAddMinutesModalOpen}
               >
                 <Text style={[{ color: themeColors.text }]}>Add Minutes</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[
-                  styles.setGoalButton,
-                  { backgroundColor: themeColors.innerBackground },
-                ]}
-                onPress={toggleMeditationHistoryModal}
-              >
-                <Text style={[{ color: themeColors.text }]}>View History</Text>
               </TouchableOpacity>
             </View>
           </View>
