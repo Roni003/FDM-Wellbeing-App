@@ -32,7 +32,7 @@ export default function FitnessPage() {
     20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160,
   ];
   const [goalField, setGoalField] = useState("");
-  const [goal, setGoal] = useState(0);
+  const [goal, setGoal] = useState(30);
   const [isTrackerVisible, setIsTrackerVisible] = useState(false);
   const [showSetGoal, setShowSetGoal] = useState(false);
   const [editButtonText, setEditButtonText] = useState("Edit");
