@@ -32,7 +32,6 @@ export default function SleepScreen() {
   const [sleepTime, setSleepTime] = useState(0);
   const [userId, setUserId] = useState("");
   const [sleepHours, setSleepHours] = useState(0);
-  const [sleepMinutes, setSleepMinutes] = useState(0);
   const [totalSleepHours, setTotalSleepHours] = useState(0);
   const [pastData, setPastData] = useState<string[]>([]);
 
@@ -109,7 +108,7 @@ export default function SleepScreen() {
   };
 
   const handleAddSleepHours = async () => {
-    const inputHours = parseFloat(sleepHours + sleepMinutes);
+    const inputHours = parseFloat(sleepHours);
     const newTotalHours = totalSleepHours + inputHours;
     const currentDate = new Date().toISOString().split("T")[0];
 
@@ -121,7 +120,6 @@ export default function SleepScreen() {
     ) {
       setTotalSleepHours(newTotalHours);
       setSleepHours("");
-      setSleepMinutes("");
 
       console.log("sleep ID:", sleepId);
 
@@ -129,7 +127,7 @@ export default function SleepScreen() {
         // if needs inserting
         console.log("needs inserting...");
         try {
-          console.log(sleepHours + sleepMinutes);
+          console.log(sleepHours);
           const { data, error } = await supabase
 
             .from("sleep_details")
@@ -277,7 +275,7 @@ export default function SleepScreen() {
               <Text style={[styles.goalHeader, { color: themeColors.text }]}>
                 Daily Goal: {`${goal} hours`}
               </Text>
-              <Goal radius={50} progress={parseFloat(totalSleepHours/60).toFixed(2)} goal={goal} />
+              <Goal radius={50} progress={parseFloat(totalSleepHours)} goal={goal*60} />
               <TouchableOpacity onPress={toggleSetGoal}>
                 <Text style={[styles.buttonText, { color: themeColors.text }]}>
                   {showSetGoal ? "Cancel" : "Edit Goal"}
@@ -326,21 +324,11 @@ export default function SleepScreen() {
               <View style={styles.sleepInput}>
                 <TextInput
                   style={styles.input}
-                  placeholder="Enter hours slept"
-                  placeholderTextColor={themeColors.textSecondary}
-                  keyboardType="numeric"
-                  value={sleepHours}
-                  onChangeText={(text) => setSleepHours(parseInt(text*60))}
-                />
-              </View>
-              <View style={styles.sleepInput}>
-                <TextInput
-                  style={styles.input}
                   placeholder="Enter minutes slept"
                   placeholderTextColor={themeColors.textSecondary}
                   keyboardType="numeric"
-                  value={sleepMinutes}
-                  onChangeText={(text) => setSleepMinutes(parseInt(text))}
+                  value={sleepHours}
+                  onChangeText={(text) => setSleepHours(parseInt(text))}
                 />
               </View>
               <TouchableOpacity
