@@ -13,6 +13,8 @@ import * as SplashScreen from "expo-splash-screen";
 export default function Entry() {
   const [fontsLoaded, fontError] = useFonts({
     FDMFont: require("../assets/fonts/FDMFont.ttf"),
+    Inter: require("../assets/fonts/Inter-Regular.ttf"),
+    InterSemibold: require("../assets/fonts/Inter-SemiBold.ttf"),
   });
 
   SplashScreen.preventAutoHideAsync();
