@@ -1,7 +1,6 @@
 import { Button, StyleSheet, Pressable, Keyboard } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { Text, View } from "@/components/Themed";
-import { Link, router } from "expo-router";
 import Auth from "@/components/Auth";
 import { supabase } from "@/lib/Supabase";
 import { redirectAfterLogin } from "@/lib/redirect";

@@ -7,7 +7,7 @@ import {
 } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Text, View } from "@/components/Themed";
-import { signOut } from "@/lib/auth";
+import { getClientRoleId, signOut } from "@/lib/auth";
 import { supabase } from "@/lib/Supabase";
 import { useCallback, useState } from "react";
 import { useFocusEffect } from "expo-router";
@@ -19,6 +19,7 @@ export default function Profile() {
   const [name, setName] = useState("-");
   const [email, setEmail] = useState("Fetching...");
   const [id, setId] = useState("Fetching...");
+  const [role, setRole] = useState("Fetching..");
   const [postCount, setPostCount] = useState(0);
   const [errorText, setErrorText] = useState("");
 
@@ -61,7 +62,26 @@ export default function Profile() {
         }
       };
 
+      const updateRole = async () => {
+        const role_id = getClientRoleId();
+        if (!role_id || role_id == 0) {
+          setRole("User");
+          return;
+        }
+
+        if (role_id == 1) {
+          setRole("Ambassador");
+          return;
+        }
+
+        if (role_id == 2) {
+          setRole("Admin");
+          return;
+        }
+      };
+
       fetchSession();
+      updateRole();
 
       return () => {
         isActive = false;
@@ -163,8 +183,8 @@ export default function Profile() {
         </View>
 
         <View style={styles.info}>
-          <Text style={styles.info_text}>User ID</Text>
-          <Text style={styles.info_value}>{id}</Text>
+          <Text style={styles.info_text}>Role</Text>
+          <Text style={styles.info_value}>{role}</Text>
         </View>
 
         <View style={styles.info}>
