@@ -6,7 +6,7 @@
 
 ## Installation
 
-1. Clone the repository:
+1. To run a copy of the app, clone the repository:
 
 ```
 git clone https://github.com/Roni003/FDM-Wellbeing-App.git
